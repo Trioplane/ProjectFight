@@ -1,0 +1,13 @@
+append function_tag minecraft:load {
+    "replace": false,
+    "values": [
+        "projectfight:load"
+    ]
+}
+
+append function_tag minecraft:tick {
+    "replace": false,
+    "values": [
+        "projectfight:tick"
+    ]
+}

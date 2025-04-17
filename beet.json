@@ -1,0 +1,20 @@
+{
+    "name": "ProjectFight",
+    "description": "WIP",
+    "version": "v0.0.1",
+    "author": "Trplnr",
+    "require": ["bolt"],
+    "data_pack": {
+      "load": ["./src"],
+      "pack_format": 71
+    },
+    "resource_pack": {
+      "load": ["./src"],
+      "pack_format": 55
+    },
+    "pipeline": ["mecha"],
+    "output": "./build",
+    "meta": {
+      "bolt": {"entrypoint": "projectfight:*"}
+    }
+}
