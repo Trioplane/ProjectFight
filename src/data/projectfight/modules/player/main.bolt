@@ -1,0 +1,13 @@
+function projectfight:player/main/init:
+    scoreboard objectives add projectfight.player.id dummy
+    scoreboard objectives add projectfight.player.left_game minecraft.custom:minecraft.leave_game
+    scoreboard players add .projectfight.var.nextid projectfight.player.id 0
+
+    function projectfight:player/health/init
+    function projectfight:player/damage/init
+    function projectfight:player/death/init
+
+function projectfight:player/main/tick:
+    function projectfight:player/joining/listen
+    function projectfight:player/death/tick
+    

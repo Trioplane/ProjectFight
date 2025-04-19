@@ -1,0 +1,17 @@
+function projectfight:player/joining/first_join:
+    execute store result score @s projectfight.player.id run scoreboard players add .projectfight.var.nextid projectfight.player.id 1
+    tag @s add projectfight.player.initv0.0.1
+    function projectfight:player/joining/common
+    tellraw @s {"text":"[ProjectFight] player initalized"}
+
+function projectfight:player/joining/rejoin:
+    scoreboard players set @s projectfight.player.left_game 0
+    function projectfight:player/joining/common
+    tellraw @s {"text":"[ProjectFight] player rejoined"}
+
+function projectfight:player/joining/common:
+    function projectfight:player/configs/apply_configs
+
+function projectfight:player/joining/listen:
+    execute as @s[tag=projectfight.player.initv0.0.1,scores={projectfight.player.left_game=1..}] run return run function projectfight:player/joining/rejoin
+    execute as @s[tag=!projectfight.player.initv0.0.1] run return run function projectfight:player/joining/first_join
