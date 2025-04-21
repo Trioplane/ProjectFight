@@ -2,6 +2,7 @@ function projectfight:load:
     tellraw @a {"text":"[ProjectFight] datapack reloaded"}
 
     function projectfight:player/main/init
+    function projectfight:items/main/init
     function projectfight:load/set_global_rules
 
 function projectfight:load/set_global_rules:
@@ -34,4 +35,4 @@ function projectfight:load/set_global_rules:
 function projectfight:tick:
     execute as @a:
         function projectfight:player/main/tick
-        function projectfight:player/death/tick
+        function projectfight:items/main/tick

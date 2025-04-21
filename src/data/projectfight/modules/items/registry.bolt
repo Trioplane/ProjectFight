@@ -1,0 +1,4 @@
+function ~/register:
+    scoreboard objectives add projectfight.items.vars dummy
+
+    scoreboard players set .generic_hold_throwable.hold_duration projectfight.items.vars 60

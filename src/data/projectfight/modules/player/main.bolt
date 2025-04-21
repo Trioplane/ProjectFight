@@ -4,10 +4,8 @@ function projectfight:player/main/init:
     scoreboard players add .projectfight.var.nextid projectfight.player.id 0
 
     function projectfight:player/health/init
-    function projectfight:player/damage/init
-    function projectfight:player/death/init
 
 function projectfight:player/main/tick:
     function projectfight:player/joining/listen
-    function projectfight:player/death/tick
+    function projectfight:player/health/tick
     
