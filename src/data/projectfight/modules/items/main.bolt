@@ -22,25 +22,28 @@ function ~/init:
     scoreboard objectives add projectfight.player.item.is_using dummy
     scoreboard objectives add projectfight.player.item.using_time dummy
 
+    function projectfight:items/movement/init
     function projectfight:items/registry/register
 
 function ~/tick:
     execute store result score @s projectfight.player.item.is_using run advancement revoke @s only projectfight:use_item
     execute if score @s projectfight.player.item.is_using matches 0 run scoreboard players set @s projectfight.player.item.using_time 0
 
+    execute as @e[type=item_display,tag=projectfight.items.generic_throwable] at @s run function ~/../../definitions/generic_throwable/movement_step
+
 function ~/use_item:
     scoreboard players add @s projectfight.player.item.using_time 1
-    execute store result storage projectfight:items temp.id int 1 run scoreboard players get @s projectfight.player.id
+    execute store result storage projectfight:items temp.player.id int 1 run scoreboard players get @s projectfight.player.id
 
-    function projectfight:items/main/use_item/run_current_item with storage projectfight:items temp
+    function projectfight:items/main/use_item/run_current_item with storage projectfight:items temp.player
 
 function ~/use_item/run_current_item:
     $execute unless data storage projectfight:players "$(id)".current_item run return run tellraw @s "[ProjectFight] error: no current item."
     $function projectfight:items/main/use_item/run_item_function with storage projectfight:players "$(id)".current_item
 
 function ~/use_item/run_item_function:
-    $execute if score .$(item_name).hold_duration projectfight.items.vars matches 1.. run return run execute if score @s projectfight.player.item.using_time >= .$(item_name).hold_duration projectfight.items.vars run function projectfight:items/definitions/$(item_name)/use with storage projectfight:items temp
-    $function projectfight:items/definitions/$(item_name)/use with storage projectfight:items temp
+    $execute if score .hold_duration projectfight.items.$(item_name) matches 1.. run return run execute if score @s projectfight.player.item.using_time >= .hold_duration projectfight.items.$(item_name) run function projectfight:items/definitions/$(item_name)/use with storage projectfight:items temp.player
+    $function projectfight:items/definitions/$(item_name)/use with storage projectfight:items temp.player
 
     
         

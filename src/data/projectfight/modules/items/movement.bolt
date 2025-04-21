@@ -1,0 +1,5 @@
+function ~/init:
+    scoreboard objectives add projectfight.items.velocity.horizontal dummy
+    scoreboard objectives add projectfight.items.velocity.vertical dummy
+    scoreboard objectives add projectfight.items.velocity.sideward dummy
+
