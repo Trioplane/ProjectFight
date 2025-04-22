@@ -1,3 +1,55 @@
 function ~/use:
-    say used generic hold throwable
-    
+    tag @s add projectfight.player.items.temp.owner
+
+    execute anchored eyes at @s: 
+        summon marker ^ ^ ^2 {Tags:["projectfight.utils.temp"]}
+        summon item_display ^ ^ ^1.5 {
+            Tags: ["projectfight.items.generic_hold_throwable", "projectfight.items", "projectfight.items.temp",],
+            item: { id: "popped_chorus_fruit" },
+            teleport_duration: 1
+        }
+
+    execute as @n[type=item_display,tag=projectfight.items.temp]: 
+        rotate @s facing entity @n[type=marker,tag=projectfight.utils.temp]
+
+        scoreboard players operation @s projectfight.items.velocity.horizontal = .init_velocity.horizontal projectfight.items.config.generic_hold_throwable
+        scoreboard players operation @s projectfight.items.velocity.vertical = .init_velocity.vertical projectfight.items.config.generic_hold_throwable
+        scoreboard players operation @s projectfight.items.velocity.sideward = .init_velocity.sideward projectfight.items.config.generic_hold_throwable
+
+        scoreboard players operation @s projectfight.items.owner = @p[tag=projectfight.player.items.temp.owner] projectfight.player.id
+
+    kill @n[type=marker,tag=projectfight.utils.temp]
+    tag @n[type=item_display,tag=projectfight.items.temp] remove projectfight.items.temp
+    tag @s remove projectfight.player.items.temp.owner
+
+function ~/movement_step:
+    execute store result storage projectfight:items temp.item.velocity.horizontal float 0.001 run scoreboard players get @s projectfight.items.velocity.horizontal
+    execute store result storage projectfight:items temp.item.velocity.vertical float 0.001 run scoreboard players get @s projectfight.items.velocity.vertical
+    execute store result storage projectfight:items temp.item.velocity.sideward float 0.001 run scoreboard players get @s projectfight.items.velocity.sideward
+
+    function projectfight:items/movement/move with storage projectfight:items temp.item.velocity
+
+    execute unless score @s projectfight.items.velocity.horizontal matches ..0 run scoreboard players operation @s projectfight.items.velocity.horizontal += .acceleration.horizontal projectfight.items.config.generic_hold_throwable
+    execute unless score @s projectfight.items.velocity.vertical matches ..-2000 run scoreboard players operation @s projectfight.items.velocity.vertical += .acceleration.vertical projectfight.items.config.generic_hold_throwable
+    scoreboard players operation @s projectfight.items.velocity.sideward += .acceleration.sideward projectfight.items.config.generic_hold_throwable
+
+    execute at @s run function projectfight:items/definitions/generic_hold_throwable/collision_check
+
+function ~/collision_check:
+    execute if entity @s[y=-64,dy=-256] run return run function projectfight:items/definitions/generic_hold_throwable/on_impact
+    execute as @s[tag=projectfight.items.marked_for_deletion] run return run function projectfight:items/definitions/generic_hold_throwable/on_impact
+    execute unless block ~ ~ ~ #air run return run function projectfight:items/definitions/generic_hold_throwable/on_impact
+    for i in range(1, 2):
+        execute unless block ^ ^ ^i #air run tag @s add projectfight.items.marked_for_deletion
+
+function ~/on_impact:
+    tag @s add projectfight.items.temp.impact
+    execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
+        tag @s add projectfight.player.temp.attacker
+        say on impact (attacker)
+    execute as @a[distance=..5]:
+        tag @s add projectfight.player.temp.victim
+        say on impact (victim)
+        scoreboard players set @s projectfight.player.damage_to_deal 25
+    function projectfight:player/health/apply_damage
+    kill @s

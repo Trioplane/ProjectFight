@@ -3,3 +3,9 @@ function ~/init:
     scoreboard objectives add projectfight.items.velocity.vertical dummy
     scoreboard objectives add projectfight.items.velocity.sideward dummy
 
+function ~/run_movement_functions:
+    execute as @e[type=item_display,tag=projectfight.items.generic_throwable] at @s run function projectfight:items/definitions/generic_throwable/movement_step
+    execute as @e[type=item_display,tag=projectfight.items.generic_hold_throwable] at @s run function projectfight:items/definitions/generic_hold_throwable/movement_step 
+
+function ~/move:
+    $execute positioned ~ ~$(vertical) ~ run tp @s ^$(sideward) ^ ^$(horizontal)

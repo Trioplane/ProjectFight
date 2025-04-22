@@ -35,4 +35,5 @@ function projectfight:load/set_global_rules:
 function projectfight:tick:
     execute as @a:
         function projectfight:player/main/tick
-        function projectfight:items/main/tick
+        function projectfight:items/main/use_item/tick
+    function projectfight:items/main/tick

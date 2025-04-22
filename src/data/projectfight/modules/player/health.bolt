@@ -23,13 +23,15 @@ function ~/apply_damage:
         # damage to deal * attacker strength
         scoreboard players operation @s projectfight.player.damage_to_deal *= @p[tag=projectfight.player.temp.attacker] projectfight.player.strength_modifier
 
-        execute if score @s projectfight.player.damage_to_deal >= @s projectfight.player.health run return: 
-            scoreboard players set @s projectfight.player.health 0
-            scoreboard players set @s projectfight.player.damage_to_deal 0
-            function projectfight:player/health/kill
-        
         scoreboard players operation @s projectfight.player.health -= @s projectfight.player.damage_to_deal
-        execute if score @s projectfight.player.health > @s projectfight.player.max_health run scoreboard players operation @s projectfight.player.health = @s projectfight.player.max_health
+
+        execute if score @s projectfight.player.health > @s projectfight.player.max_health:
+            scoreboard players operation @s projectfight.player.health = @s projectfight.player.max_health
+            
+        execute if score @s projectfight.player.health matches ..0:
+            scoreboard players set @s projectfight.player.health 0
+            function projectfight:player/health/kill
+
         scoreboard players set @s projectfight.player.damage_to_deal 0
 
     tag @a[tag=projectfight.player.temp.victim] remove projectfight.player.temp.victim
@@ -37,6 +39,8 @@ function ~/apply_damage:
 
 function ~/kill:
     tag @s add projectfight.player.dead
+
+    execute as @p[tag=projectfight.player.temp.attacker] run say hahah
 
     execute if entity @p[tag=projectfight.player.temp.attacker]: 
         tellraw @s [{"selector":"@p[tag=projectfight.player.temp.attacker]"},{"text":" killed you"}]
