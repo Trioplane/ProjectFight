@@ -23,9 +23,7 @@ function ~/apply_damage:
         scoreboard players operation @s projectfight.player.damage_to_deal *= @p[tag=projectfight.player.temp.attacker] projectfight.player.strength_modifier
 
         scoreboard players operation @s projectfight.player.health -= @s projectfight.player.damage_to_deal
-
-        tellraw @a {score:{name:"PilkeySEK",objective:"projectfight.player.damage_to_deal"}}
-
+        
         execute if score @s projectfight.player.damage_to_deal matches ..0 if score @s projectfight.player.health > @s projectfight.player.max_health:
             scoreboard players operation @s projectfight.player.health = @s projectfight.player.max_health
             
