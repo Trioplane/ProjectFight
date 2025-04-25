@@ -2,7 +2,7 @@ function ~/use:
     tag @s add projectfight.player.items.temp.owner
 
     execute anchored eyes at @s: 
-        summon marker ^ ^ ^2 {Tags:["projectfight.utils.temp"]}
+        summon marker ^ ^ ^5 {Tags:["projectfight.utils.temp"]}
         summon item_display ^ ^ ^1.5 {
             Tags: ["projectfight.items.generic_throwable", "projectfight.items", "projectfight.items.temp",],
             item: { id: "popped_chorus_fruit" },

@@ -8,4 +8,5 @@ function ~/run_movement_functions:
     execute as @e[type=item_display,tag=projectfight.items.generic_hold_throwable] at @s run function projectfight:items/definitions/generic_hold_throwable/movement_step 
 
 function ~/move:
+    #$execute positioned ~ ~$(vertical) ~ run rotate @s facing ^$(sideward) ^ ^$(horizontal)
     $execute positioned ~ ~$(vertical) ~ run tp @s ^$(sideward) ^ ^$(horizontal)

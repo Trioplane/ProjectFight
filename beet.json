@@ -12,9 +12,12 @@
       "load": ["./src"],
       "pack_format": 55
     },
-    "pipeline": ["mecha"],
+    "pipeline": ["mecha", "beet.contrib.load"],
     "output": "./build",
     "meta": {
-      "bolt": {"entrypoint": "projectfight:*"}
+      "bolt": {"entrypoint": "projectfight:*"},
+      "load": {
+        "data_pack": "./libs/*"
+      }
     }
 }

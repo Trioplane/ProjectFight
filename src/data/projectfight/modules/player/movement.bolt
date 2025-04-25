@@ -1,0 +1,105 @@
+speed_levels = [
+    [0, 4.3],
+    [4.3, 8],
+    [8, 100]
+]
+
+for index, speed_level in enumerate(speed_levels):
+    predicate f"projectfight:player/movement/speed_level_{index}" {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+            "movement": {
+                "horizontal_speed": {
+                    "min": speed_level[0],
+                    "max": speed_level[1]
+                }
+            }
+        }
+    }
+
+predicate projectfight:player/movement/is_pressing_jump {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "type_specific": {
+            "type": "minecraft:player",
+            "input": {
+                "jump": true
+            }
+        }
+    }
+}
+
+predicate projectfight:player/movement/is_pressing_sneak {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "type_specific": {
+            "type": "minecraft:player",
+            "input": {
+                "sneak": true
+            }
+        }
+    }
+}
+
+function ~/init:
+    scoreboard objectives add projectfight.player.movement.ledge_grab.cooldown dummy
+    scoreboard objectives add projectfight.player.movement.slide.cooldown dummy
+
+function ~/tick:
+    execute at @s run function projectfight:player/movement/move
+    execute if score @s projectfight.player.movement.ledge_grab.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.ledge_grab.cooldown 1
+    execute if score @s projectfight.player.movement.slide.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.slide.cooldown 1
+
+def player_motion_launch_xyz(x,y,z):
+    scoreboard players set $x player_motion.api.launch x
+    scoreboard players set $y player_motion.api.launch y
+    scoreboard players set $z player_motion.api.launch z
+    function player_motion:api/launch_xyz
+
+function ~/move:
+    # ACCELERATION
+    execute function projectfight:player/movement/accelerate:
+        execute if predicate projectfight:player/movement/speed_level_0 run return:
+            attribute @s minecraft:movement_speed base set 0.1
+            attribute @s minecraft:jump_strength base set 0.4
+        execute if predicate projectfight:player/movement/speed_level_1 run return:
+            attribute @s minecraft:movement_speed base set 0.16
+            attribute @s minecraft:jump_strength base set 0.45
+        execute if predicate projectfight:player/movement/speed_level_2 run return:
+            attribute @s minecraft:movement_speed base set 0.23
+            attribute @s minecraft:jump_strength base set 0.65
+
+    # LEDGE GRABBING
+    execute 
+        if block ~ ~-0.2 ~ #air 
+        positioned ~ ~-0.6 ~ anchored eyes unless block ^ ^ ^0.75 #air 
+        positioned ~ ~0.5 ~ anchored eyes if block ^ ^ ^0.75 #air 
+        if predicate projectfight:player/movement/is_pressing_jump
+        if score @s projectfight.player.movement.ledge_grab.cooldown matches 0:
+            player_motion_launch_xyz(0,6000,0)
+            scoreboard players set @s projectfight.player.movement.ledge_grab.cooldown 20
+            playsound minecraft:entity.breeze.jump master @s ~ ~ ~
+
+    # SLIDING
+    execute 
+        if predicate projectfight:player/movement/speed_level_2
+        if predicate projectfight:player/movement/is_pressing_sneak
+        if score @s projectfight.player.movement.slide.cooldown matches 0:
+            summon item_display ~ ~1 ~ {Tags:["projectfight.player.movement.slide.shulker_vehicle","projectfight.player.temp.movement.slide.shulker_vehicle"],Passengers:[{id:"minecraft:shulker",NoAI:true,Invulnerable:true}]}
+
+            execute positioned 0.0 0.0 0.0 rotated ~ 0 run summon marker ^ ^ ^2 {Tags:["projectfight.player.temp.movement.slide.vector"]}
+            execute store result score $x player_motion.api.launch run data get entity @n[type=marker,tag=projectfight.player.temp.movement.slide.vector] Pos[0] 10000
+            execute store result score $z player_motion.api.launch run data get entity @n[type=marker,tag=projectfight.player.temp.movement.slide.vector] Pos[2] 10000
+            scoreboard players set $y player_motion.api.launch 0
+            function player_motion:api/launch_xyz
+            kill @n[type=marker,tag=projectfight.player.temp.movement.slide.vector]
+            playsound minecraft:entity.breeze.slide master @s ~ ~ ~
+            scoreboard players set @s projectfight.player.movement.slide.cooldown 20
+
+
+    particle crit ~ ~-0.2 ~
+    execute positioned ~ ~-0.4 ~ anchored eyes particle crit ^ ^ ^0.75
+    execute positioned ~ ~0.5 ~ anchored eyes particle crit ^ ^ ^0.75

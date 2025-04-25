@@ -7,7 +7,7 @@ function ~/register:
     scoreboard players set .init_velocity.vertical projectfight.items.config.generic_throwable 0
     scoreboard players set .init_velocity.sideward projectfight.items.config.generic_throwable 0
 
-    scoreboard players set .acceleration.horizontal projectfight.items.config.generic_throwable -50
+    scoreboard players set .acceleration.horizontal projectfight.items.config.generic_throwable -10
     scoreboard players set .acceleration.vertical projectfight.items.config.generic_throwable -40
     scoreboard players set .acceleration.sideward projectfight.items.config.generic_throwable 0
 
