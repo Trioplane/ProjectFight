@@ -7,6 +7,7 @@ default_scores = [
     {"death_timer": 0},
     {"movement.ledge_grab.cooldown": 0},
     {"movement.slide.cooldown": 0},
+    {"movement.slide.time": 0},
 ]
 
 default_attributes = [
@@ -14,6 +15,7 @@ default_attributes = [
     {"minecraft:attack_damage": 0},
     {"minecraft:attack_knockback": 0},
     {"minecraft:step_height": 1},
+    {"minecraft:sneaking_speed": 0.7},
 ]
 
 function projectfight:player/configs/apply_configs:
