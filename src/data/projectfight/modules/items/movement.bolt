@@ -8,10 +8,7 @@ function ~/run_movement_functions:
     execute as @e[type=item_display,tag=projectfight.items.generic_hold_throwable] at @s run function projectfight:items/definitions/generic_hold_throwable/movement_step 
 
 function ~/move:
-    tag @s add projectfight.items.temp.moving
-    summon item_display 0 0 0 {Tags:["projectfight.items.temp.next_rotation"]}
-    $execute rotated as @s positioned ~ ~$(vertical) ~ positioned ^$(sideward) ^ ^$(horizontal) run rotate @n[type=item_display,tag=projectfight.items.temp.next_rotation] facing ^ ^ ^1
-    $execute as @e[type=item_display,tag=projectfight.items.initial_rotation] if score @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp.moving] projectfight.items.owner rotated as @s positioned ~ ~$(vertical) ~ run tp @n[type=item_display,tag=projectfight.items.temp.moving] ^$(sideward) ^ ^$(horizontal)
-    execute rotated as @n[type=item_display,tag=projectfight.items.temp.next_rotation] run rotate @s ~ ~
-    kill @n[type=item_display,tag=projectfight.items.temp.next_rotation]
-    tag @s remove projectfight.items.temp.moving
+    scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.items.id
+    $execute rotated as @e[type=item_display,tag=projectfight.items.initial_rotation,predicate=projectfight:util/compare_score/items/owner,limit=1] positioned ~ ~$(vertical) ~ positioned ^$(sideward) ^ ^$(horizontal) positioned ~ ~$(vertical) ~ run summon marker ^$(sideward) ^ ^$(horizontal) {Tags:["projectfight.items.temp.rotation_point"]}
+    $execute rotated as @e[type=item_display,tag=projectfight.items.initial_rotation,predicate=projectfight:util/compare_score/items/owner,limit=1] positioned ~ ~$(vertical) ~ run tp @s ^$(sideward) ^ ^$(horizontal) facing entity @n[type=marker,tag=projectfight.items.temp.rotation_point]
+    kill @n[type=marker,tag=projectfight.items.temp.rotation_point]

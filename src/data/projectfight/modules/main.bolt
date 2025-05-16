@@ -4,6 +4,7 @@ function projectfight:load:
     function projectfight:player/main/init
     function projectfight:items/main/init
     function projectfight:load/set_global_rules
+    function projectfight:util/main/init
 
 function projectfight:load/set_global_rules:
     gamerule disableElytraMovementCheck true

@@ -16,12 +16,13 @@ function ~/use:
         scoreboard players operation @s projectfight.items.velocity.vertical = .init_velocity.vertical projectfight.items.config.generic_throwable
         scoreboard players operation @s projectfight.items.velocity.sideward = .init_velocity.sideward projectfight.items.config.generic_throwable
 
+        function projectfight:items/main/give_id
         scoreboard players operation @s projectfight.items.owner = @p[tag=projectfight.player.items.temp.owner] projectfight.player.id
 
     summon item_display 0 0 0 {Tags:["projectfight.items.initial_rotation","projectfight.items.initial_rotation.temp"]}
     execute as @n[type=item_display,tag=projectfight.items.initial_rotation.temp]:
         execute rotated as @n[type=item_display,tag=projectfight.items.temp] run rotate @s ~ ~
-        scoreboard players operation @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp] projectfight.items.owner
+        scoreboard players operation @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp] projectfight.items.id
         tag @s remove projectfight.items.initial_rotation.temp
 
     playsound minecraft:entity.shulker.shoot master @a ~ ~ ~ 0.5
@@ -62,6 +63,6 @@ function ~/on_impact:
 
     playsound entity.wither.break_block master @a ~ ~ ~ 0.5
     playsound entity.generic.explode master @a ~ ~ ~ 0.5
-    execute as @e[type=item_display,tag=projectfight.items.initial_rotation] if score @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
+    execute as @e[type=item_display,tag=projectfight.items.initial_rotation] if score @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.id:
         kill @s
     kill @s
