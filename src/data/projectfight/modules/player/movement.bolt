@@ -44,16 +44,28 @@ predicate projectfight:player/movement/is_pressing_sneak {
     }
 }
 
+predicate projectfight:player/movement/is_crawling {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "flags": {
+            "is_swimming": true 
+        }
+    }
+}
+
 function ~/init:
     scoreboard objectives add projectfight.player.movement.ledge_grab.cooldown dummy
     scoreboard objectives add projectfight.player.movement.slide.cooldown dummy
     scoreboard objectives add projectfight.player.movement.slide.time dummy
     scoreboard objectives add projectfight.player.movement.slide.shulker.owner dummy
+    scoreboard objectives add projectfight.player.movement.air_dash.cooldown dummy
 
 function ~/tick:
     tag @s add projectfight.player.movement.temp.current_player
     execute if entity @s[tag=!projectfight.player.dead] at @s run function projectfight:player/movement/move
     execute if score @s projectfight.player.movement.ledge_grab.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.ledge_grab.cooldown 1
+    execute if score @s projectfight.player.movement.air_dash.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.air_dash.cooldown 1
     execute if score @s projectfight.player.movement.slide.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.slide.cooldown 1
     execute if score @s projectfight.player.movement.slide.time matches 1..:
         execute
@@ -103,18 +115,20 @@ function ~/move:
     # SLIDING
     execute 
         if predicate projectfight:player/movement/is_pressing_sneak
+        unless block ~ ~-0.1 ~ #air 
+        positioned ~ ~1 ~ if entity @s[dy=0]
+        positioned ~ ~-1 ~
         if score @s projectfight.player.movement.slide.cooldown matches 0
         run function projectfight:player/movement/slide:
             tag @s add projectfight.player.temp.movement.slide
             summon item_display ~ ~1 ~ {Tags:["projectfight.player.movement.slide.shulker_vehicle","projectfight.player.temp.movement.slide.shulker_vehicle"],Passengers:[{id:"minecraft:shulker",NoAI:true,Invulnerable:true,attributes:[{id:"minecraft:scale",base:1.75}],active_effects:[{id:"invisibility",duration:-1,show_particles:false}]}]}
             execute as @n[type=item_display,tag=projectfight.player.temp.movement.slide.shulker_vehicle]:
-
                 scoreboard players operation @s projectfight.player.movement.slide.shulker.owner = @p[tag=projectfight.player.temp.movement.slide] projectfight.player.id
 
             execute positioned 0.0 0.0 0.0 rotated ~ 0 run summon marker ^ ^ ^2 {Tags:["projectfight.player.temp.movement.slide.vector"]}
             execute store result score $x player_motion.api.launch run data get entity @n[type=marker,tag=projectfight.player.temp.movement.slide.vector] Pos[0] 10000
             execute store result score $z player_motion.api.launch run data get entity @n[type=marker,tag=projectfight.player.temp.movement.slide.vector] Pos[2] 10000
-            scoreboard players set $y player_motion.api.launch 0
+            scoreboard players set $y player_motion.api.launch -500
             function player_motion:api/launch_xyz
 
             kill @n[type=marker,tag=projectfight.player.temp.movement.slide.vector]
@@ -125,3 +139,25 @@ function ~/move:
 
             scoreboard players set @s projectfight.player.movement.slide.cooldown 20
             scoreboard players set @s projectfight.player.movement.slide.time 10
+
+    # AIR DASH
+    execute
+        unless score @s projectfight.player.movement.slide.cooldown matches 1..
+        if predicate projectfight:player/movement/is_pressing_sneak
+        if block ~ ~0.1 ~ #air
+        positioned ~ ~1 ~ if entity @s[dy=0]
+        positioned ~ ~-1 ~
+        if score @s projectfight.player.movement.air_dash.cooldown matches 0
+        run function projectfight:player/movement/air_dash:
+            execute positioned 0.0 0.0 0.0 rotated ~ 0 run summon marker ^ ^ ^2 {Tags:["projectfight.player.temp.movement.slide.vector"]}
+            execute store result score $x player_motion.api.launch run data get entity @n[type=marker,tag=projectfight.player.temp.movement.slide.vector] Pos[0] 4000
+            execute store result score $z player_motion.api.launch run data get entity @n[type=marker,tag=projectfight.player.temp.movement.slide.vector] Pos[2] 4000
+            scoreboard players set $y player_motion.api.launch -1000
+            function player_motion:api/launch_xyz
+
+            playsound minecraft:entity.breeze.shoot master @s ~ ~ ~ 0.5
+            playsound minecraft:entity.breeze.idle_air master @s ~ ~ ~ 0.5
+
+            kill @n[type=marker,tag=projectfight.player.temp.movement.slide.vector]
+            scoreboard players set @s projectfight.player.movement.air_dash.cooldown 30
+            scoreboard players set @s projectfight.player.movement.slide.cooldown 10

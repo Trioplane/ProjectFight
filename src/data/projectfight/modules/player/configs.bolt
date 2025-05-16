@@ -8,6 +8,7 @@ default_scores = [
     {"movement.ledge_grab.cooldown": 0},
     {"movement.slide.cooldown": 0},
     {"movement.slide.time": 0},
+    {"movement.air_dash.cooldown": 0},
 ]
 
 default_attributes = [

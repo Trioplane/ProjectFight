@@ -16,7 +16,7 @@ function ~/tick:
 
 function ~/apply_damage:
     # Calculates damage_to_deal and applies it to every player with the tag `projectfight.player.temp.victim`
-    execute as @a[tag=projectfight.player.temp.victim,tag=!projectfight.player.dead]:
+    execute as @a[tag=projectfight.player.temp.victim,tag=!projectfight.player.dead,gamemode=!creative]:
         # damage to deal * victim weakness
         scoreboard players operation @s projectfight.player.damage_to_deal *= @s projectfight.player.weakness_modifier
         # damage to deal * attacker strength
