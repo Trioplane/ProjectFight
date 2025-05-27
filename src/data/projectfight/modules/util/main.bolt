@@ -1,8 +1,33 @@
-predicate projectfight:util/compare_score/items/owner {
+predicate projectfight:util/compare_score/items.owner {
     "condition": "minecraft:entity_scores",
     "entity": "this",
     "scores": {
       "projectfight.items.owner": {
+        "min": {
+          "type": "minecraft:score",
+          "target": {
+            "type": "minecraft:fixed",
+            "name": "#compare_value"
+          },
+          "score": "projectfight.predicate.compare_score"
+        },
+        "max": {
+          "type": "minecraft:score",
+          "target": {
+            "type": "minecraft:fixed",
+            "name": "#compare_value"
+          },
+          "score": "projectfight.predicate.compare_score"
+        }
+      }
+    }
+}
+
+predicate projectfight:util/compare_score/player.movement.slide.shulker.owner {
+    "condition": "minecraft:entity_scores",
+    "entity": "this",
+    "scores": {
+      "projectfight.player.movement.slide.shulker.owner": {
         "min": {
           "type": "minecraft:score",
           "target": {

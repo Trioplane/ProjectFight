@@ -62,26 +62,22 @@ function ~/init:
     scoreboard objectives add projectfight.player.movement.air_dash.cooldown dummy
 
 function ~/tick:
-    tag @s add projectfight.player.movement.temp.current_player
     execute if entity @s[tag=!projectfight.player.dead] at @s run function projectfight:player/movement/move
+    scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.player.id
     execute if score @s projectfight.player.movement.ledge_grab.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.ledge_grab.cooldown 1
     execute if score @s projectfight.player.movement.air_dash.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.air_dash.cooldown 1
     execute if score @s projectfight.player.movement.slide.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.slide.cooldown 1
     execute if score @s projectfight.player.movement.slide.time matches 1..:
         execute
             at @s 
-            as @e[type=item_display,tag=projectfight.player.movement.slide.shulker_vehicle] 
-            if score @s projectfight.player.movement.slide.shulker.owner = @p[tag=projectfight.player.movement.temp.current_player] projectfight.player.id
+            as @e[type=item_display,tag=projectfight.player.movement.slide.shulker_vehicle,predicate=projectfight:util/compare_score/player.movement.slide.shulker.owner]
             positioned ~ ~1 ~ rotated ~ 0:
                 tp @s ^ ^ ^1
-                say but am i really alive
         scoreboard players remove @s projectfight.player.movement.slide.time 1
-    execute if score @s projectfight.player.movement.slide.time matches 0 as @e[type=item_display,tag=projectfight.player.movement.slide.shulker_vehicle] at @s:
+    execute if score @s projectfight.player.movement.slide.time matches 0 as @e[type=item_display,tag=projectfight.player.movement.slide.shulker_vehicle,predicate=projectfight:util/compare_score/player.movement.slide.shulker.owner] at @s:
         tp @s ~ -256 ~
         execute on passengers run kill @s
         kill @s
-            
-    tag @s remove projectfight.player.movement.temp.current_player  
 
 def player_motion_launch_xyz(x,y,z):
     scoreboard players set $x player_motion.api.launch x
@@ -123,13 +119,9 @@ function ~/move:
         if score @s projectfight.player.movement.slide.cooldown matches 0
         run function projectfight:player/movement/slide:
             tag @s add projectfight.player.temp.movement.slide
-            say it should summon item display
             summon item_display ~ ~1 ~ {Tags:["projectfight.player.movement.slide.shulker_vehicle","projectfight.player.temp.movement.slide.shulker_vehicle"],Passengers:[{id:"minecraft:shulker",NoAI:true,Invulnerable:true,attributes:[{id:"minecraft:scale",base:1.75}],active_effects:[{id:"invisibility",duration:-1,show_particles:false}]}]}
             execute as @n[type=item_display,tag=projectfight.player.temp.movement.slide.shulker_vehicle]:
                 scoreboard players operation @s projectfight.player.movement.slide.shulker.owner = @p[tag=projectfight.player.temp.movement.slide] projectfight.player.id
-                say it summoned an item display
-                execute on passengers run say am i alive
-                execute on passengers run tellraw @a {entity: "@s", nbt: "Pos"}
 
             execute positioned 0.0 0.0 0.0 rotated ~ 0 run summon marker ^ ^ ^2 {Tags:["projectfight.player.temp.movement.slide.vector"]}
             execute store result score $x player_motion.api.launch run data get entity @n[type=marker,tag=projectfight.player.temp.movement.slide.vector] Pos[0] 10000
