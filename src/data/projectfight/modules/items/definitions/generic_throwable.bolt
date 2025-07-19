@@ -3,10 +3,10 @@ function ~/use:
 
     execute anchored eyes at @s: 
         summon marker ^ ^ ^5 {Tags:["projectfight.utils.temp"]}
-        summon item_display ^ ^ ^1.5 {
+        summon item_display ^ ^ ^1 {
             Tags: ["projectfight.items.generic_throwable", "projectfight.items", "projectfight.items.temp",],
             item: { id: "popped_chorus_fruit" },
-            teleport_duration: 1
+            teleport_duration: 2
         }
 
     execute as @n[type=item_display,tag=projectfight.items.temp]: 
@@ -37,7 +37,7 @@ function ~/movement_step:
     execute store result storage projectfight:items temp.item.velocity.vertical float 0.001 run scoreboard players get @s projectfight.items.velocity.vertical
     execute store result storage projectfight:items temp.item.velocity.sideward float 0.001 run scoreboard players get @s projectfight.items.velocity.sideward
 
-    function projectfight:items/movement/move with storage projectfight:items temp.item.velocity
+    function projectfight:items/movement/move/gravity with storage projectfight:items temp.item.velocity
 
     execute unless score @s projectfight.items.velocity.horizontal matches ..0 run scoreboard players operation @s projectfight.items.velocity.horizontal += .acceleration.horizontal projectfight.items.config.generic_throwable
     execute unless score @s projectfight.items.velocity.vertical matches ..-2000 run scoreboard players operation @s projectfight.items.velocity.vertical += .acceleration.vertical projectfight.items.config.generic_throwable
@@ -57,7 +57,7 @@ function ~/on_impact:
         scoreboard players set @s projectfight.player.damage_to_deal 25
     function projectfight:player/health/apply_damage
 
-    particle campfire_cosy_smoke ~ ~ ~ 0.2 0.2 0.2 0.3 10
+    particle campfire_cosy_smoke ~ ~ ~ 1 1 1 0.3 10
     particle poof ~ ~ ~ 0.3 0.3 0.3 0.2 15
     particle flash ~ ~ ~ 0 0 0 0 1
 

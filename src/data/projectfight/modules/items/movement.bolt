@@ -2,13 +2,20 @@ function ~/init:
     scoreboard objectives add projectfight.items.velocity.horizontal dummy
     scoreboard objectives add projectfight.items.velocity.vertical dummy
     scoreboard objectives add projectfight.items.velocity.sideward dummy
+    scoreboard objectives add projectfight.items.speed dummy
 
+def add_movement_function(item_name):
+    execute as @e[type=item_display,tag=f"projectfight.items.{item_name}"] at @s run function f"projectfight:items/definitions/{item_name}/movement_step"
 function ~/run_movement_functions:
-    execute as @e[type=item_display,tag=projectfight.items.generic_throwable] at @s run function projectfight:items/definitions/generic_throwable/movement_step
-    execute as @e[type=item_display,tag=projectfight.items.generic_hold_throwable] at @s run function projectfight:items/definitions/generic_hold_throwable/movement_step 
-
-function ~/move:
+    add_movement_function("generic_throwable")
+    add_movement_function("generic_hold_throwable")
+    add_movement_function("generic_throwable_no_gravity")
+    
+function ~/move/gravity:
     scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.items.id
     $execute rotated as @e[type=item_display,tag=projectfight.items.initial_rotation,predicate=projectfight:util/compare_score/items.owner,limit=1] positioned ~ ~$(vertical) ~ positioned ^$(sideward) ^ ^$(horizontal) positioned ~ ~$(vertical) ~ run summon marker ^$(sideward) ^ ^$(horizontal) {Tags:["projectfight.items.temp.rotation_point"]}
     $execute rotated as @e[type=item_display,tag=projectfight.items.initial_rotation,predicate=projectfight:util/compare_score/items.owner,limit=1] positioned ~ ~$(vertical) ~ run tp @s ^$(sideward) ^ ^$(horizontal) facing entity @n[type=marker,tag=projectfight.items.temp.rotation_point]
     kill @n[type=marker,tag=projectfight.items.temp.rotation_point]
+
+function ~/move/no_gravity:
+    $tp @s ^ ^ ^$(speed)

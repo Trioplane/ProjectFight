@@ -6,11 +6,17 @@
     "require": ["bolt"],
     "data_pack": {
       "load": ["./src"],
-      "pack_format": 71
+      "pack_format": 81,
+      "filter": {
+        "block": [
+          { "namespace": "minecraft", "path": "recipe/.*" },
+          { "namespace": "minecraft", "path": "advancement/.*" }
+        ]
+      }
     },
     "resource_pack": {
       "load": ["./src"],
-      "pack_format": 55
+      "pack_format": 64
     },
     "pipeline": ["mecha", "beet.contrib.load"],
     "output": "./build",
