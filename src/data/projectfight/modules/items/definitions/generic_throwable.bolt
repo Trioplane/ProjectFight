@@ -33,6 +33,8 @@ function ~/use:
     tag @s remove projectfight.player.items.temp.owner
 
 function ~/movement_step:
+    execute at @s run function projectfight:items/definitions/generic_throwable/collision_check
+
     execute store result storage projectfight:items temp.item.velocity.horizontal float 0.001 run scoreboard players get @s projectfight.items.velocity.horizontal
     execute store result storage projectfight:items temp.item.velocity.vertical float 0.001 run scoreboard players get @s projectfight.items.velocity.vertical
     execute store result storage projectfight:items temp.item.velocity.sideward float 0.001 run scoreboard players get @s projectfight.items.velocity.sideward
@@ -43,8 +45,6 @@ function ~/movement_step:
     execute unless score @s projectfight.items.velocity.vertical matches ..-2000 run scoreboard players operation @s projectfight.items.velocity.vertical += .acceleration.vertical projectfight.items.config.generic_throwable
     scoreboard players operation @s projectfight.items.velocity.sideward += .acceleration.sideward projectfight.items.config.generic_throwable
 
-    execute at @s run function projectfight:items/definitions/generic_throwable/collision_check
-
 function ~/collision_check:
     execute if function projectfight:items/collision/check/basic run function projectfight:items/definitions/generic_throwable/on_impact
 
@@ -52,9 +52,11 @@ function ~/on_impact:
     tag @s add projectfight.items.temp.impact
     execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
         tag @s add projectfight.player.temp.attacker
+
     execute as @a[distance=..5]:
         tag @s add projectfight.player.temp.victim
-        scoreboard players set @s projectfight.player.damage_to_deal 25
+        scoreboard players operation @s projectfight.player.damage_to_deal = .damage projectfight.items.config.generic_throwable
+
     function projectfight:player/health/apply_damage
 
     particle campfire_cosy_smoke ~ ~ ~ 1 1 1 0.3 10
@@ -65,4 +67,5 @@ function ~/on_impact:
     playsound entity.generic.explode master @a ~ ~ ~ 0.5
     execute as @e[type=item_display,tag=projectfight.items.initial_rotation] if score @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.id:
         kill @s
+
     kill @s

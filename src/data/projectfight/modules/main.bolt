@@ -1,10 +1,11 @@
 function projectfight:load:
     tellraw @a {"text":"[ProjectFight] datapack reloaded"}
 
+    function projectfight:load/set_global_rules
     function projectfight:player/main/init
     function projectfight:items/main/init
-    function projectfight:load/set_global_rules
     function projectfight:util/main/init
+    function projectfight:match/main/init
 
 function projectfight:load/set_global_rules:
     gamerule disableElytraMovementCheck true
@@ -37,3 +38,4 @@ function projectfight:tick:
     execute as @a:
         function projectfight:player/main/tick
     function projectfight:items/main/tick
+    function projectfight:match/main/tick

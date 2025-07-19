@@ -24,10 +24,10 @@ function ~/use:
     tag @s remove projectfight.player.items.temp.owner
 
 function ~/movement_step:
+    execute at @s run function projectfight:items/definitions/generic_throwable_no_gravity/collision_check
+    
     execute store result storage projectfight:items temp.item.speed float 0.001 run scoreboard players get @s projectfight.items.speed
     function projectfight:items/movement/move/no_gravity with storage projectfight:items temp.item
-
-    execute at @s run function projectfight:items/definitions/generic_throwable_no_gravity/collision_check
 
 function ~/collision_check:
     execute if function projectfight:items/collision/check/basic_extended run function projectfight:items/definitions/generic_throwable_no_gravity/on_impact

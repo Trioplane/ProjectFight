@@ -1,0 +1,22 @@
+function ~/init:
+    function projectfight:match/loadout/init
+
+    scoreboard objectives add projectfight.match dummy
+
+    scoreboard players add .active projectfight.match 0
+    scoreboard players add .dice_timer projectfight.match 0
+
+function ~/tick:
+    execute if score .active projectfight.match matches 1:
+        function projectfight:match/dice/tick
+
+        execute if score .dice_timer projectfight.match matches 1.. run scoreboard players remove .dice_timer projectfight.match 1
+        execute unless score .dice_timer projectfight.match matches 1..:
+            execute
+                at @e[type=marker,tag=projectfight.dice.spawner,sort=random,limit=3]
+                positioned ~ ~1.5 ~
+                unless entity @n[type=block_display,tag=projectfight.dice,distance=..1]:
+                    function projectfight:match/dice/spawn
+            scoreboard players set .dice_timer projectfight.match 20
+
+    

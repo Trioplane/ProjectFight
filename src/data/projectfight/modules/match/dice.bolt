@@ -1,0 +1,18 @@
+function ~/spawn:
+    summon block_display ~ ~ ~ {Tags:["projectfight.dice"],block_state:{Name:"ender_chest"}}
+
+function ~/tick:
+    execute 
+        as @e[type=block_display,tag=projectfight.dice] 
+        if entity @p[tag=!projectfight.player.dead,distance=..2] at @s:
+            function ~/../collect
+
+function ~/collect:
+    execute as @p[tag=!projectfight.player.dead,distance=..2] at @s:
+        function projectfight:match/loadout/get_item
+        playsound minecraft:block.beacon.power_select block @s
+        playsound minecraft:entity.firework_rocket.twinkle block @s ~ ~ ~ 1 1.5
+        playsound minecraft:entity.arrow.hit_player block @s
+
+    particle minecraft:firework ~ ~ ~ 0.5 0.5 0.5 0.3 30
+    particle minecraft:flash ~ ~ ~ 0 0 0 1 1

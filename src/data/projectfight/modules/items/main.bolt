@@ -66,7 +66,7 @@ function ~/give_id:
 function ~/give_item:
     execute store result storage projectfight:items temp.player.id int 1 run scoreboard players get @s projectfight.player.id
     $data modify storage projectfight:items temp.player.item_to_give set value "$(item)"
-    function ~/../give_item/give with storage projectfight:items temp.player
+    function ~/set_item with storage projectfight:items temp.player
     give @s amethyst_shard[custom_data={projectfight:{is_item:true}},consumable={consume_seconds:99999999}]
 
 function ~/give_item/set_item:
