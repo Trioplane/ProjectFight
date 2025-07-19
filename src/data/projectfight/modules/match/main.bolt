@@ -14,7 +14,7 @@ function ~/tick:
         execute unless score .dice_timer projectfight.match matches 1..:
             execute
                 at @e[type=marker,tag=projectfight.dice.spawner,sort=random,limit=3]
-                positioned ~ ~1.5 ~
+                positioned ~ ~1.25 ~
                 unless entity @n[type=block_display,tag=projectfight.dice,distance=..1]:
                     function projectfight:match/dice/spawn
             scoreboard players set .dice_timer projectfight.match 20
