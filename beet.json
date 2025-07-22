@@ -15,7 +15,7 @@
       }
     },
     "resource_pack": {
-      "load": ["./src"],
+      "load": ["./src", "./libs/*"],
       "pack_format": 64
     },
     "pipeline": ["mecha", "beet.contrib.load"],
