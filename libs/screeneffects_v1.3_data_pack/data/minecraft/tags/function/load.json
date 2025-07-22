@@ -1,6 +1,5 @@
 {
   "values": [
-    "scrfx:zinternals/load",
-    "example:load"
+    "scrfx:zinternals/load"
   ]
 }

@@ -3,27 +3,34 @@
     "description": "WIP",
     "version": "v0.0.1",
     "author": "Trplnr",
-    "require": ["bolt"],
     "data_pack": {
-      "load": ["./src"],
-      "pack_format": 81,
-      "filter": {
-        "block": [
-          { "namespace": "minecraft", "path": "recipe/.*" },
-          { "namespace": "minecraft", "path": "advancement/.*" }
-        ]
-      }
+      "load": ["./libs/*"]
     },
     "resource_pack": {
-      "load": ["./src", "./libs/*"],
-      "pack_format": 64
+      "load": ["./libs/*"]
     },
-    "pipeline": ["mecha", "beet.contrib.load"],
-    "output": "./build",
-    "meta": {
-      "bolt": {"entrypoint": "projectfight:*"},
-      "load": {
-        "data_pack": "./libs/*"
+    "pipeline": [
+      {
+        "require": ["bolt"],
+        "data_pack": {
+          "load": ["./src"],
+          "pack_format": 81,
+          "filter": {
+            "block": [
+              { "namespace": "minecraft", "path": "recipe/.*" },
+              { "namespace": "minecraft", "path": "advancement/.*" }
+            ]
+          }
+        },
+        "resource_pack": {
+          "load": ["./src"],
+          "pack_format": 64
+        },
+        "pipeline": ["mecha"],
+        "meta": {
+          "bolt": {"entrypoint": "projectfight:*"}
+        }
       }
-    }
+    ],
+    "output": "./build"
 }
