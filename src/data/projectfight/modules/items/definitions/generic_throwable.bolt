@@ -5,7 +5,7 @@ function ~/use:
         summon marker ^ ^ ^5 {Tags:["projectfight.utils.temp"]}
         summon item_display ^ ^ ^1 {
             Tags: ["projectfight.items.generic_throwable", "projectfight.items", "projectfight.items.temp",],
-            item: { id: "popped_chorus_fruit" },
+            item: { id: "popped_chorus_fruit", components: { item_model: "projectfight:items/generic_throwable" } },
             teleport_duration: 2
         }
 

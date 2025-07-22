@@ -1,17 +1,134 @@
+function ~/init:
+    scoreboard objectives add projectfight.player.joining.start_intro.first_join trigger
+    scoreboard objectives add projectfight.player.joining.start_intro.rejoin trigger
+
 function projectfight:player/joining/first_join:
     execute store result score @s projectfight.player.id run scoreboard players add .projectfight.var.nextid projectfight.player.id 1
     tag @s add projectfight.player.initv0.0.1
     function projectfight:player/joining/common
+    scoreboard players enable @s projectfight.player.joining.start_intro.first_join
+    effect give @s blindness infinite 1 true
+    dialog show @s projectfight:player/joining/wait_for_resource_pack/first_join
     tellraw @s {"text":"[ProjectFight] player initalized"}
 
-function projectfight:player/joining/rejoin:
+function projectfight:player/joining/prejoin:
     scoreboard players set @s projectfight.player.left_game 0
+    scoreboard players enable @s projectfight.player.joining.start_intro.rejoin
+    effect give @s blindness infinite 1 true
+    dialog show @s projectfight:player/joining/wait_for_resource_pack/rejoin
     function projectfight:player/joining/common
-    tellraw @s {"text":"[ProjectFight] player rejoined"}
+
+function projectfight:player/joining/start_intro/first_join:
+    scoreboard players set @s projectfight.player.joining.start_intro.first_join 0
+    data modify storage scrfx:in id set value "projectfight:trplnr_opening"
+    function scrfx:play
+    effect clear @s blindness
+    tellraw @s {"text":"[ProjectFight] new player"}
+
+function projectfight:player/joining/start_intro/rejoin:
+    scoreboard players set @s projectfight.player.joining.start_intro.rejoin 0
+    data modify storage scrfx:in id set value "projectfight:trplnr_opening"
+    function scrfx:play
+    effect clear @s blindness
+    tellraw @s {"text":"[ProjectFight] player rejoined."}
 
 function projectfight:player/joining/common:
     function projectfight:player/configs/apply_configs
 
 function projectfight:player/joining/listen:
-    execute as @s[tag=projectfight.player.initv0.0.1,scores={projectfight.player.left_game=1..}] run return run function projectfight:player/joining/rejoin
+    execute as @s[tag=projectfight.player.initv0.0.1,scores={projectfight.player.left_game=1..}] run return run function projectfight:player/joining/prejoin
     execute as @s[tag=!projectfight.player.initv0.0.1] run return run function projectfight:player/joining/first_join
+
+function projectfight:player/joining/tick:
+    execute if score @s projectfight.player.joining.start_intro.first_join matches 1..:
+        function projectfight:player/joining/start_intro/first_join
+    execute if score @s projectfight.player.joining.start_intro.rejoin matches 1..:
+        function projectfight:player/joining/start_intro/rejoin
+
+dialog projectfight:player/joining/wait_for_resource_pack/first_join {
+    "type": "minecraft:multi_action",
+    "title": {
+        "text": ""
+    },
+    "body": [
+        {
+            "type": "minecraft:plain_message",
+            "contents": [
+                "\n\n\n\n\n",
+                {
+                    "translate": "projectfight.prejoin.wait_for_resource_pack",
+                    "fallback": "Please §b§lwait for the pack to load§r before playing."
+                }
+            ],
+            "width": 300
+        }
+    ],
+    "can_close_with_escape": true,
+    "pause": false,
+    "after_action": "close",
+    "exit_action": {
+        "label": "",
+        "width": 1,
+        "action": {
+            "type": "minecraft:run_command",
+            "command": "trigger projectfight.player.joining.start_intro.rejoin"
+        }
+    },
+    "actions": [
+        {
+            "label": {
+                "translate": "projectfight.prejoin.wait_for_resource_pack.button",
+                "fallback": "Please wait..."
+            },
+            "width": 100,
+            "action": {
+                "type": "minecraft:run_command",
+                "command": "trigger projectfight.player.joining.start_intro.first_join"
+            }
+        }
+    ]
+}
+
+dialog projectfight:player/joining/wait_for_resource_pack/rejoin {
+    "type": "minecraft:multi_action",
+    "title": {
+        "text": ""
+    },
+    "body": [
+        {
+            "type": "minecraft:plain_message",
+            "contents": [
+                "\n\n\n\n\n",
+                {
+                    "translate": "projectfight.prejoin.wait_for_resource_pack",
+                    "fallback": "Please §b§lwait for the pack to load§r before playing."
+                }
+            ],
+            "width": 300
+        }
+    ],
+    "can_close_with_escape": true,
+    "pause": false,
+    "after_action": "close",
+    "exit_action": {
+        "label": "",
+        "width": 1,
+        "action": {
+            "type": "minecraft:run_command",
+            "command": "trigger projectfight.player.joining.start_intro.rejoin"
+        }
+    },
+    "actions": [
+        {
+            "label": {
+                "translate": "projectfight.prejoin.wait_for_resource_pack.button",
+                "fallback": "Please wait..."
+            },
+            "width": 100,
+            "action": {
+                "type": "minecraft:run_command",
+                "command": "trigger projectfight.player.joining.start_intro.rejoin"
+            }
+        }
+    ]
+}

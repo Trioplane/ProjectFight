@@ -24,6 +24,7 @@
         },
         "resource_pack": {
           "load": ["./src"],
+          "zipped": true,
           "pack_format": 64
         },
         "pipeline": ["mecha"],

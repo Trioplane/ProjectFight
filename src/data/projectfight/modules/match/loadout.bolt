@@ -9,7 +9,6 @@ function ~/get_item:
     function ~/get_random_number with storage projectfight:match loadout
     function ~/select_item with storage projectfight:match temp
     function projectfight:items/main/give_item with storage projectfight:match loadout
-    tellraw @s [{text:"You got "},{storage:"projectfight:match",nbt:"loadout.item"}]
 
 function ~/get_item/get_random_number:
     $execute store result storage projectfight:match temp.random_number int 1 run random value 0..$(length)
