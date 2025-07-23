@@ -16,10 +16,10 @@ predicate projectfight:is_in_kill_plane {
 function ~/check/basic:
     execute if predicate projectfight:is_in_kill_plane run return 1
     execute as @s[tag=projectfight.items.marked_for_collision] run return 1
-    execute if score @s projectfight.items.despawn_timer matches 500 run return 1
+    execute if score @s projectfight.items.age matches 500.. run return 1
 
     # ENTITY CHECKS
-    execute as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
+    execute if score @s projectfight.items.age matches 3.. as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
 
     # BLOCK CHECKS
     execute unless block ~ ~ ~ #air run return 1
@@ -36,10 +36,10 @@ function ~/check/basic:
 function ~/check/basic_extended:
     execute if predicate projectfight:is_in_kill_plane run return 1
     execute as @s[tag=projectfight.items.marked_for_collision] run return 1
-    execute if score @s projectfight.items.despawn_timer matches 500 run return 1
+    execute if score @s projectfight.items.age matches 500.. run return 1
 
     # ENTITY CHECKS
-    execute as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
+    execute if score @s projectfight.items.age matches 3.. as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
 
     # BLOCK CHECKS
     execute unless block ~ ~ ~ #air run return 1

@@ -1,55 +1,63 @@
-function ~/use:
-    tag @s add projectfight.player.items.temp.owner
+from ./generic_throwable import ItemGenericThrowable
 
-    execute anchored eyes at @s: 
-        summon marker ^ ^ ^5 {Tags:["projectfight.utils.temp"]}
-        summon item_display ^ ^ ^1.5 {
-            Tags: ["projectfight.items.generic_throwable_no_gravity", "projectfight.items", "projectfight.items.temp",],
-            item: { id: "popped_chorus_fruit", components: { item_model: "projectfight:items/generic_throwable_no_gravity" } },
-            teleport_duration: 2
-        }
+class ItemGenericThrowableNoGravity(ItemGenericThrowable):
+    def __init__(self, item_name, config, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None) :
+        super().__init__(item_name, config, insert_on_use, insert_on_movement_step, insert_on_impact)
 
-    execute as @n[type=item_display,tag=projectfight.items.temp]: 
-        rotate @s facing entity @n[type=marker,tag=projectfight.utils.temp]
+    def use(self):
+        tag @s add projectfight.player.items.temp.owner
 
-        scoreboard players operation @s projectfight.items.speed = .speed projectfight.items.config.generic_throwable_no_gravity
-        function projectfight:items/main/give_id
-        scoreboard players operation @s projectfight.items.owner = @p[tag=projectfight.player.items.temp.owner] projectfight.player.id
+        execute anchored eyes at @s: 
+            summon marker ^ ^ ^5 {Tags:["projectfight.utils.temp"]}
+            summon item_display ^ ^ ^1 {
+                Tags: [f"projectfight.items.{self.item_name}", "projectfight.items", "projectfight.items.temp",],
+                item: { id: "popped_chorus_fruit", components: { item_model: f"projectfight:items/{self.item_name}" } },
+                teleport_duration: 2
+            }
 
-    playsound minecraft:entity.shulker.shoot master @a ~ ~ ~ 0.5
-    playsound minecraft:entity.arrow.shoot master @a ~ ~ ~ 0.5
+        execute as @n[type=item_display,tag=projectfight.items.temp]: 
+            rotate @s facing entity @n[type=marker,tag=projectfight.utils.temp]
 
-    kill @n[type=marker,tag=projectfight.utils.temp]
-    tag @n[type=item_display,tag=projectfight.items.temp] remove projectfight.items.temp
-    tag @s remove projectfight.player.items.temp.owner
+            scoreboard players set @s projectfight.items.speed self.config.speed
+            function projectfight:items/main/give_id
+            scoreboard players operation @s projectfight.items.owner = @p[tag=projectfight.player.items.temp.owner] projectfight.player.id
 
-function ~/movement_step:
-    execute at @s run function projectfight:items/definitions/generic_throwable_no_gravity/collision_check
+        if self.insert_on_use: 
+            self.insert_on_use(self)
+
+        kill @n[type=marker,tag=projectfight.utils.temp]
+        tag @n[type=item_display,tag=projectfight.items.temp] remove projectfight.items.temp
+        tag @s remove projectfight.player.items.temp.owner
+
+    def movement_step(self):
+        execute at @s if function projectfight:items/collision/check/basic_extended run function f"projectfight:items/definitions/{self.item_name}/on_impact"
     
-    execute store result storage projectfight:items temp.item.speed float 0.001 run scoreboard players get @s projectfight.items.speed
-    function projectfight:items/movement/move/no_gravity with storage projectfight:items temp.item
+        if self.insert_on_movement_step: 
+            self.insert_on_movement_step(self)
 
-function ~/collision_check:
-    execute if function projectfight:items/collision/check/basic_extended run function projectfight:items/definitions/generic_throwable_no_gravity/on_impact
+        execute store result storage projectfight:items temp.item.speed float 0.001 run scoreboard players get @s projectfight.items.speed
+        function projectfight:items/movement/move/no_gravity with storage projectfight:items temp.item
 
-function ~/on_impact:
-    tag @s add projectfight.items.temp.impact
-    execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
-        tag @s add projectfight.player.temp.attacker
+    def on_impact(self):
+        tag @s add projectfight.items.temp.impact
+        execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
+            tag @s add projectfight.player.temp.attacker
+    
+        execute as @a[distance=(None, self.config.on_impact.aoe_range)]:
+            tag @s add projectfight.player.temp.victim
+            scoreboard players add @s projectfight.player.damage_to_deal self.config.on_impact.damage
+    
+        function projectfight:player/health/apply_damage
 
-    execute as @a[distance=..5]:
-        tag @s add projectfight.player.temp.victim
-        scoreboard players operation @s projectfight.player.damage_to_deal = .damage projectfight.items.config.generic_throwable_no_gravity
+        if self.insert_on_impact: 
+            self.insert_on_impact(self)
 
-    function projectfight:player/health/apply_damage
-
-    particle campfire_cosy_smoke ~ ~ ~ 1 1 1 0.3 10
-    particle poof ~ ~ ~ 0.3 0.3 0.3 0.2 15
-    particle flash ~ ~ ~ 0 0 0 0 1
-
-    playsound entity.wither.break_block master @a ~ ~ ~ 0.5
-    playsound entity.generic.explode master @a ~ ~ ~ 0.5
-    execute as @e[type=item_display,tag=projectfight.items.initial_rotation] if score @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.id:
         kill @s
 
-    kill @s
+ItemGenericThrowableNoGravity("generic_throwable_no_gravity", {
+    speed: 3000,
+    on_impact: {
+        aoe_range: 3,
+        damage: 25
+    }
+}).build()

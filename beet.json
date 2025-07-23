@@ -11,7 +11,7 @@
     },
     "pipeline": [
       {
-        "require": ["bolt"],
+        "require": ["bolt", "bolt_expressions"],
         "data_pack": {
           "load": ["./src"],
           "pack_format": 81,

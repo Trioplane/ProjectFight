@@ -3,13 +3,6 @@ function ~/init:
     scoreboard objectives add projectfight.items.velocity.vertical dummy
     scoreboard objectives add projectfight.items.velocity.sideward dummy
     scoreboard objectives add projectfight.items.speed dummy
-
-def add_movement_function(item_name):
-    execute as @e[type=item_display,tag=f"projectfight.items.{item_name}"] at @s run function f"projectfight:items/definitions/{item_name}/movement_step"
-function ~/run_movement_functions:
-    add_movement_function("generic_throwable")
-    add_movement_function("generic_hold_throwable")
-    add_movement_function("generic_throwable_no_gravity")
     
 function ~/move/gravity:
     scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.items.id

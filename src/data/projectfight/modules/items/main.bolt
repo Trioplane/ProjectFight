@@ -1,37 +1,18 @@
-advancement projectfight:use_item {
-  "criteria": {
-    "use_item": {
-      "trigger": "minecraft:using_item",
-      "conditions": {
-        "item": {
-          "predicates": {
-            "minecraft:custom_data": {
-              "projectfight": { "is_item": true }
-            }
-          }
-        }
-      }
-    }
-  },
-  "rewards": {
-    "function": "projectfight:items/main/use_item"
-  }
-}
+from bolt_expressions import Scoreboard
 
 function ~/init:
     scoreboard objectives add projectfight.player.item.is_using dummy
     scoreboard objectives add projectfight.player.item.using_time dummy
     scoreboard objectives add projectfight.player.item.has_item dummy
     scoreboard objectives add projectfight.items.id dummy
-    scoreboard objectives add projectfight.items.despawn_timer dummy
+    scoreboard objectives add projectfight.items.age dummy
 
     scoreboard objectives add projectfight.items.owner dummy
 
     function projectfight:items/movement/init
-    function projectfight:items/registry/register
 
 function ~/tick:
-    execute as @e[type=item_display,tag=projectfight.items] scoreboard players add @s projectfight.items.despawn_timer 1
+    execute as @e[type=item_display,tag=projectfight.items] scoreboard players add @s projectfight.items.age 1
     function projectfight:items/movement/run_movement_functions
 
 function ~/use_item:
@@ -72,3 +53,72 @@ function ~/give_item:
 
 function ~/give_item/set_item:
     $data modify storage projectfight:players "$(id)".current_item.item_name set value "$(item_to_give)"
+
+advancement projectfight:use_item {
+  "criteria": {
+    "use_item": {
+      "trigger": "minecraft:using_item",
+      "conditions": {
+        "item": {
+          "predicates": {
+            "minecraft:custom_data": {
+              "projectfight": { "is_item": true }
+            }
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "projectfight:items/main/use_item"
+  }
+}
+
+class Item:
+    def __init__(self, item_name, config):
+        self.item_name = item_name
+        self.config = config
+
+    def use(self):
+        tag @s add projectfight.player.items.temp.owner
+
+        execute anchored eyes at @s: 
+            summon marker ^ ^ ^5 {Tags:["projectfight.utils.temp"]}
+            summon item_display ^ ^ ^1 {
+                Tags: [f"projectfight.items.{self.item_name}", "projectfight.items", "projectfight.items.temp",],
+                item: { id: "popped_chorus_fruit", components: { item_model: f"projectfight:items/{self.item_name}" } },
+                teleport_duration: 2
+            }
+
+        kill @n[type=marker,tag=projectfight.utils.temp]
+        tag @n[type=item_display,tag=projectfight.items.temp] remove projectfight.items.temp
+        tag @s remove projectfight.player.items.temp.owner
+
+    def movement_step(self):
+        execute if function projectfight:items/collision/check/basic run function f"projectfight:items/definitions/{self.item_name}/on_impact"
+    
+    def on_impact(self):
+        tag @s add projectfight.items.temp.impact
+        execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
+            tag @s add projectfight.player.temp.attacker
+    
+        execute as @a[distance=(None, self.config.on_impact.aoe_range)]:
+            tag @s add projectfight.player.temp.victim
+            scoreboard players set @s projectfight.player.damage_to_deal self.config.on_impact.damage
+    
+        function projectfight:player/health/apply_damage
+    
+        kill @s
+    
+    def build(self):
+        function f"projectfight:items/definitions/{self.item_name}/use":
+            self.use()
+        
+        function f"projectfight:items/definitions/{self.item_name}/movement_step":
+            self.movement_step()
+
+        function f"projectfight:items/definitions/{self.item_name}/on_impact":
+            self.on_impact()
+
+        append function projectfight:items/main/tick:
+            execute as @e[type=item_display,tag=f"projectfight.items.{self.item_name}"] at @s run function f"projectfight:items/definitions/{self.item_name}/movement_step"
