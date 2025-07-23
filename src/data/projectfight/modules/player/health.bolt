@@ -45,6 +45,8 @@ function ~/kill:
 
     execute unless entity @p[tag=projectfight.player.temp.attacker] run tellraw @s "An unknown force killed you."
 
+    tag @s remove projectfight.player.knockback_stunned
+    function projectfight:player/movement/knockback/disable
     scoreboard players set @s projectfight.player.death_timer 100
     gamemode spectator @s
 

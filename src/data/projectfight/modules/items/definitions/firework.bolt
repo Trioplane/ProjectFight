@@ -1,0 +1,31 @@
+from ./generic_throwable_no_gravity import ItemGenericThrowableNoGravity
+
+def on_use(self):
+    playsound minecraft:entity.firework_rocket.shoot master @s
+    playsound minecraft:entity.firework_rocket.launch master @s
+
+def on_movement_step(self):
+    playsound minecraft:entity.silverfish.ambient master @a ~ ~ ~ 0.5 1.5
+    particle minecraft:firework
+
+def on_impact(self):
+    particle minecraft:flash
+    particle minecraft:firework ~ ~ ~ 0 0 0 0.4 20
+    playsound minecraft:entity.firework_rocket.large_blast master @a
+    playsound minecraft:entity.firework_rocket.blast master @a
+    playsound minecraft:entity.firework_rocket.twinkle master @a
+
+ItemGenericThrowableNoGravity(
+    "firework", 
+    {
+        speed: 3000,
+        on_impact: {
+            aoe_range: 3,
+            damage: 15,
+            knockback_strength: 10
+        }
+    }, 
+    insert_on_use = on_use, 
+    insert_on_movement_step = on_movement_step, 
+    insert_on_impact = on_impact
+).build()

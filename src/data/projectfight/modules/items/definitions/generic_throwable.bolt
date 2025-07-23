@@ -1,4 +1,5 @@
 from ../main import Item
+from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 from bolt_expressions import Scoreboard
 
 class ItemGenericThrowable(Item):
@@ -83,8 +84,13 @@ class ItemGenericThrowable(Item):
         execute as @a[distance=(None, self.config.on_impact.aoe_range)]:
             tag @s add projectfight.player.temp.victim
             scoreboard players add @s projectfight.player.damage_to_deal self.config.on_impact.damage
-    
-        function projectfight:player/health/apply_damage
+            execute
+                facing entity @s eyes 
+                positioned 0.0 0.0 0.0 
+                run tp KNOCKBACK_PUSH_VECTOR_ENTITY ^ ^ ^self.config.on_impact.knockback_strength ~ ~
+            function projectfight:player/movement/knockback/apply
+
+        function projectfight:player/health/apply_damage        
 
         if self.insert_on_impact:
             self.insert_on_impact(self)
@@ -107,6 +113,7 @@ ItemGenericThrowable("generic_throwable", {
     },
     on_impact: {
         aoe_range: 5,
+        knockback_strength: 20,
         damage: 25
     }
 }).build()

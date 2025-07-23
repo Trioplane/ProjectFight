@@ -25,6 +25,7 @@ ItemGenericHoldThrowable("generic_hold_throwable", {
     },
     on_impact: {
         aoe_range: 7,
+        knockback_strength: 35,
         damage: 50
     },
     hold_duration: 60

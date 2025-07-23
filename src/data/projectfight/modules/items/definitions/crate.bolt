@@ -21,6 +21,7 @@ ItemGenericThrowable("crate", {
     },
     on_impact: {
         aoe_range: 6,
+        knockback_strength: 35,
         damage: 20
     }
 }, insert_on_use = on_use, insert_on_impact = on_impact).build()

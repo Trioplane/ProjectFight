@@ -1,4 +1,5 @@
 from ./generic_throwable import ItemGenericThrowable
+from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 
 class ItemGenericThrowableNoGravity(ItemGenericThrowable):
     def __init__(self, item_name, config, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None) :
@@ -46,7 +47,12 @@ class ItemGenericThrowableNoGravity(ItemGenericThrowable):
         execute as @a[distance=(None, self.config.on_impact.aoe_range)]:
             tag @s add projectfight.player.temp.victim
             scoreboard players add @s projectfight.player.damage_to_deal self.config.on_impact.damage
-    
+            execute
+                facing entity @s eyes 
+                positioned 0.0 0.0 0.0 
+                run tp KNOCKBACK_PUSH_VECTOR_ENTITY ^ ^ ^self.config.on_impact.knockback_strength ~ ~
+            function projectfight:player/movement/knockback/apply
+
         function projectfight:player/health/apply_damage
 
         if self.insert_on_impact: 
@@ -58,6 +64,7 @@ ItemGenericThrowableNoGravity("generic_throwable_no_gravity", {
     speed: 3000,
     on_impact: {
         aoe_range: 3,
+        knockback_strength: 15,
         damage: 25
     }
 }).build()

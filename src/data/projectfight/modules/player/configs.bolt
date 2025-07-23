@@ -17,6 +17,7 @@ default_attributes = [
     {"minecraft:attack_knockback": 0},
     {"minecraft:step_height": 1},
     {"minecraft:sneaking_speed": 0.7},
+    {"minecraft:gravity": 0.045},
 ]
 
 function projectfight:player/configs/apply_configs:

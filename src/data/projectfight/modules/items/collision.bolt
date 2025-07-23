@@ -19,7 +19,7 @@ function ~/check/basic:
     execute if score @s projectfight.items.age matches 500.. run return 1
 
     # ENTITY CHECKS
-    execute if score @s projectfight.items.age matches 3.. as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
+    execute if score @s projectfight.items.age matches 5.. as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
 
     # BLOCK CHECKS
     execute unless block ~ ~ ~ #air run return 1
@@ -39,7 +39,7 @@ function ~/check/basic_extended:
     execute if score @s projectfight.items.age matches 500.. run return 1
 
     # ENTITY CHECKS
-    execute if score @s projectfight.items.age matches 3.. as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
+    execute if score @s projectfight.items.age matches 5.. as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run return 1
 
     # BLOCK CHECKS
     execute unless block ~ ~ ~ #air run return 1

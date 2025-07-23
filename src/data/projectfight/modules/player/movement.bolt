@@ -54,15 +54,32 @@ predicate projectfight:player/movement/is_crawling {
     }
 }
 
+predicate projectfight:player/movement/is_on_ground {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "flags": {
+            "is_on_ground": true
+        }
+    }
+}
+
+KNOCKBACK_PUSH_VECTOR_ENTITY = "000003a2-0000-0000-0000-000000000000"
+
 function ~/init:
     scoreboard objectives add projectfight.player.movement.ledge_grab.cooldown dummy
     scoreboard objectives add projectfight.player.movement.slide.cooldown dummy
     scoreboard objectives add projectfight.player.movement.slide.time dummy
     scoreboard objectives add projectfight.player.movement.slide.shulker.owner dummy
     scoreboard objectives add projectfight.player.movement.air_dash.cooldown dummy
+    scoreboard objectives add projectfight.player.movement.knockback.stun_time dummy
+
+    execute unless entity @n[type=marker,tag=projectfight.player.movement.knockback.push_vector] run summon marker 0.0 0.0 0.0 {Tags:["projectfight.player.movement.knockback.push_vector"],UUID:[I;930,0,0,0]}
 
 function ~/tick:
-    execute if entity @s[tag=!projectfight.player.dead] at @s run function projectfight:player/movement/move
+    execute 
+        if entity @s[tag=!projectfight.player.dead, tag=!projectfight.player.knockback_stunned] 
+        at @s run function projectfight:player/movement/move
     scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.player.id
     execute if score @s projectfight.player.movement.ledge_grab.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.ledge_grab.cooldown 1
     execute if score @s projectfight.player.movement.air_dash.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.air_dash.cooldown 1
@@ -78,6 +95,17 @@ function ~/tick:
         tp @s ~ -256 ~
         execute on passengers run kill @s
         kill @s
+
+    execute as @s[tag=projectfight.player.knockback_stunned] at @s:
+        execute unless predicate projectfight:player/movement/is_on_ground:
+            particle minecraft:poof
+            particle minecraft:campfire_cosy_smoke
+            return run scoreboard players set @s projectfight.player.movement.knockback.stun_time 60
+
+        execute if score @s projectfight.player.movement.knockback.stun_time matches ..0:
+            return run function projectfight:player/movement/knockback/disable
+        
+        scoreboard players remove @s projectfight.player.movement.knockback.stun_time 1
 
 def player_motion_launch_xyz(x,y,z):
     scoreboard players set $x player_motion.api.launch x
@@ -159,3 +187,25 @@ function ~/move:
             kill @n[type=marker,tag=projectfight.player.temp.movement.slide.vector]
             scoreboard players set @s projectfight.player.movement.air_dash.cooldown 30
             scoreboard players set @s projectfight.player.movement.slide.cooldown 10
+
+function ~/knockback/enable:
+    attribute @s minecraft:movement_speed modifier add projectfight:knockback_stun -1 add_multiplied_total
+    attribute @s minecraft:movement_efficiency modifier add projectfight:knockback_stun -1 add_multiplied_total
+    attribute @s minecraft:jump_strength modifier add projectfight:knockback_stun -1 add_multiplied_total
+    scoreboard players set @s projectfight.player.movement.knockback.stun_time 60
+    tag @s add projectfight.player.knockback_stunned
+
+function ~/knockback/disable:
+    attribute @s minecraft:movement_speed modifier remove projectfight:knockback_stun
+    attribute @s minecraft:movement_efficiency modifier remove projectfight:knockback_stun
+    attribute @s minecraft:jump_strength modifier remove projectfight:knockback_stun
+    tag @s remove projectfight.player.knockback_stunned
+
+function ~/knockback/apply:
+    execute store result score $x player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[0] 1000
+    execute store result score $y player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[1] 1000
+    execute store result score $z player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[2] 1000
+    scoreboard players add $y player_motion.api.launch 3000
+    function player_motion:api/launch_xyz
+
+    function ~/../enable
