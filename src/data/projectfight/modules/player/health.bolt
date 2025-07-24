@@ -47,7 +47,9 @@ function ~/kill:
 
     tag @s remove projectfight.player.knockback_stunned
     function projectfight:player/movement/knockback/disable
-    scoreboard players set @s projectfight.player.death_timer 100
+    scoreboard players set @s projectfight.player.death_timer 86
+    data modify storage scrfx:in id set value "projectfight:death"
+    function scrfx:play
     gamemode spectator @s
 
 function ~/respawn:

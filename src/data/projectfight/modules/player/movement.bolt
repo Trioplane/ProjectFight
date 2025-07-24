@@ -97,15 +97,16 @@ function ~/tick:
         kill @s
 
     execute as @s[tag=projectfight.player.knockback_stunned] at @s:
-        execute unless predicate projectfight:player/movement/is_on_ground:
+        execute unless predicate projectfight:player/movement/is_on_ground run return:
             particle minecraft:poof
             particle minecraft:campfire_cosy_smoke
-            return run scoreboard players set @s projectfight.player.movement.knockback.stun_time 60
+            execute unless score @s projectfight.player.movement.knockback.stun_time matches ..0 run return:
+                scoreboard players remove @s projectfight.player.movement.knockback.stun_time 1
 
-        execute if score @s projectfight.player.movement.knockback.stun_time matches ..0:
-            return run function projectfight:player/movement/knockback/disable
+        execute if score @s projectfight.player.movement.knockback.stun_time matches ..0 run return:
+            function projectfight:player/movement/knockback/disable
         
-        scoreboard players remove @s projectfight.player.movement.knockback.stun_time 1
+        scoreboard players remove @s projectfight.player.movement.knockback.stun_time 4
 
 def player_motion_launch_xyz(x,y,z):
     scoreboard players set $x player_motion.api.launch x
@@ -147,7 +148,7 @@ function ~/move:
         if score @s projectfight.player.movement.slide.cooldown matches 0
         run function projectfight:player/movement/slide:
             tag @s add projectfight.player.temp.movement.slide
-            summon item_display ~ ~1 ~ {Tags:["projectfight.player.movement.slide.shulker_vehicle","projectfight.player.temp.movement.slide.shulker_vehicle"],Passengers:[{id:"minecraft:shulker",NoAI:true,Invulnerable:true,attributes:[{id:"minecraft:scale",base:1.75}],active_effects:[{id:"invisibility",duration:-1,show_particles:false}]}]}
+            summon item_display ~ ~1 ~ {Tags:["projectfight.player.movement.slide.shulker_vehicle","projectfight.player.temp.movement.slide.shulker_vehicle"],Passengers:[{id:"minecraft:shulker",NoAI:true,Invulnerable:true,Color:12b,attributes:[{id:"minecraft:scale",base:1.75}],active_effects:[{id:"invisibility",duration:-1,show_particles:false}]}]}
             execute as @n[type=item_display,tag=projectfight.player.temp.movement.slide.shulker_vehicle]:
                 scoreboard players operation @s projectfight.player.movement.slide.shulker.owner = @p[tag=projectfight.player.temp.movement.slide] projectfight.player.id
 
@@ -192,7 +193,7 @@ function ~/knockback/enable:
     attribute @s minecraft:movement_speed modifier add projectfight:knockback_stun -1 add_multiplied_total
     attribute @s minecraft:movement_efficiency modifier add projectfight:knockback_stun -1 add_multiplied_total
     attribute @s minecraft:jump_strength modifier add projectfight:knockback_stun -1 add_multiplied_total
-    scoreboard players set @s projectfight.player.movement.knockback.stun_time 60
+    scoreboard players set @s projectfight.player.movement.knockback.stun_time 120
     tag @s add projectfight.player.knockback_stunned
 
 function ~/knockback/disable:
@@ -205,7 +206,6 @@ function ~/knockback/apply:
     execute store result score $x player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[0] 1000
     execute store result score $y player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[1] 1000
     execute store result score $z player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[2] 1000
-    scoreboard players add $y player_motion.api.launch 3000
     function player_motion:api/launch_xyz
 
     function ~/../enable
