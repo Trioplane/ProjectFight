@@ -75,6 +75,7 @@ function ~/init:
     scoreboard objectives add projectfight.player.movement.slide.shulker.owner dummy
     scoreboard objectives add projectfight.player.movement.air_dash.cooldown dummy
     scoreboard objectives add projectfight.player.movement.knockback.stun_time dummy
+    scoreboard objectives add projectfight.player.movement.knockback.has_touched_ground dummy
 
     execute unless entity @n[type=marker,tag=projectfight.player.movement.knockback.push_vector] run summon marker 0.0 0.0 0.0 {Tags:["projectfight.player.movement.knockback.push_vector"],UUID:[I;930,0,0,0]}
 
@@ -98,16 +99,23 @@ function ~/tick:
     execute as @s[tag=projectfight.player.knockback_stunned] at @s:
         execute rotated ~ 0 run tp @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner] ~ ~ ~
 
+        execute if score @s projectfight.player.movement.knockback.stun_time matches ..0 run return:
+            function projectfight:player/movement/knockback/disable
+
         execute unless predicate projectfight:player/movement/is_on_ground run return:
             particle minecraft:poof
             particle minecraft:campfire_cosy_smoke
-            execute unless score @s projectfight.player.movement.knockback.stun_time matches ..0 run return:
-                scoreboard players remove @s projectfight.player.movement.knockback.stun_time 1
+            scoreboard players remove @s projectfight.player.movement.knockback.stun_time 1
 
-        execute if score @s projectfight.player.movement.knockback.stun_time matches ..0 run return:
-            function projectfight:player/movement/knockback/disable
-        
-        scoreboard players remove @s projectfight.player.movement.knockback.stun_time 4
+        # the game thinks were still on ground for some ticks
+        execute unless score @s projectfight.player.movement.knockback.stun_time matches 118.. if predicate projectfight:player/movement/is_on_ground run return:
+            execute unless score @s projectfight.player.movement.knockback.has_touched_ground matches 1
+                as @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner]:
+                    function animated_java:player_display/animations/knockback_on_air/stop
+                    function animated_java:player_display/animations/knockback_on_ground/play
+
+            scoreboard players set @s projectfight.player.movement.knockback.has_touched_ground 1
+            scoreboard players remove @s projectfight.player.movement.knockback.stun_time 4
 
 def player_motion_launch_xyz(x,y,z):
     scoreboard players set $x player_motion.api.launch x
@@ -195,6 +203,7 @@ function ~/knockback/enable:
     attribute @s minecraft:movement_efficiency modifier add projectfight:knockback_stun -1 add_multiplied_total
     attribute @s minecraft:jump_strength modifier add projectfight:knockback_stun -1 add_multiplied_total
     
+    scoreboard players set @s projectfight.player.movement.knockback.has_touched_ground 0
     effect give @s invisibility infinite 0 true
     summon_player_display("knockback_on_air")
 
@@ -206,8 +215,8 @@ function ~/knockback/disable:
     attribute @s minecraft:movement_efficiency modifier remove projectfight:knockback_stun
     attribute @s minecraft:jump_strength modifier remove projectfight:knockback_stun
 
+    scoreboard players set @s projectfight.player.movement.knockback.has_touched_ground 0
     effect clear @s invisibility
-
     execute as @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner]:
         function animated_java:player_display/remove/this
 
