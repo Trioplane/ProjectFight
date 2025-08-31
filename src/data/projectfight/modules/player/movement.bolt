@@ -1,3 +1,5 @@
+from projectfight:player/main import summon_player_display
+
 speed_levels = [
     [0, 4.3],
     [4.3, 8],
@@ -85,10 +87,7 @@ function ~/tick:
     execute if score @s projectfight.player.movement.air_dash.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.air_dash.cooldown 1
     execute if score @s projectfight.player.movement.slide.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.slide.cooldown 1
     execute if score @s projectfight.player.movement.slide.time matches 1..:
-        execute
-            at @s 
-            as @e[type=item_display,tag=projectfight.player.movement.slide.shulker_vehicle,predicate=projectfight:util/compare_score/player.movement.slide.shulker.owner]
-            positioned ~ ~1 ~ rotated ~ 0:
+        execute at @s as @e[type=item_display,tag=projectfight.player.movement.slide.shulker_vehicle,predicate=projectfight:util/compare_score/player.movement.slide.shulker.owner] positioned ~ ~1 ~ rotated ~ 0:
                 tp @s ^ ^ ^1
         scoreboard players remove @s projectfight.player.movement.slide.time 1
     execute if score @s projectfight.player.movement.slide.time matches 0 as @e[type=item_display,tag=projectfight.player.movement.slide.shulker_vehicle,predicate=projectfight:util/compare_score/player.movement.slide.shulker.owner] at @s:
@@ -97,6 +96,8 @@ function ~/tick:
         kill @s
 
     execute as @s[tag=projectfight.player.knockback_stunned] at @s:
+        execute rotated ~ 0 run tp @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner] ~ ~ ~
+
         execute unless predicate projectfight:player/movement/is_on_ground run return:
             particle minecraft:poof
             particle minecraft:campfire_cosy_smoke
@@ -193,6 +194,10 @@ function ~/knockback/enable:
     attribute @s minecraft:movement_speed modifier add projectfight:knockback_stun -1 add_multiplied_total
     attribute @s minecraft:movement_efficiency modifier add projectfight:knockback_stun -1 add_multiplied_total
     attribute @s minecraft:jump_strength modifier add projectfight:knockback_stun -1 add_multiplied_total
+    
+    effect give @s invisibility infinite 0 true
+    summon_player_display("knockback_on_air")
+
     scoreboard players set @s projectfight.player.movement.knockback.stun_time 120
     tag @s add projectfight.player.knockback_stunned
 
@@ -200,6 +205,12 @@ function ~/knockback/disable:
     attribute @s minecraft:movement_speed modifier remove projectfight:knockback_stun
     attribute @s minecraft:movement_efficiency modifier remove projectfight:knockback_stun
     attribute @s minecraft:jump_strength modifier remove projectfight:knockback_stun
+
+    effect clear @s invisibility
+
+    execute as @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner]:
+        function animated_java:player_display/remove/this
+
     tag @s remove projectfight.player.knockback_stunned
 
 function ~/knockback/apply:

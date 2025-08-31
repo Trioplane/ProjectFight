@@ -48,5 +48,33 @@ predicate projectfight:util/compare_score/player.movement.slide.shulker.owner {
     }
 }
 
+predicate projectfight:util/compare_score/player.display.owner {
+    "condition": "minecraft:entity_scores",
+    "entity": "this",
+    "scores": {
+      "projectfight.player.display.owner": {
+        "min": {
+          "type": "minecraft:score",
+          "target": {
+            "type": "minecraft:fixed",
+            "name": "#compare_value"
+          },
+          "score": "projectfight.predicate.compare_score"
+        },
+        "max": {
+          "type": "minecraft:score",
+          "target": {
+            "type": "minecraft:fixed",
+            "name": "#compare_value"
+          },
+          "score": "projectfight.predicate.compare_score"
+        }
+      }
+    }
+}
+
 function ~/init:
     scoreboard objectives add projectfight.predicate.compare_score dummy
+
+function projectfight:util/sandbox:
+    ...

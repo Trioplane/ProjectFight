@@ -1,0 +1,25 @@
+{
+	"formatVersion": "1.0.0",
+	"rigs": {
+		"player_display": {
+			"coreFiles": ["assets/minecraft/atlases/blocks.json", "pack.mcmeta"],
+			"versionedFiles": [
+				"assets/animated_java/items/blueprint/player_display/head.json",
+				"assets/animated_java/items/blueprint/player_display/left_arm.json",
+				"assets/animated_java/items/blueprint/player_display/left_leg.json",
+				"assets/animated_java/items/blueprint/player_display/right_arm.json",
+				"assets/animated_java/items/blueprint/player_display/right_leg.json",
+				"assets/animated_java/items/blueprint/player_display/torso.json",
+				"assets/animated_java/items/empty.json",
+				"assets/animated_java/models/blueprint/player_display/head.json",
+				"assets/animated_java/models/blueprint/player_display/left_arm.json",
+				"assets/animated_java/models/blueprint/player_display/left_leg.json",
+				"assets/animated_java/models/blueprint/player_display/right_arm.json",
+				"assets/animated_java/models/blueprint/player_display/right_leg.json",
+				"assets/animated_java/models/blueprint/player_display/torso.json",
+				"assets/animated_java/models/empty.json",
+				"assets/animated_java/textures/blueprint/player_display/skin.png"
+			]
+		}
+	}
+}

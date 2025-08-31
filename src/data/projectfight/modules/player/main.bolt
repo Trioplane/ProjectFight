@@ -1,5 +1,6 @@
 function projectfight:player/main/init:
     scoreboard objectives add projectfight.player.id dummy
+    scoreboard objectives add projectfight.player.display.owner dummy
     scoreboard objectives add projectfight.player.left_game minecraft.custom:minecraft.leave_game
     scoreboard players add .projectfight.var.nextid projectfight.player.id 0
 
@@ -13,4 +14,22 @@ function projectfight:player/main/tick:
     function projectfight:player/health/tick
     function projectfight:items/main/use_item/tick
     function projectfight:player/movement/tick
-    
+
+def summon_player_display(animation):
+    execute rotated ~ 0 run function animated_java:player_display/summon {args: {animation: animation, start_animation: true}}
+    function projectfight:player/main/apply_skin_to_player_display
+    tag @s add projectfight.player.temp.display.owner
+    execute as @n[type=item_display,tag=projectfight.player.display.root.new,tag=aj.player_display.root]:
+        scoreboard players operation @s projectfight.player.display.owner = @p[tag=projectfight.player.temp.display.owner] projectfight.player.id
+        execute on passengers run tag @s remove projectfight.player.display.children.new
+        tag @s remove projectfight.player.display.root.new
+    tag @s remove projectfight.player.temp.display.owner
+
+function ~/apply_skin_to_player_display:
+    #execute as PLAYER run this function
+    loot replace entity @n[type=item_display,tag=aj.player_display.bone.head,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/head
+    loot replace entity @n[type=item_display,tag=aj.player_display.bone.right_arm,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/right_arm
+    loot replace entity @n[type=item_display,tag=aj.player_display.bone.left_arm,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/left_arm
+    loot replace entity @n[type=item_display,tag=aj.player_display.bone.torso,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/torso
+    loot replace entity @n[type=item_display,tag=aj.player_display.bone.right_leg,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/right_leg
+    loot replace entity @n[type=item_display,tag=aj.player_display.bone.left_leg,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/left_leg
