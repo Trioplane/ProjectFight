@@ -102,10 +102,11 @@ function ~/tick:
         execute if score @s projectfight.player.movement.knockback.stun_time matches ..0 run return:
             function projectfight:player/movement/knockback/disable
 
+        scoreboard players remove @s projectfight.player.movement.knockback.stun_time 1
+
         execute unless predicate projectfight:player/movement/is_on_ground run return:
             particle minecraft:poof
             particle minecraft:campfire_cosy_smoke
-            scoreboard players remove @s projectfight.player.movement.knockback.stun_time 1
 
         # the game thinks were still on ground for some ticks
         execute unless score @s projectfight.player.movement.knockback.stun_time matches 118.. if predicate projectfight:player/movement/is_on_ground run return:
@@ -115,7 +116,7 @@ function ~/tick:
                     function animated_java:player_display/animations/knockback_on_ground/play
 
             scoreboard players set @s projectfight.player.movement.knockback.has_touched_ground 1
-            scoreboard players remove @s projectfight.player.movement.knockback.stun_time 4
+            scoreboard players remove @s projectfight.player.movement.knockback.stun_time 3
 
 def player_motion_launch_xyz(x,y,z):
     scoreboard players set $x player_motion.api.launch x
@@ -203,6 +204,8 @@ function ~/knockback/enable:
     attribute @s minecraft:movement_efficiency modifier add projectfight:knockback_stun -1 add_multiplied_total
     attribute @s minecraft:jump_strength modifier add projectfight:knockback_stun -1 add_multiplied_total
     
+    execute as @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner]:
+        function animated_java:player_display/remove/this
     scoreboard players set @s projectfight.player.movement.knockback.has_touched_ground 0
     effect give @s invisibility infinite 0 true
     summon_player_display("knockback_on_air")
