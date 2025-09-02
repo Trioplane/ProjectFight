@@ -5,5 +5,5 @@ execute if score @s aj.tween_duration matches 0 on passengers run data modify en
 data remove storage aj:temp args
 execute store result storage aj:temp args.frame int 1 run scoreboard players get @s aj.knockback_on_ground.frame
 function animated_java:player_display/animations/knockback_on_ground/zzz/apply_frame with storage aj:temp args
-execute if score @s aj.knockback_on_ground.frame matches 1.. run return run function animated_java:player_display/animations/knockback_on_ground/pause
+execute if score @s aj.knockback_on_ground.frame matches 8.. run return run function animated_java:player_display/animations/knockback_on_ground/pause
 scoreboard players add @s aj.knockback_on_ground.frame 1
