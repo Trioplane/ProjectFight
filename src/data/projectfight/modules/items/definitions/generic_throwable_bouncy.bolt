@@ -61,20 +61,20 @@ class ItemGenericThrowableBouncy(ItemGenericThrowable):
             velocity.vertical["@s"] += self.config.acceleration.sideward
 
 
-ItemGenericThrowableBouncy("generic_throwable_bouncy", {
-    init_velocity: {
-        horizontal: 1000,
-        vertical: 0,
-        sideward: 0
-    },
-    acceleration: {
-        horizontal: 0,
-        vertical: -30,
-        sideward: 0
-    },
-    on_impact: {
-        aoe_range: 4,
-        knockback_strength: 20,
-        damage: 30
-    }
-}).build()
+# ItemGenericThrowableBouncy("generic_throwable_bouncy", {
+#     init_velocity: {
+#         horizontal: 1000,
+#         vertical: 0,
+#         sideward: 0
+#     },
+#     acceleration: {
+#         horizontal: 0,
+#         vertical: -30,
+#         sideward: 0
+#     },
+#     on_impact: {
+#         aoe_range: 4,
+#         knockback_strength: 20,
+#         damage: 30
+#     }
+# }).build()
