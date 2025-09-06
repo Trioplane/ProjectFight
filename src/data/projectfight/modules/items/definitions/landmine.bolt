@@ -1,0 +1,42 @@
+from ./generic_placeable import ItemGenericPlaceable
+
+def on_use(self):
+    playsound minecraft:block.vault.place master @a
+    playsound minecraft:entity.arrow.shoot master @a ~ ~ ~ 1 0.5
+
+def on_place(self):
+    particle minecraft:dust{color:[0.3f,0.3f,0.3f],scale:1} ~ ~ ~ 0.2 0.2 0.2 1 5
+    particle minecraft:dust{color:[0.5f,0.5f,0.5f],scale:1.5} ~ ~ ~ 0.3 0.2 0.3 1 5
+    playsound minecraft:block.vault.insert_item master @a ~ ~ ~ 0.5
+
+def on_activate(self):
+    particle minecraft:trial_spawner_detection ~ ~ ~ 0.1 0.1 0.1 0.1 15
+    playsound minecraft:block.note_block.didgeridoo master @a ~ ~ ~ 1 1
+    playsound minecraft:block.vault.eject_item master @a ~ ~ ~ 2
+
+def on_impact(self):
+    playsound minecraft:entity.generic.explode master @a
+    particle minecraft:campfire_cosy_smoke ~ ~ ~ 0.2 0.2 0.2 0.2 20
+    particle minecraft:poof ~ ~ ~ 0.2 0.2 0.2 0.2 10
+
+ItemGenericPlaceable("landmine", {
+    init_velocity: {
+        horizontal: 600,
+        vertical: 0,
+        sideward: 0
+    },
+    acceleration: {
+        horizontal: 0,
+        vertical: -70,
+        sideward: 0
+    },
+    on_impact: {
+        aoe_range: 5,
+        knockback_strength: 20,
+        damage: 40
+    },
+    trigger: {
+        range: 2,
+        delay: 10
+    }
+}, insert_on_use = on_use, insert_on_place = on_place, insert_on_activate = on_activate, insert_on_impact = on_impact).build()
