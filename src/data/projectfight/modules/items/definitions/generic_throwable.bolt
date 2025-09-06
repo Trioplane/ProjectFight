@@ -96,20 +96,20 @@ class ItemGenericThrowable(Item):
     
         kill @s
 
-ItemGenericThrowable("generic_throwable", {
-    init_velocity: {
-        horizontal: 1500,
-        vertical: 0,
-        sideward: 0
-    },
-    acceleration: {
-        horizontal: -10,
-        vertical: -40,
-        sideward: 0
-    },
-    on_impact: {
-        aoe_range: 5,
-        knockback_strength: 20,
-        damage: 25
-    }
-}).build()
+# ItemGenericThrowable("generic_throwable", {
+#     init_velocity: {
+#         horizontal: 1500,
+#         vertical: 0,
+#         sideward: 0
+#     },
+#     acceleration: {
+#         horizontal: -10,
+#         vertical: -40,
+#         sideward: 0
+#     },
+#     on_impact: {
+#         aoe_range: 5,
+#         knockback_strength: 20,
+#         damage: 25
+#     }
+# }).build()

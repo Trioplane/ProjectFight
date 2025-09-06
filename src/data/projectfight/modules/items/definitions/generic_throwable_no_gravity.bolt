@@ -60,11 +60,11 @@ class ItemGenericThrowableNoGravity(ItemGenericThrowable):
 
         kill @s
 
-ItemGenericThrowableNoGravity("generic_throwable_no_gravity", {
-    speed: 3000,
-    on_impact: {
-        aoe_range: 3,
-        knockback_strength: 15,
-        damage: 25
-    }
-}).build()
+# ItemGenericThrowableNoGravity("generic_throwable_no_gravity", {
+#     speed: 3000,
+#     on_impact: {
+#         aoe_range: 3,
+#         knockback_strength: 15,
+#         damage: 25
+#     }
+# }).build()

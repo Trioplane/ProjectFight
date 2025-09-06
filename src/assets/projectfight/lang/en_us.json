@@ -2,5 +2,7 @@
     "projectfight.prejoin.wait_for_resource_pack": "§aResource pack has loaded!",
     "projectfight.prejoin.wait_for_resource_pack.button": "§a§lContinue",
     "projectfight.items.crate": "Crate",
-    "projectfight.items.firework": "Firework"
+    "projectfight.items.firework": "Firework",
+    "projectfight.items.landmine": "Landmine",
+    "projectfight.items.banana_peel": "Banana Peel"
 }

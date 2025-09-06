@@ -39,6 +39,12 @@ class ItemGenericPlaceable(ItemGenericThrowable):
             summon item_display ^ ^ ^1 {
                 Tags: [f"projectfight.items.{self.item_name}", "projectfight.items", "projectfight.items.temp",],
                 item: { id: "popped_chorus_fruit", components: { item_model: f"projectfight:items/{self.item_name}" } },
+                transformation: {
+                    translation: [0f,0.5f,0f],
+                    scale: [1f,1f,1f],
+                    left_rotation: [0f,0f,0f,1f],
+                    right_rotation: [0f,0f,0f,1f]
+                },
                 teleport_duration: 2
             }
 
@@ -138,24 +144,24 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                 function f"projectfight:items/definitions/{self.item_name}/on_impact"
 
 
-ItemGenericPlaceable("generic_placeable", {
-    init_velocity: {
-        horizontal: 600,
-        vertical: 0,
-        sideward: 0
-    },
-    acceleration: {
-        horizontal: 0,
-        vertical: -70,
-        sideward: 0
-    },
-    on_impact: {
-        aoe_range: 5,
-        knockback_strength: 40,
-        damage: 70
-    },
-    trigger: {
-        range: 2,
-        delay: 20
-    }
-}).build()
+# ItemGenericPlaceable("generic_placeable", {
+#     init_velocity: {
+#         horizontal: 600,
+#         vertical: 0,
+#         sideward: 0
+#     },
+#     acceleration: {
+#         horizontal: 0,
+#         vertical: -70,
+#         sideward: 0
+#     },
+#     on_impact: {
+#         aoe_range: 5,
+#         knockback_strength: 40,
+#         damage: 70
+#     },
+#     trigger: {
+#         range: 2,
+#         delay: 20
+#     }
+# }).build()

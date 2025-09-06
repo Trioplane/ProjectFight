@@ -1,6 +1,6 @@
 {
     "model": {
         "type": "minecraft:model",
-        "model": "projectfight:item/items/generic"
+        "model": "projectfight:item/items/landmine"
     }
 }

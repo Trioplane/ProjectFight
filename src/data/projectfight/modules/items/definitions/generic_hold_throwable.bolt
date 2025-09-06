@@ -12,21 +12,21 @@ class ItemGenericHoldThrowable(ItemGenericThrowable):
             item_config = Scoreboard(f"projectfight.items.config.{self.item_name}")
             item_config[".hold_duration"] = self.config.hold_duration
 
-ItemGenericHoldThrowable("generic_hold_throwable", {
-    init_velocity: {
-        horizontal: 2000,
-        vertical: 0,
-        sideward: 0
-    },
-    acceleration: {
-        horizontal: -50,
-        vertical: -40,
-        sideward: 0
-    },
-    on_impact: {
-        aoe_range: 7,
-        knockback_strength: 35,
-        damage: 50
-    },
-    hold_duration: 60
-}).build()
+# ItemGenericHoldThrowable("generic_hold_throwable", {
+#     init_velocity: {
+#         horizontal: 2000,
+#         vertical: 0,
+#         sideward: 0
+#     },
+#     acceleration: {
+#         horizontal: -50,
+#         vertical: -40,
+#         sideward: 0
+#     },
+#     on_impact: {
+#         aoe_range: 7,
+#         knockback_strength: 35,
+#         damage: 50
+#     },
+#     hold_duration: 60
+# }).build()
