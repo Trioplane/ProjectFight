@@ -44,7 +44,7 @@ class ItemGenericThrowable(Item):
         tag @s remove projectfight.player.items.temp.owner
 
     def movement_step(self):
-        execute at @s if function projectfight:items/collision/check/basic run function f"projectfight:items/definitions/{self.item_name}/on_impact"
+        execute at @s if function projectfight:items/collision/check/basic run return run function f"projectfight:items/definitions/{self.item_name}/on_impact"
 
         if self.insert_on_movement_step: 
             self.insert_on_movement_step(self)
@@ -61,20 +61,16 @@ class ItemGenericThrowable(Item):
             else:
                 scoreboard players add @s projectfight.items.velocity.horizontal self.config.acceleration.horizontal
     
-            #Scoreboard("projectfight.items.velocity.horizontal")["@s"] += self.config.acceleration.horizontal
         execute unless score @s projectfight.items.velocity.vertical matches ..-2000:
             if self.config.acceleration.vertical < 0:
                 scoreboard players remove @s projectfight.items.velocity.vertical (self.config.acceleration.vertical * -1)
             else:
                 scoreboard players add @s projectfight.items.velocity.vertical self.config.acceleration.vertical
 
-            #Scoreboard("projectfight.items.velocity.vertical")["@s"] += self.config.acceleration.vertical
-        
         if self.config.acceleration.sideward < 0:
             scoreboard players remove @s projectfight.items.velocity.sideward (self.config.acceleration.sideward * -1)
         else:
             scoreboard players add @s projectfight.items.velocity.sideward self.config.acceleration.sideward
-        #Scoreboard("projectfight.items.velocity.sideward")["@s"] += self.config.acceleration.sideward
 
     def on_impact(self):
         tag @s add projectfight.items.temp.impact

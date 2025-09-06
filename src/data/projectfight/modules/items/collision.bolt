@@ -52,3 +52,21 @@ function ~/check/basic_extended:
             execute unless block ~ ~ ~ #air run tag @s add projectfight.items.marked_for_collision
             execute as @a[dx=0,distance=..3] positioned ~-1 ~ ~-1 if entity @s[dx=0] run tag @n[type=item_display,tag=projectfight.items.temp.ahead_collision_check] add projectfight.items.marked_for_collision
     tag @s remove projectfight.items.temp.ahead_collision_check
+
+function ~/check/block_ahead:
+    execute if predicate projectfight:is_in_kill_plane run return 1
+    execute if score @s projectfight.items.age matches 500.. run return 1
+
+    # check ahead 2 blocks
+    for i in range(1, 4):
+        offset = i * 0.5
+        execute positioned ^ ^ ^offset unless block ~ ~ ~ #air run return 1
+
+function ~/check/ground:
+    execute if predicate projectfight:is_in_kill_plane run return 1
+    execute as @s[tag=projectfight.items.marked_for_collision] run return 1
+    execute if score @s projectfight.items.age matches 500.. run return 1
+
+    # BLOCK CHECKS
+    execute unless block ~ ~ ~ #air run return 1
+    execute positioned ~ ~-0.5 ~ unless block ~ ~ ~ #air run tag @s add projectfight.items.marked_for_collision

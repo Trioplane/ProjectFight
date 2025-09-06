@@ -7,9 +7,11 @@ def on_use(self):
 def on_movement_step(self):
     playsound minecraft:entity.silverfish.ambient master @a ~ ~ ~ 0.5 1.5
     particle minecraft:firework
+    execute positioned ^ ^ ^-1 run particle minecraft:firework
+    execute positioned ^ ^ ^-2 run particle minecraft:firework
 
 def on_impact(self):
-    particle minecraft:flash
+    particle minecraft:flash ~ ~ ~ 0 0 0 1 1
     particle minecraft:firework ~ ~ ~ 0 0 0 0.4 20
     playsound minecraft:entity.firework_rocket.large_blast master @a
     playsound minecraft:entity.firework_rocket.blast master @a
