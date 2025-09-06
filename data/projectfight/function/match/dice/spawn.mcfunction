@@ -1,0 +1,1 @@
+summon block_display ~ ~ ~ {Tags: ["projectfight.dice"], block_state: {Name: "ender_chest"}, transformation: {translation: [-0.5f, -0.2f, -0.5f], scale: [1.2f, 1.2f, 1.2f], left_rotation: [0.0f, 0.0f, 0.0f, 1.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f]}}

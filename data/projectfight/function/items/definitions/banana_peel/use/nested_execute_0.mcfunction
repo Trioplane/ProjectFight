@@ -1,0 +1,2 @@
+summon marker ^ ^ ^5 {Tags: ["projectfight.utils.temp"]}
+summon item_display ^ ^ ^1 {Tags: ["projectfight.items.banana_peel", "projectfight.items", "projectfight.items.temp"], item: {id: "popped_chorus_fruit", components: {item_model: "projectfight:items/banana_peel"}}, transformation: {translation: [0.0f, 0.5f, 0.0f], scale: [1.0f, 1.0f, 1.0f], left_rotation: [0.0f, 0.0f, 0.0f, 1.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f]}, teleport_duration: 2}

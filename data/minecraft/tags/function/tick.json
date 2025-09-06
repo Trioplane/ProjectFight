@@ -1,0 +1,7 @@
+{
+  "values": [
+    "scrfx:zinternals/tick",
+    "animated_java:global/on_tick",
+    "projectfight:tick"
+  ]
+}

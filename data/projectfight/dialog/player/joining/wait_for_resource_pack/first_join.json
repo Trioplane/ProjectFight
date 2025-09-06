@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": ""
+  },
+  "body": [
+    {
+      "type": "minecraft:plain_message",
+      "contents": [
+        "\n\n\n\n\n",
+        {
+          "translate": "projectfight.prejoin.wait_for_resource_pack",
+          "fallback": "Please \u00a7b\u00a7lwait for the pack to load\u00a7r before playing."
+        }
+      ],
+      "width": 300
+    }
+  ],
+  "can_close_with_escape": true,
+  "pause": false,
+  "after_action": "close",
+  "exit_action": {
+    "label": "",
+    "width": 1,
+    "action": {
+      "type": "minecraft:run_command",
+      "command": "trigger projectfight.player.joining.start_intro.rejoin"
+    }
+  },
+  "actions": [
+    {
+      "label": {
+        "translate": "projectfight.prejoin.wait_for_resource_pack.button",
+        "fallback": "Please wait..."
+      },
+      "width": 100,
+      "action": {
+        "type": "minecraft:run_command",
+        "command": "trigger projectfight.player.joining.start_intro.first_join"
+      }
+    }
+  ]
+}

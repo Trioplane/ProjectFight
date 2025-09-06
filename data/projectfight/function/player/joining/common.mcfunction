@@ -1,0 +1,1 @@
+function projectfight:player/configs/apply_configs

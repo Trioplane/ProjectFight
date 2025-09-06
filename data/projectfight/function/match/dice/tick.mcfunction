@@ -1,0 +1,1 @@
+execute as @a[tag=!projectfight.player.dead] unless score @s projectfight.player.item.has_item matches 1.. at @s if entity @n[type=block_display, tag=projectfight.dice, distance=..1.4, limit=1] run function projectfight:match/dice/collect

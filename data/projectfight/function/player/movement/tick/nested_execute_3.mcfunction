@@ -1,0 +1,2 @@
+function animated_java:player_display/animations/knockback_on_air/stop
+function animated_java:player_display/animations/knockback_on_ground/play

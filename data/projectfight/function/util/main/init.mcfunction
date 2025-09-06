@@ -1,0 +1,1 @@
+scoreboard objectives add projectfight.predicate.compare_score dummy

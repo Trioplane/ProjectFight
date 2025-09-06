@@ -1,0 +1,10 @@
+{
+  "values": [
+    "player_motion:internal/technical/load",
+    "scrfx:zinternals/load",
+    "animated_java:global/internal/gu/load",
+    "animated_java:global/on_load",
+    "projectfight:init_expressions",
+    "projectfight:load"
+  ]
+}
