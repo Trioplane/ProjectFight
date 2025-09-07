@@ -48,8 +48,8 @@ function ~/kill:
     gamemode spectator @s
 
 function ~/show_death_message:
-    $title @s actionbar {translate:"$(translation_key).victim",with:[{"selector":"@p[tag=projectfight.player.temp.attacker]"}],color:"gold"}
-    $title @p[tag=projectfight.player.temp.attacker] actionbar {translate:"$(translation_key).attacker",with:[{"selector":"@s"}]}
+    $title @s actionbar {translate:"$(translation_key).victim",with:[{"selector":"@p[tag=projectfight.player.temp.attacker]"}],color:"red"}
+    $title @p[tag=projectfight.player.temp.attacker] actionbar {translate:"$(translation_key).attacker",with:[{"selector":"@s"}],color:"gold"}
 
 function ~/respawn:
     tag @s remove projectfight.player.dead
