@@ -7,6 +7,7 @@
     "projectfight.items.landmine": "Landmine",
     "projectfight.items.banana_peel": "Banana Peel",
 
+    "projectfight.death.generic.self": "Did you really just kill yourself?",
     "projectfight.death.generic.attacker": "You eliminated %s",
     "projectfight.death.generic.victim": "%s eliminated you",
     "projectfight.death.explosion.attacker": "You exploded %s",
