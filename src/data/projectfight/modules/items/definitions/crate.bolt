@@ -24,4 +24,4 @@ ItemGenericThrowable("crate", {
         knockback_strength: 35,
         damage: 20
     }
-}, insert_on_use = on_use, insert_on_impact = on_impact).build()
+}, "explosion", insert_on_use = on_use, insert_on_impact = on_impact).build()

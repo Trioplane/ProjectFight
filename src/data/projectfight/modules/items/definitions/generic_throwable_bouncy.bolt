@@ -1,6 +1,5 @@
 from bolt_expressions import Scoreboard, Data
 from ./generic_throwable import ItemGenericThrowable
-from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 
 velocity = {
     horizontal: Scoreboard("projectfight.items.velocity.horizontal"),
@@ -11,8 +10,8 @@ velocity = {
 rot_x = Scoreboard("projectfight.items.rot.x")
 
 class ItemGenericThrowableBouncy(ItemGenericThrowable):
-    def __init__(self, item_name, config, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None):
-        super().__init__(item_name, config, insert_on_use, insert_on_movement_step, insert_on_impact)
+    def __init__(self, item_name, config, damage_type = None, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None):
+        super().__init__(item_name, config, damage_type, insert_on_use, insert_on_movement_step, insert_on_impact)
 
     # THIS IS NOT HOW YOU SHOULD DO BOUNCE, THIS IS TEMPORARY
     # ALL THIS DOES IS KEEP FLIPPING THE SIGN OF HORIZONTAL VEL WHEN HITTING A WALl

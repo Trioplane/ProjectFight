@@ -2,8 +2,8 @@ from ./generic_throwable import ItemGenericThrowable
 from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 
 class ItemGenericThrowableNoGravity(ItemGenericThrowable):
-    def __init__(self, item_name, config, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None) :
-        super().__init__(item_name, config, insert_on_use, insert_on_movement_step, insert_on_impact)
+    def __init__(self, item_name, config, damage_type = None, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None) :
+        super().__init__(item_name, config, damage_type, insert_on_use, insert_on_movement_step, insert_on_impact)
 
     def use(self):
         tag @s add projectfight.player.items.temp.owner
@@ -44,7 +44,7 @@ class ItemGenericThrowableNoGravity(ItemGenericThrowable):
         execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
             tag @s add projectfight.player.temp.attacker
     
-        execute as @a[distance=(None, self.config.on_impact.aoe_range)]:
+        execute as @a[tag=!projectfight.player.dead,distance=(None, self.config.on_impact.aoe_range)]:
             tag @s add projectfight.player.temp.victim
             scoreboard players add @s projectfight.player.damage_to_deal self.config.on_impact.damage
             execute
@@ -53,6 +53,7 @@ class ItemGenericThrowableNoGravity(ItemGenericThrowable):
                 run tp KNOCKBACK_PUSH_VECTOR_ENTITY ^ ^ ^self.config.on_impact.knockback_strength ~ ~
             function projectfight:player/movement/knockback/apply
 
+        data modify storage projectfight:health temp.damage.translation_key set value f"projectfight.death.{self.damage_type}"
         function projectfight:player/health/apply_damage
 
         if self.insert_on_impact: 

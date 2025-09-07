@@ -39,4 +39,4 @@ ItemGenericPlaceable("landmine", {
         range: 2,
         delay: 10
     }
-}, insert_on_use = on_use, insert_on_place = on_place, insert_on_activate = on_activate, insert_on_impact = on_impact).build()
+}, "explosive_placeable", insert_on_use = on_use, insert_on_place = on_place, insert_on_activate = on_activate, insert_on_impact = on_impact).build()

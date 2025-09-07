@@ -225,12 +225,16 @@ function ~/knockback/disable:
 
     scoreboard players set @s projectfight.player.movement.knockback.has_touched_ground 0
     effect clear @s invisibility
+    scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.player.id
     execute as @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner]:
         function animated_java:player_display/remove/this
 
     tag @s remove projectfight.player.knockback_stunned
 
 function ~/knockback/apply:
+    scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.player.id
+    execute as @n[type=item_display,tag=projectfight.player.display,predicate=projectfight:util/compare_score/player.display.owner]:
+        function animated_java:player_display/remove/this
     execute store result score $x player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[0] 1000
     execute store result score $y player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[1] 1000
     execute store result score $z player_motion.api.launch run data get entity KNOCKBACK_PUSH_VECTOR_ENTITY Pos[2] 1000

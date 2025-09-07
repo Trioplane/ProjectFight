@@ -26,7 +26,8 @@ ItemGenericThrowableNoGravity(
             damage: 15,
             knockback_strength: 10
         }
-    }, 
+    },
+    "firework",
     insert_on_use = on_use, 
     insert_on_movement_step = on_movement_step, 
     insert_on_impact = on_impact

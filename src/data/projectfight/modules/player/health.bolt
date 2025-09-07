@@ -39,18 +39,17 @@ function ~/apply_damage:
 function ~/kill:
     tag @s add projectfight.player.dead
 
-    execute if entity @p[tag=projectfight.player.temp.attacker]: 
-        tellraw @s [{"selector":"@p[tag=projectfight.player.temp.attacker]"},{"text":" killed you"}]
-        tellraw @p[tag=projectfight.player.temp.attacker] [{"text":"You killed "},{"selector":"@s"}]
-
-    execute unless entity @p[tag=projectfight.player.temp.attacker] run tellraw @s "An unknown force killed you."
-
-    tag @s remove projectfight.player.knockback_stunned
+    function ~/../show_death_message with storage projectfight:health temp.damage
+    
     function projectfight:player/movement/knockback/disable
     scoreboard players set @s projectfight.player.death_timer 86
     data modify storage scrfx:in id set value "projectfight:death"
     function scrfx:play
     gamemode spectator @s
+
+function ~/show_death_message:
+    $title @s actionbar {translate:"$(translation_key).victim",with:[{"selector":"@p[tag=projectfight.player.temp.attacker]"}],color:"gold"}
+    $title @p[tag=projectfight.player.temp.attacker] actionbar {translate:"$(translation_key).attacker",with:[{"selector":"@s"}]}
 
 function ~/respawn:
     tag @s remove projectfight.player.dead

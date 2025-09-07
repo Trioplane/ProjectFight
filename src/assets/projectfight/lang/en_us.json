@@ -1,8 +1,18 @@
 {
     "projectfight.prejoin.wait_for_resource_pack": "§aResource pack has loaded!",
     "projectfight.prejoin.wait_for_resource_pack.button": "§a§lContinue",
+
     "projectfight.items.crate": "Crate",
     "projectfight.items.firework": "Firework",
     "projectfight.items.landmine": "Landmine",
-    "projectfight.items.banana_peel": "Banana Peel"
+    "projectfight.items.banana_peel": "Banana Peel",
+
+    "projectfight.death.generic.attacker": "You eliminated %s",
+    "projectfight.death.generic.victim": "%s eliminated you",
+    "projectfight.death.explosion.attacker": "You exploded %s",
+    "projectfight.death.explosion.victim": "%s exploded you",
+    "projectfight.death.firework.attacker": "You blew up %s",
+    "projectfight.death.firework.victim": "%s made you go off with a bang",
+    "projectfight.death.explosive_placeable.attacker": "%s triggered your item and exploded",
+    "projectfight.death.explosive_placeable.victim": "You triggered %s's item and went boom"
 }

@@ -1,6 +1,5 @@
 from bolt_expressions import Scoreboard
 from ./generic_throwable import ItemGenericThrowable
-from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 
 velocity = {
     horizontal: Scoreboard("projectfight.items.velocity.horizontal"),
@@ -20,14 +19,15 @@ class ItemGenericPlaceable(ItemGenericThrowable):
     def __init__(
         self, 
         item_name, 
-        config, 
+        config,
+        damage_type = None,
         insert_on_use = None, 
         insert_on_movement_step = None, 
         insert_on_impact = None, 
         insert_on_place = None, 
         insert_on_activate = None
     ):
-        super().__init__(item_name, config, insert_on_use, insert_on_movement_step, insert_on_impact)
+        super().__init__(item_name, config, damage_type, insert_on_use, insert_on_movement_step, insert_on_impact)
         self.insert_on_place = insert_on_place
         self.insert_on_activate = insert_on_activate
 
@@ -133,12 +133,12 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                 execute if score @s projectfight.items.trigger_delay matches 1.. run scoreboard players remove @s projectfight.items.trigger_delay 1
                 execute if score @s projectfight.items.trigger_delay matches 0 run function f"projectfight:items/definitions/{self.item_name}/on_impact"
 
-            execute if entity @a[distance=(None, self.config.trigger.range)]:
+            execute if entity @a[tag=!projectfight.player.dead,distance=(None, self.config.trigger.range)]:
                 if self.insert_on_activate: 
                     self.insert_on_activate(self)
                 tag @s add f"projectfight.items.{self.item_name}.activated"
         else:
-            execute if entity @a[distance=(None, self.config.trigger.range)]: 
+            execute if entity @a[tag=!projectfight.player.dead,distance=(None, self.config.trigger.range)]: 
                 if self.insert_on_activate: 
                     self.insert_on_activate(self)
                 function f"projectfight:items/definitions/{self.item_name}/on_impact"
