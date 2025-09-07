@@ -1,6 +1,7 @@
 tag @s add projectfight.items.temp.impact
 execute as @a if score @s projectfight.player.id = @n[type=item_display, tag=projectfight.items.temp.impact] projectfight.items.owner run tag @s add projectfight.player.temp.attacker
-execute as @a[distance=..6] run function projectfight:items/definitions/crate/on_impact/nested_execute_0
+execute as @a[tag=!projectfight.player.dead, distance=..6] run function projectfight:items/definitions/crate/on_impact/nested_execute_0
+data modify storage projectfight:health temp.damage.translation_key set value "projectfight.death.explosion"
 function projectfight:player/health/apply_damage
 playsound minecraft:entity.wither.break_block master @a
 particle minecraft:block{block_state: {Name: "minecraft:dark_oak_planks"}} ~ ~ ~ 1 1 1 1 30
