@@ -26,7 +26,7 @@ ItemGenericPlaceable("wet_floor_sign", {
     },
     on_impact: {
         aoe_range: 12,
-        knockback_strength: 20,
+        knockback_strength: 50,
         damage: 5
     },
     trigger: {
