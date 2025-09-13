@@ -79,4 +79,4 @@ function ~/init:
 function projectfight:util/sandbox:
     ...
 
-print(f"Compiled {__name__}")
+print(f"🛠 Compiled {__name__}")

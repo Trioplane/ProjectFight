@@ -124,6 +124,6 @@ class Item:
         append function projectfight:items/main/tick:
             execute as @e[type=item_display,tag=f"projectfight.items.{self.item_name}"] at @s run function f"projectfight:items/definitions/{self.item_name}/movement_step"
 
-        print(f"Built item `{self.item_name}`")
+        print(f"🍕 Built item `{self.item_name}`")
 
-print(f"Compiled {__name__}")
+print(f"🛠 Compiled {__name__}")

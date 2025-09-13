@@ -33,7 +33,6 @@ function projectfight:load:
     }
     function scrfx:add_screen_effects {storage: "projectfight:scrfx_data", path: "screen_effects"}
 
-
 function projectfight:load/set_global_rules:
     gamerule disableElytraMovementCheck true
     gamerule disablePlayerMovementCheck true
@@ -67,3 +66,5 @@ function projectfight:tick:
         effect give @s saturation infinite 255 true
     function projectfight:items/main/tick
     function projectfight:match/main/tick
+
+print(f"🛠 Compiled {__name__}")
