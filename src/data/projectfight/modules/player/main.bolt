@@ -33,3 +33,5 @@ function ~/apply_skin_to_player_display:
     loot replace entity @n[type=item_display,tag=aj.player_display.bone.torso,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/torso
     loot replace entity @n[type=item_display,tag=aj.player_display.bone.right_leg,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/right_leg
     loot replace entity @n[type=item_display,tag=aj.player_display.bone.left_leg,tag=projectfight.player.display.children.new] hotbar.0 loot minecraft:player/left_leg
+
+print(f"Compiled {__name__}")
