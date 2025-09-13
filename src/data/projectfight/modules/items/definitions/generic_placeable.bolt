@@ -1,4 +1,5 @@
 from bolt_expressions import Scoreboard
+from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 from ./generic_throwable import ItemGenericThrowable
 
 velocity = {
@@ -76,11 +77,37 @@ class ItemGenericPlaceable(ItemGenericThrowable):
     def movement_step(self):
         execute unless entity @s[tag=f"projectfight.items.{self.item_name}.placed"] run return:
             execute at @s if function projectfight:items/collision/check/ground run return:
+                tag @s add f"projectfight.items.{self.item_name}.placed"
+                tag @s add f"projectfight.items.{self.item_name}.placed.temp"
+
+                execute:
+                    execute unless block ~ ~ ~ #air run return run function projectfight:items/definitions/generic_placeable/find_ground_up
+                    function projectfight:items/definitions/generic_placeable/find_ground_down
+
+                # TODO: find the exact formula on how to get the display size to match with distance check
+                #       ...or maybe use dx dy dz
+                display_size = (self.config.trigger.range + (self.config.trigger.range / 4))
+
+                summon item_display ~ ~ ~ {
+                    Tags:[f"projectfight.items.{self.item_name}.trigger_area", f"projectfight.items.{self.item_name}.trigger_area.temp"],
+                    brightness: {block: 15, sky: 15},
+                    item: { id: "popped_chorus_fruit", components: { item_model: "projectfight:general/trigger_area" } },
+                    transformation: {
+                       translation: [0f,0.51f,0f],
+                       scale: [(display_size),1f,(display_size)],
+                       left_rotation: [0f,0f,0f,1f],
+                       right_rotation: [0f,0f,0f,1f]
+                    }
+                }
+                execute as @n[type=item_display,tag=f"projectfight.items.{self.item_name}.trigger_area.temp"]:
+                    ride @s mount @n[type=item_display,tag=f"projectfight.items.{self.item_name}.placed.temp"]
+                    data modify entity @s Rotation set from entity @n[type=item_display,tag=f"projectfight.items.{self.item_name}.placed.temp"]
+                    tag @s remove f"projectfight.items.{self.item_name}.trigger_area.temp"
+
                 if self.insert_on_place: 
                     self.insert_on_place(self)
-                tag @s add f"projectfight.items.{self.item_name}.placed"
-                execute unless block ~ ~ ~ #air run return run function projectfight:items/definitions/generic_placeable/find_ground_up
-                function projectfight:items/definitions/generic_placeable/find_ground_down
+
+                tag @s remove f"projectfight.items.{self.item_name}.placed.temp"
 
             if self.insert_on_movement_step: 
                 self.insert_on_movement_step(self)
@@ -142,6 +169,35 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                 if self.insert_on_activate: 
                     self.insert_on_activate(self)
                 function f"projectfight:items/definitions/{self.item_name}/on_impact"
+    
+    def on_impact(self):
+        tag @s add projectfight.items.temp.impact
+        execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
+            tag @s add projectfight.player.temp.attacker
+    
+        execute as @a[tag=!projectfight.player.dead,distance=(None, self.config.on_impact.aoe_range)]:
+            tag @s add projectfight.player.temp.victim
+            scoreboard players add @s projectfight.player.damage_to_deal self.config.on_impact.damage
+            execute
+                facing entity @s eyes 
+                positioned 0.0 0.0 0.0 
+                run tp KNOCKBACK_PUSH_VECTOR_ENTITY ^ ^ ^self.config.on_impact.knockback_strength ~ ~
+            function projectfight:player/movement/knockback/apply
+
+        # uncomment when needed
+        #data modify storage projectfight:health temp.damage.type set value self.damage_type
+        data modify storage projectfight:health temp.damage.translation_key set value f"projectfight.death.{self.damage_type}"
+        function projectfight:player/health/apply_damage
+
+        if self.insert_on_impact:
+            self.insert_on_impact(self)
+
+        execute on passengers run kill @s
+    
+        execute as @e[type=item_display,tag=projectfight.items.initial_rotation] if score @s projectfight.items.owner = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.id:
+            kill @s
+    
+        kill @s
 
 
 # ItemGenericPlaceable("generic_placeable", {
