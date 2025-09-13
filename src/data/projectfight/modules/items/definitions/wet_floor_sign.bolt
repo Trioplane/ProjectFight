@@ -1,0 +1,36 @@
+from ./generic_placeable import ItemGenericPlaceable
+
+def on_use(self):
+    playsound minecraft:entity.arrow.shoot master @a ~ ~ ~ 1 1.5
+
+def on_place(self):
+    particle minecraft:falling_honey ~ ~ ~ 0.3 0.5 0.3 1 5
+    playsound minecraft:block.honey_block.fall master @a ~ ~ ~ 1 2
+
+def on_impact(self):
+    playsound minecraft:block.honey_block.fall master @a ~ ~ ~ 1 1
+    playsound minecraft:block.honey_block.hit master @a ~ ~ ~ 1 1
+    playsound minecraft:entity.witch.celebrate master @a ~ ~ ~ 1 2
+    particle minecraft:block_crumble{block_state:{Name:"minecraft:honey_block"}} ~ ~ ~ 0.3 0.3 0.3 1 10
+
+ItemGenericPlaceable("wet_floor_sign", {
+    init_velocity: {
+        horizontal: 1500,
+        vertical: 0,
+        sideward: 0
+    },
+    acceleration: {
+        horizontal: 0,
+        vertical: -100,
+        sideward: 0
+    },
+    on_impact: {
+        aoe_range: 12,
+        knockback_strength: 20,
+        damage: 5
+    },
+    trigger: {
+        range: 10,
+        delay: 20
+    }
+}, insert_on_use = on_use, insert_on_place = on_place, insert_on_impact = on_impact).build()
