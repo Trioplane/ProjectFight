@@ -21,24 +21,37 @@ def on_impact(self):
     particle minecraft:campfire_signal_smoke ~ ~0.2 ~ 1 0.3 1 0.1 20
     particle minecraft:dust_pillar{block_state:{Name:"yellow_concrete_powder"}} ~ ~ ~ 1 1 1 1 40
 
-ItemGenericPlaceable("wet_floor_sign", {
-    init_velocity: {
-        horizontal: 1500,
-        vertical: 0,
-        sideward: 0
+ItemGenericPlaceable(
+    "wet_floor_sign", 
+    {
+        init_velocity: {
+            horizontal: 1500,
+            vertical: 0,
+            sideward: 0
+        },
+        acceleration: {
+            horizontal: 0,
+            vertical: -100,
+            sideward: 0
+        },
+        on_impact: {
+            aoe_range: 12,
+            knockback_strength: 50,
+            damage: 5
+        },
+        trigger: {
+            range: 10,
+            delay: 20
+        },
+    }, 
+    "slip",
+    transformation = {
+        translation: [0,1,0],
+        scale: [3,3,3],
+        left_rotation: None,
+        right_rotation: None
     },
-    acceleration: {
-        horizontal: 0,
-        vertical: -100,
-        sideward: 0
-    },
-    on_impact: {
-        aoe_range: 12,
-        knockback_strength: 50,
-        damage: 5
-    },
-    trigger: {
-        range: 10,
-        delay: 20
-    }
-}, "slip", insert_on_use = on_use, insert_on_place = on_place, insert_on_impact = on_impact).build()
+    insert_on_use = on_use, 
+    insert_on_place = on_place, 
+    insert_on_impact = on_impact
+).build()
