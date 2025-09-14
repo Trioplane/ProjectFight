@@ -1,17 +1,25 @@
 from ./generic_placeable import ItemGenericPlaceable
 
 def on_use(self):
-    playsound minecraft:entity.arrow.shoot master @a ~ ~ ~ 1 1.5
+    playsound minecraft:entity.arrow.shoot master @a ~ ~ ~ 1 0.5
+    playsound minecraft:block.stone.break master @a
 
 def on_place(self):
-    particle minecraft:falling_honey ~ ~ ~ 0.3 0.5 0.3 1 5
-    playsound minecraft:block.honey_block.fall master @a ~ ~ ~ 1 2
+    particle minecraft:dust_pillar{block_state:{Name:"yellow_concrete_powder"}} ~ ~ ~ 1 1 1 0.5 40
+    particle minecraft:dust{scale:1,color:[0.5f,0.5f,0.5f]} ~ ~0.5 ~ 1.2 0.4 1.2 1 20
+    particle minecraft:dust{scale:2,color:[0.2f,0.2f,0.2f]} ~ ~0.5 ~ 2 0.2 2 0.5 20
+    playsound minecraft:entity.ravager.step
+    playsound minecraft:block.bamboo_wood.place master @a
 
 def on_impact(self):
-    playsound minecraft:block.honey_block.fall master @a ~ ~ ~ 1 1
-    playsound minecraft:block.honey_block.hit master @a ~ ~ ~ 1 1
+    playsound minecraft:block.conduit.deactivate
+    playsound minecraft:block.netherite_block.fall master @a ~ ~ ~ 1 1
+    playsound minecraft:block.netherite_block.hit master @a ~ ~ ~ 1 1
     playsound minecraft:entity.witch.celebrate master @a ~ ~ ~ 1 2
-    particle minecraft:block_crumble{block_state:{Name:"minecraft:honey_block"}} ~ ~ ~ 0.3 0.3 0.3 1 10
+    playsound minecraft:entity.ravager.celebrate master @a ~ ~ ~ 1 1.5
+    particle minecraft:dust_plume ~ ~ ~ 1 1 1 0.5 25
+    particle minecraft:campfire_signal_smoke ~ ~0.2 ~ 1 0.3 1 0.1 20
+    particle minecraft:dust_pillar{block_state:{Name:"yellow_concrete_powder"}} ~ ~ ~ 1 1 1 1 40
 
 ItemGenericPlaceable("wet_floor_sign", {
     init_velocity: {
@@ -33,4 +41,4 @@ ItemGenericPlaceable("wet_floor_sign", {
         range: 10,
         delay: 20
     }
-}, insert_on_use = on_use, insert_on_place = on_place, insert_on_impact = on_impact).build()
+}, "slip", insert_on_use = on_use, insert_on_place = on_place, insert_on_impact = on_impact).build()

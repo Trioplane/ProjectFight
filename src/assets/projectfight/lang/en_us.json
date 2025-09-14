@@ -6,6 +6,7 @@
     "projectfight.items.firework": "Firework",
     "projectfight.items.landmine": "Landmine",
     "projectfight.items.banana_peel": "Banana Peel",
+    "projectfight.items.wet_floor_sign": "Wet Floor Sign",
 
     "projectfight.death.generic.self": "Did you really just kill yourself?",
     "projectfight.death.generic.attacker": "You eliminated %s",
@@ -15,5 +16,7 @@
     "projectfight.death.firework.attacker": "You blew up %s",
     "projectfight.death.firework.victim": "%s made you go off with a bang",
     "projectfight.death.explosive_placeable.attacker": "%s triggered your item and exploded",
-    "projectfight.death.explosive_placeable.victim": "You triggered %s's item and went boom"
+    "projectfight.death.explosive_placeable.victim": "You triggered %s's item and went boom",
+    "projectfight.death.slip.attacker": "%s slipped on your item",
+    "projectfight.death.slip.victim": "You slipped on %s's item and fractured your bones"
 }
