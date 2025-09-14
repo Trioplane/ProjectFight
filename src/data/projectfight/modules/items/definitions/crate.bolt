@@ -8,20 +8,31 @@ def on_impact(self):
     particle minecraft:block{block_state:{Name:"minecraft:dark_oak_planks"}} ~ ~ ~ 1 1 1 1 30
     particle minecraft:campfire_cosy_smoke ~ ~ ~ 0.2 0.2 0.2 0.2 20 normal
 
-ItemGenericThrowable("crate", {
-    init_velocity: {
-        horizontal: 1200,
-        vertical: 0,
-        sideward: 0,
+ItemGenericThrowable(
+    "crate", 
+    {
+        init_velocity: {
+            horizontal: 1200,
+            vertical: 0,
+            sideward: 0,
+        },
+        acceleration: {
+            horizontal: -70,
+            vertical: -40,
+            sideward: 0
+        },
+        on_impact: {
+            aoe_range: 6,
+            knockback_strength: 35,
+            damage: 20
+        }
+    }, 
+    "explosion", 
+    transformation = {
+        translation: None,
+        scale: [1.5,1.5,1.5],
+        left_rotation: None,
+        right_rotation: None
     },
-    acceleration: {
-        horizontal: -70,
-        vertical: -40,
-        sideward: 0
-    },
-    on_impact: {
-        aoe_range: 6,
-        knockback_strength: 35,
-        damage: 20
-    }
-}, "explosion", insert_on_use = on_use, insert_on_impact = on_impact).build()
+    insert_on_use = on_use, 
+    insert_on_impact = on_impact).build()

@@ -3,12 +3,29 @@ from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 from bolt_expressions import Scoreboard
 
 class ItemGenericThrowable(Item):
-    def __init__(self, item_name, config, damage_type = None, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None):
+    def __init__(self, item_name, config, damage_type = None, transformation = None, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None):
         super().__init__(item_name, config)
         self.insert_on_use = insert_on_use
         self.insert_on_movement_step = insert_on_movement_step
         self.insert_on_impact = insert_on_impact
         self.damage_type = damage_type or "generic"
+
+        # TODO: HOW THE FUCK DO YOU PROPERLY ADD DEFAULT VALUES TO NON EXISTANT KEYS IN PYTHON
+        #       THIS ONLY TAKES LIKE 6 LINES OF CODE IN JAVASCRIPT
+        if (transformation == None):
+            transformation = {
+                translation:  [0,0,0],
+                scale: [1,1,1],
+                left_rotation: [0,0,0,1],
+                right_rotation: [0,0,0,1],
+            }
+
+        self.transformation = {
+            translation: transformation.translation or [0,0,0],
+            scale: transformation.scale or [1,1,1],
+            left_rotation: transformation.left_rotation or [0,0,0,1],
+            right_rotation: transformation.right_rotation or [0,0,0,1],
+        }
     
     def use(self):
         tag @s add projectfight.player.items.temp.owner
@@ -18,6 +35,7 @@ class ItemGenericThrowable(Item):
             summon item_display ^ ^ ^1 {
                 Tags: [f"projectfight.items.{self.item_name}", "projectfight.items", "projectfight.items.temp",],
                 item: { id: "popped_chorus_fruit", components: { item_model: f"projectfight:items/{self.item_name}" } },
+                transformation: self.transformation,
                 teleport_duration: 2
             }
 

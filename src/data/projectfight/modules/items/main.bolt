@@ -79,7 +79,7 @@ class Item:
     def __init__(self, item_name, config):
         self.item_name = item_name
         self.config = config
-
+        
     def use(self):
         tag @s add projectfight.player.items.temp.owner
 

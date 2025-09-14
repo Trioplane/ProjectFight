@@ -22,15 +22,18 @@ class ItemGenericPlaceable(ItemGenericThrowable):
         item_name, 
         config,
         damage_type = None,
+        transformation = None,
         insert_on_use = None, 
         insert_on_movement_step = None, 
         insert_on_impact = None, 
         insert_on_place = None, 
         insert_on_activate = None
     ):
-        super().__init__(item_name, config, damage_type, insert_on_use, insert_on_movement_step, insert_on_impact)
+        super().__init__(item_name, config, damage_type, transformation, insert_on_use, insert_on_movement_step, insert_on_impact)
         self.insert_on_place = insert_on_place
         self.insert_on_activate = insert_on_activate
+
+        self.transformation.translation[1] += 0.5
 
     def use(self):
         tag @s add projectfight.player.items.temp.owner
@@ -40,12 +43,7 @@ class ItemGenericPlaceable(ItemGenericThrowable):
             summon item_display ^ ^ ^1 {
                 Tags: [f"projectfight.items.{self.item_name}", "projectfight.items", "projectfight.items.temp",],
                 item: { id: "popped_chorus_fruit", components: { item_model: f"projectfight:items/{self.item_name}" } },
-                transformation: {
-                    translation: [0f,0.5f,0f],
-                    scale: [1f,1f,1f],
-                    left_rotation: [0f,0f,0f,1f],
-                    right_rotation: [0f,0f,0f,1f]
-                },
+                transformation: self.transformation,
                 teleport_duration: 2
             }
 

@@ -2,8 +2,17 @@ from ./generic_throwable import ItemGenericThrowable
 from projectfight:player/movement import KNOCKBACK_PUSH_VECTOR_ENTITY
 
 class ItemGenericThrowableNoGravity(ItemGenericThrowable):
-    def __init__(self, item_name, config, damage_type = None, insert_on_use = None, insert_on_movement_step = None, insert_on_impact = None) :
-        super().__init__(item_name, config, damage_type, insert_on_use, insert_on_movement_step, insert_on_impact)
+    def __init__(
+        self, 
+        item_name, 
+        config, 
+        damage_type = None,
+        transformation = None,
+        insert_on_use = None, 
+        insert_on_movement_step = None, 
+        insert_on_impact = None
+    ):
+        super().__init__(item_name, config, damage_type, transformation, insert_on_use, insert_on_movement_step, insert_on_impact)
 
     def use(self):
         tag @s add projectfight.player.items.temp.owner
