@@ -86,7 +86,6 @@ class ItemGenericPlaceable(ItemGenericThrowable):
 
                 # TODO: find the exact formula on how to get the display size to match with distance check
                 #       ...or maybe use dx dy dz
-                display_size = (self.config.trigger.range + (self.config.trigger.range / 4))
 
                 summon item_display ~ ~ ~ {
                     Tags:[f"projectfight.items.{self.item_name}.trigger_area", f"projectfight.items.{self.item_name}.trigger_area.temp"],
@@ -94,7 +93,7 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                     item: { id: "popped_chorus_fruit", components: { item_model: "projectfight:general/trigger_area" } },
                     transformation: {
                        translation: [0f,0.51f,0f],
-                       scale: [(display_size),1f,(display_size)],
+                       scale: [(self.config.trigger.range),1f,(self.config.trigger.range)],
                        left_rotation: [0f,0f,0f,1f],
                        right_rotation: [0f,0f,0f,1f]
                     }
@@ -155,17 +154,36 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                 velocity.vertical["@s"] += self.config.acceleration.sideward
         # end of return
 
+        trigger_range = self.config.trigger.range - 1
+        trigger_offset = trigger_range / -2
+
         if self.config.trigger.delay > 0:
             execute if entity @s[tag=f"projectfight.items.{self.item_name}.activated"] run return:
                 execute if score @s projectfight.items.trigger_delay matches 1.. run scoreboard players remove @s projectfight.items.trigger_delay 1
                 execute if score @s projectfight.items.trigger_delay matches 0 run function f"projectfight:items/definitions/{self.item_name}/on_impact"
 
-            execute if entity @a[tag=!projectfight.player.dead,distance=(None, self.config.trigger.range)]:
+            execute 
+                align xyz 
+                positioned ~trigger_offset ~ ~trigger_offset
+                if entity @a[
+                    tag=!projectfight.player.dead,
+                    dx=(trigger_range),
+                    dy=0,
+                    dz=(trigger_range),
+                ]:
                 if self.insert_on_activate: 
                     self.insert_on_activate(self)
                 tag @s add f"projectfight.items.{self.item_name}.activated"
         else:
-            execute if entity @a[tag=!projectfight.player.dead,distance=(None, self.config.trigger.range)]: 
+            execute 
+                align xyz 
+                positioned ~trigger_offset ~ ~trigger_offset 
+                if entity @a[
+                    tag=!projectfight.player.dead,
+                    dx=(self.config.trigger.range),
+                    dy=0,
+                    dz=(self.config.trigger.range),
+                ]:
                 if self.insert_on_activate: 
                     self.insert_on_activate(self)
                 function f"projectfight:items/definitions/{self.item_name}/on_impact"
@@ -174,8 +192,22 @@ class ItemGenericPlaceable(ItemGenericThrowable):
         tag @s add projectfight.items.temp.impact
         execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
             tag @s add projectfight.player.temp.attacker
-    
-        execute as @a[tag=!projectfight.player.dead,distance=(None, self.config.on_impact.aoe_range)]:
+
+        aoe_range = self.config.on_impact.aoe_range - 1
+        aoe_range_offset = aoe_range / -2
+        aoe_range_offset_back = aoe_range_offset * -1
+        aoe_range_y = aoe_range * 0.4
+
+        execute
+            align xyz
+            positioned ~aoe_range_offset ~ ~aoe_range_offset
+            as @a[
+                tag=!projectfight.player.dead,
+                dx=aoe_range,
+                dy=aoe_range_y,
+                dz=aoe_range
+            ]
+            positioned ~aoe_range_offset_back ~ ~aoe_range_offset_back:
             tag @s add projectfight.player.temp.victim
             scoreboard players add @s projectfight.player.damage_to_deal self.config.on_impact.damage
             execute
