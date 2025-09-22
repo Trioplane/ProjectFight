@@ -1,2 +1,2 @@
 summon marker ^ ^ ^5 {Tags: ["projectfight.utils.temp"]}
-summon item_display ^ ^ ^1 {Tags: ["projectfight.items.crate", "projectfight.items", "projectfight.items.temp"], item: {id: "popped_chorus_fruit", components: {item_model: "projectfight:items/crate"}}, teleport_duration: 2}
+summon item_display ^ ^ ^1 {Tags: ["projectfight.items.crate", "projectfight.items", "projectfight.items.temp"], item: {id: "popped_chorus_fruit", components: {item_model: "projectfight:items/crate"}}, transformation: {translation: [0, 0, 0], scale: [1.5d, 1.5d, 1.5d], left_rotation: [0, 0, 0, 1], right_rotation: [0, 0, 0, 1]}, teleport_duration: 2}

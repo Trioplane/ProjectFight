@@ -1,0 +1,2 @@
+summon marker ^ ^ ^5 {Tags: ["projectfight.utils.temp"]}
+summon item_display ^ ^ ^1 {Tags: ["projectfight.items.wet_floor_sign", "projectfight.items", "projectfight.items.temp"], item: {id: "popped_chorus_fruit", components: {item_model: "projectfight:items/wet_floor_sign"}}, transformation: {translation: [0, 1.5d, 0], scale: [3, 3, 3], left_rotation: [0, 0, 0, 1], right_rotation: [0, 0, 0, 1]}, teleport_duration: 2}

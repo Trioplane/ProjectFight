@@ -4,3 +4,4 @@ execute as @e[type=item_display, tag=projectfight.items.banana_peel] at @s run f
 execute as @e[type=item_display, tag=projectfight.items.crate] at @s run function projectfight:items/definitions/crate/movement_step
 execute as @e[type=item_display, tag=projectfight.items.firework] at @s run function projectfight:items/definitions/firework/movement_step
 execute as @e[type=item_display, tag=projectfight.items.landmine] at @s run function projectfight:items/definitions/landmine/movement_step
+execute as @e[type=item_display, tag=projectfight.items.wet_floor_sign] at @s run function projectfight:items/definitions/wet_floor_sign/movement_step
