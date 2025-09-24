@@ -1,0 +1,51 @@
+import copy
+
+def actionbar_append_slot(slot):
+    data modify storage projectfight:gui actionbar.display append from storage projectfight:gui f"actionbar.{slot}.slot_negative"
+    data modify storage projectfight:gui actionbar.display append from storage projectfight:gui f"actionbar.{slot}.slot"
+
+def actionbar_modify_slot(slot, component, background = 0):
+    component_negative = copy.deepcopy(component)
+    component_display = copy.deepcopy(component)
+
+    if isinstance(component_negative, list):
+        for index in range(len(component_negative)):
+            component_negative[index]["font"] = "default_neg"
+            component_negative[index]["shadow_color"] = 0
+    elif isinstance(component_negative, dict):
+        component_negative["font"] = "default_neg"
+        component_negative["shadow_color"] = 0
+
+    if isinstance(component_display, list):
+        for index in range(len(component_display)):
+            component_display[index]["font"] = "projectfight:hud/default_right"
+            component_display[index]["shadow_color"] = 0
+    elif isinstance(component_display, dict):
+        component_display["font"] = "projectfight:hud/default_right"
+        component_display["shadow_color"] = 0
+
+    if background > 1:
+        background_str_negative = ""
+        background_str = ""
+        for i in range(background):
+            if i == 0:
+                background_str_negative += "\uE004\uE003"
+                background_str += "\uE000\uE003"
+            elif i == background - 1: 
+                background_str_negative += "\uE004"
+                background_str += "\uE002"
+            else: 
+                background_str_negative += "\uE004\uE003"
+                background_str += "\uE001\uE003"
+
+        background_str = background_str_negative + background_str
+
+        component_negative.insert(0, {text: background_str, font:"projectfight:hud/background", shadow_color: 0})
+
+    data modify storage projectfight:gui f"actionbar.{slot}.slot_negative" set value component_negative
+    data modify storage projectfight:gui f"actionbar.{slot}.slot" set value component_display
+
+Actionbar = {
+    append_slot: actionbar_append_slot,
+    modify_slot: actionbar_modify_slot
+}

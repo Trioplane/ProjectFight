@@ -1,0 +1,18 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "projectfight:font/hud/background.png",
+            "height": 12,
+            "ascent": -4000,
+            "chars": ["\uE000\uE001\uE002"]
+        },
+        {
+            "type": "space",
+            "advances": {
+                "\uE003": -1,
+                "\uE004": -12
+            }
+        }
+    ]
+}

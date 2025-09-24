@@ -1,0 +1,22 @@
+from projectfight:gui/actionbar import Actionbar
+
+function ~/init:
+    ...
+
+function ~/tick:
+    function projectfight:gui/main/build/actionbar
+    execute as @a run function projectfight:gui/main/show/actionbar with storage projectfight:gui actionbar
+
+function ~/build/actionbar:
+    data modify storage projectfight:gui actionbar.display set value []
+
+    # Slots
+    Actionbar.append_slot("health")
+    Actionbar.append_slot("kill")
+
+function ~/show/actionbar:
+    # entity context = player
+    $title @s actionbar $(display)
+
+
+

@@ -1,4 +1,5 @@
-# HEALTH
+from projectfight:gui/actionbar import Actionbar
+
 function ~/init:
     scoreboard objectives add projectfight.player.max_health dummy
     scoreboard objectives add projectfight.player.health dummy
@@ -33,6 +34,8 @@ function ~/apply_damage:
 
         scoreboard players set @s projectfight.player.damage_to_deal 0
 
+        Actionbar.modify_slot("health", [{text:"♥ ",color:"red"},{score:{name:"@s",objective:"projectfight.player.health"},color:"green"},{text:" "}], 3)
+
     tag @a[tag=projectfight.player.temp.victim] remove projectfight.player.temp.victim
     tag @a[tag=projectfight.player.temp.attacker] remove projectfight.player.temp.attacker
 
@@ -58,3 +61,5 @@ function ~/respawn:
     scoreboard players operation @s projectfight.player.health = @s projectfight.player.max_health
     gamemode adventure @s
     tp @s 0 63 0
+
+    Actionbar.modify_slot("health", [{text:"♥ ",color:"red"},{score:{name:"@s",objective:"projectfight.player.health"},color:"green"},{text:" "}], 3)

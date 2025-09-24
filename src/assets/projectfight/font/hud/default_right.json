@@ -1,0 +1,10 @@
+{
+    "providers": [
+        { "type": "reference", "id": "minecraft:include/space" },
+        {
+            "type": "reference",
+            "id": "projectfight:hud/include/default_right",
+            "filter": { "uniform": false }
+        }
+    ]
+}
