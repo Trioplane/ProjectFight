@@ -14,8 +14,8 @@ function projectfight:load:
             path: "projectfight:scrfx/intro",
             callbacks: {
                 "0": "execute at @s run playsound minecraft:block.fire.ambient",
-                "66": "execute at @s run playsound minecraft:block.note_block.didgeridoo",
-                "121": "execute at @s run playsound minecraft:block.note_block.didgeridoo",
+                "59": "execute at @s run playsound minecraft:block.note_block.didgeridoo",
+                "115": "execute at @s run playsound minecraft:block.note_block.didgeridoo",
                 "178": "execute at @s run playsound minecraft:entity.player.attack.sweep master @s ~ ~ ~ 1 1.3",
                 "193": "execute at @s run playsound minecraft:entity.breeze.land",
                 "207": "execute at @s run playsound minecraft:entity.breeze.land master @s ~ ~ ~ 1 0.5"
@@ -61,6 +61,7 @@ function projectfight:load/set_global_rules:
     gamerule doWeatherCycle false
     gamerule announceAdvancements false
     gamerule tntExplodes false
+    gamerule locatorBar false
 
 function projectfight:tick:
     execute as @a:
