@@ -8,15 +8,17 @@ function projectfight:load:
     function projectfight:match/main/init
     
     data modify storage projectfight:scrfx_data screen_effects set value {
-       "projectfight:trplnr_opening": {
+       "projectfight:intro": {
             tps: 1,
-            frame_count: 98,
-            path: "projectfight:scrfx/trplnr_opening",
+            frame_count: 210,
+            path: "projectfight:scrfx/intro",
             callbacks: {
                 "0": "execute at @s run playsound minecraft:block.fire.ambient",
-                "65": "execute at @s run playsound minecraft:entity.player.attack.sweep master @s ~ ~ ~ 1 1.3",
-                "79": "execute at @s run playsound minecraft:entity.breeze.land",
-                "94": "execute at @s run playsound minecraft:entity.breeze.land master @s ~ ~ ~ 1 0.5"
+                "66": "execute at @s run playsound minecraft:block.note_block.didgeridoo",
+                "121": "execute at @s run playsound minecraft:block.note_block.didgeridoo",
+                "178": "execute at @s run playsound minecraft:entity.player.attack.sweep master @s ~ ~ ~ 1 1.3",
+                "193": "execute at @s run playsound minecraft:entity.breeze.land",
+                "207": "execute at @s run playsound minecraft:entity.breeze.land master @s ~ ~ ~ 1 0.5"
             }
         },
         "projectfight:death": {
