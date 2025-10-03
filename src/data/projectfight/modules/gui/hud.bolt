@@ -4,25 +4,25 @@ import copy
 # and values are paths that start in `projectfight:players "$(id)".`
 # It gets the values per player and hydrates the component.
 # !! THIS CAN ONLY BE RAN IF THE FUNCTION IT'S IN HAS AN "id" ARGUMENT !!
-def add_slot(component, background_size = 0, hydrator = {}):
+def add_slot(component, background_size = 0, hydrator = {}, shadow_color = None):
     component_negative = copy.deepcopy(component)
     component_display = copy.deepcopy(component)
 
     if isinstance(component_negative, list):
         for index in range(len(component_negative)):
             component_negative[index]["font"] = "default_neg"
-            component_negative[index]["shadow_color"] = 0
+            component_negative[index]["shadow_color"] = shadow_color or 0
     elif isinstance(component_negative, dict):
         component_negative["font"] = "default_neg"
-        component_negative["shadow_color"] = 0
+        component_negative["shadow_color"] = shadow_color or 0
 
     if isinstance(component_display, list):
         for index in range(len(component_display)):
             component_display[index]["font"] = "projectfight:hud/default_right"
-            component_display[index]["shadow_color"] = 0
+            component_display[index]["shadow_color"] = shadow_color or 0
     elif isinstance(component_display, dict):
         component_display["font"] = "projectfight:hud/default_right"
-        component_display["shadow_color"] = 0
+        component_display["shadow_color"] = shadow_color or 0
 
     if background_size > 1:
         background_str_negative = ""
@@ -41,19 +41,22 @@ def add_slot(component, background_size = 0, hydrator = {}):
         background_str = background_str_negative + background_str
 
         component_negative.insert(0, {text: background_str, font:"projectfight:hud/background", shadow_color: 0})
-    # TODO: Ask for help on how to insert values in macros.
 
     data modify storage projectfight:gui hud.display append value component_negative
 
-    # for negative, index needs to be i+1 to select the actual text and not the background
-    for hydratee, value in hydrator.items():
-        _hydratee = hydratee
-        if hydratee.startswith("["):
-            end_index = hydratee.index("]")
-            component_index = int(hydratee[1:end_index]) + 1
-            _hydratee = f"[{component_index}]{hydratee[end_index + 1:]}"
+    # for negative, index needs to be i+1 to select the actual text and not the background if there is
+    if background_size > 0:
+        for hydratee, value in hydrator.items():
+            _hydratee = hydratee
+            if hydratee.startswith("["):
+                end_index = hydratee.index("]")
+                component_index = int(hydratee[1:end_index]) + 1
+                _hydratee = f"[{component_index}]{hydratee[end_index + 1:]}"
 
-        data modify storage projectfight:gui f"hud.display[-1]{_hydratee}" set from storage projectfight:gui f"hud.current_player.data.{value}"
+            data modify storage projectfight:gui f"hud.display[-1]{_hydratee}" set from storage projectfight:gui f"hud.current_player.data.{value}"
+    else:
+        for hydratee, value in hydrator.items():
+            data modify storage projectfight:gui f"hud.display[-1]{hydratee}" set from storage projectfight:gui f"hud.current_player.data.{value}"
 
     data modify storage projectfight:gui hud.display append value component_display
 
@@ -81,6 +84,9 @@ function ~/build:
         },
         background_size = 3
     )
+
+    # KILL MESSAGE
+    add_slot([{text:""},{text:""},{text:"           "}], hydrator = { "[1]": "kill_message.component" })
 
 function ~/show:
     # entity context = player

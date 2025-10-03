@@ -7,8 +7,14 @@ function ~/init:
     scoreboard objectives add projectfight.player.strength_modifier dummy
 
     scoreboard objectives add projectfight.player.death_timer dummy
+    scoreboard objectives add projectfight.gui.hud.kill_message.remove_time dummy
 
 function ~/tick:
+    execute if score @s projectfight.gui.hud.kill_message.remove_time matches 1..:
+        scoreboard players remove @s projectfight.gui.hud.kill_message.remove_time 1
+        execute if score @s projectfight.gui.hud.kill_message.remove_time matches 0:
+            execute store result storage projectfight:gui hud.update_hud.id int 1 run scoreboard players get @s projectfight.player.id
+            function ~/../update_hud/death/remove with storage projectfight:gui hud.update_hud
     execute as @s[tag=projectfight.player.dead]:
         scoreboard players remove @s projectfight.player.death_timer 1
         execute if score @s projectfight.player.death_timer matches 0 run function projectfight:player/health/respawn
@@ -32,7 +38,7 @@ function ~/apply_damage:
 
         scoreboard players set @s projectfight.player.damage_to_deal 0
         
-        function ~/../update_hud
+        function ~/../update_hud/health
 
     tag @a[tag=projectfight.player.temp.victim] remove projectfight.player.temp.victim
     tag @a[tag=projectfight.player.temp.attacker] remove projectfight.player.temp.attacker
@@ -52,7 +58,12 @@ function ~/show_death_message:
     execute if score @s projectfight.player.id = @p[tag=projectfight.player.temp.attacker] projectfight.player.id run return:
         tellraw @s {translate:"projectfight.death.generic.self",color:"red",italic: true}
     $tellraw @s {translate:"$(translation_key).victim",with:[{"selector":"@p[tag=projectfight.player.temp.attacker]",color:"red"}],color:"gray"}
-    $tellraw @p[tag=projectfight.player.temp.attacker] {translate:"$(translation_key).attacker",with:[{"selector":"@s",color:"gold"}],color:"gray"}
+
+    $summon text_display ~ ~ ~ {Tags:["projectfight.gui.kill_message.resolver"],text:{translate:"$(translation_key).attacker",with:[{"selector":"@a[tag=projectfight.player.temp.victim,tag=projectfight.player.dead]",color:"gold"}],color:"white"}}
+    data modify storage projectfight:health temp.damage.attacker.message set from entity @n[type=text_display,tag=projectfight.gui.kill_message.resolver] text
+    kill @n[tag=projectfight.gui.kill_message.resolver]
+    execute store result storage projectfight:gui hud.update_hud.id int 1 run scoreboard players get @p[tag=projectfight.player.temp.attacker] projectfight.player.id
+    execute as @p[tag=projectfight.player.temp.attacker] run function ~/../update_hud/death/set_values with storage projectfight:gui hud.update_hud
 
 function ~/respawn:
     tag @s remove projectfight.player.dead
@@ -60,13 +71,20 @@ function ~/respawn:
     gamemode adventure @s
     tp @s 0 63 0
 
-    function ~/../update_hud
+    function ~/../update_hud/health
 
-function ~/update_hud:
+function ~/update_hud/death/set_values:
+    scoreboard players set @s projectfight.gui.hud.kill_message.remove_time 100
+    $data modify storage projectfight:players "$(id)".hud.kill_message.component set from storage projectfight:health temp.damage.attacker.message
+
+function ~/update_hud/death/remove:
+    $data remove storage projectfight:players "$(id)".hud.kill_message.component
+
+function ~/update_hud/health:
     execute store result storage projectfight:gui hud.update_hud.id int 1 run scoreboard players get @s projectfight.player.id
     function ~/set_values with storage projectfight:gui hud.update_hud
 
-function ~/update_hud/set_values:
+function ~/update_hud/health/set_values:
     $execute store result storage projectfight:players "$(id)".hud.health.value int 1 run scoreboard players get @s projectfight.player.health
     $data modify storage projectfight:players "$(id)".hud.health.text set string storage projectfight:players "$(id)".hud.health.value
 
