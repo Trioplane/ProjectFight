@@ -1,5 +1,3 @@
-from projectfight:gui/actionbar import Actionbar
-
 function ~/init:
     scoreboard objectives add projectfight.player.max_health dummy
     scoreboard objectives add projectfight.player.health dummy
@@ -33,8 +31,8 @@ function ~/apply_damage:
             function projectfight:player/health/kill
 
         scoreboard players set @s projectfight.player.damage_to_deal 0
-
-        Actionbar.modify_slot("health", [{text:"♥ ",color:"red"},{score:{name:"@s",objective:"projectfight.player.health"},color:"green"},{text:" "}], 3)
+        
+        function ~/../update_hud
 
     tag @a[tag=projectfight.player.temp.victim] remove projectfight.player.temp.victim
     tag @a[tag=projectfight.player.temp.attacker] remove projectfight.player.temp.attacker
@@ -62,4 +60,16 @@ function ~/respawn:
     gamemode adventure @s
     tp @s 0 63 0
 
-    Actionbar.modify_slot("health", [{text:"♥ ",color:"red"},{score:{name:"@s",objective:"projectfight.player.health"},color:"green"},{text:" "}], 3)
+    function ~/../update_hud
+
+function ~/update_hud:
+    execute store result storage projectfight:gui hud.update_hud.id int 1 run scoreboard players get @s projectfight.player.id
+    function ~/set_values with storage projectfight:gui hud.update_hud
+
+function ~/update_hud/set_values:
+    $execute store result storage projectfight:players "$(id)".hud.health.value int 1 run scoreboard players get @s projectfight.player.health
+    $data modify storage projectfight:players "$(id)".hud.health.text set string storage projectfight:players "$(id)".hud.health.value
+
+    $execute if score @s projectfight.player.health matches 67..100 run data modify storage projectfight:players "$(id)".hud.health.color set value "green"
+    $execute if score @s projectfight.player.health matches 34..66 run data modify storage projectfight:players "$(id)".hud.health.color set value "yellow"
+    $execute if score @s projectfight.player.health matches 0..33 run data modify storage projectfight:players "$(id)".hud.health.color set value "red"

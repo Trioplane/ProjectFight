@@ -19,6 +19,4 @@ function ~/tick:
                     function projectfight:match/dice/spawn
             scoreboard players set .dice_timer projectfight.match 20
 
-print(f"🛠 Compiled {__name__}")
-
     

@@ -1,0 +1,51 @@
+inputs = ["forward","backward","left","right","jump"]
+
+function ~/init:
+    scoreboard objectives add projectfight.gui.screen.button.selected dummy
+    scoreboard objectives add projectfight.gui.screen.button.last dummy
+
+    for input in inputs:
+        scoreboard objectives add f"projectfight.gui.screen.{input}.is_holding" dummy
+        scoreboard objectives add f"projectfight.gui.screen.{input}.was_holding" dummy
+
+for input in inputs:
+    # TODO: LEARN HOW TO USE VARIABLES AS KEY NAMES IN PYTHON, THIS LOOKS HORRIBLE
+    p = {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+            "type_specific": {
+                "type": "minecraft:player",
+                "input": {
+                    
+                }
+            }
+        }
+    }
+
+    p.predicate.type_specific.input[input] = true
+
+    predicate f"projectfight:gui/screen/is_pressing_{input}":
+        p
+
+function ~/tick:
+    for input in inputs:
+        scoreboard players operation @s f"projectfight.gui.screen.{input}.was_holding" = @s f"projectfight.gui.screen.{input}.is_holding"
+        execute store result score @s f"projectfight.gui.screen.{input}.is_holding" if predicate f"projectfight:gui/screen/is_pressing_{input}"
+
+        execute 
+            if score @s f"projectfight.gui.screen.{input}.is_holding" matches 1 
+            if score @s f"projectfight.gui.screen.{input}.was_holding" matches 0:
+                if input == "forward" or input == "left":
+                    scoreboard players remove @s projectfight.gui.screen.button.selected 1
+                elif input == "backward" or input == "right":
+                    scoreboard players add @s projectfight.gui.screen.button.selected 1
+                else:
+                    say wahoo
+        
+        execute if score @s projectfight.gui.screen.button.selected matches ..-1
+            run scoreboard players operation @s projectfight.gui.screen.button.selected = @s projectfight.gui.screen.button.last
+        
+        execute if score @s projectfight.gui.screen.button.selected > @s projectfight.gui.screen.button.last
+            run scoreboard players set @s projectfight.gui.screen.button.selected 0
+        

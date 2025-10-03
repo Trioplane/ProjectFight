@@ -6,6 +6,7 @@ function projectfight:load:
     function projectfight:items/main/init
     function projectfight:util/main/init
     function projectfight:match/main/init
+    function projectfight:gui/main/init
     
     data modify storage projectfight:scrfx_data screen_effects set value {
        "projectfight:intro": {
@@ -67,8 +68,6 @@ function projectfight:tick:
     execute as @a:
         function projectfight:player/main/tick
         effect give @s saturation infinite 255 true
-    function projectfight:gui/main/tick
     function projectfight:items/main/tick
     function projectfight:match/main/tick
-
-print(f"🛠 Compiled {__name__}")
+    function projectfight:gui/main/tick
