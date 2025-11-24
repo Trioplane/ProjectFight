@@ -1,0 +1,94 @@
+inputs = ["forward","backward","left","right","jump"]
+
+function ~/init:
+    scoreboard objectives add projectfight.gui.screen.button.selected dummy
+    scoreboard objectives add projectfight.gui.screen.button.last dummy
+
+    for input in inputs:
+        scoreboard objectives add f"projectfight.gui.screen.{input}.is_holding" dummy
+        scoreboard objectives add f"projectfight.gui.screen.{input}.was_holding" dummy
+
+# TODO: why tf isnt this working suddenly tf
+# for input in inputs:
+#     predicate f"projectfight:gui/screen/is_pressing_{input}": {
+#         "condition": "minecraft:entity_properties",
+#         "entity": "this",
+#         "predicate": {
+#             "type_specific": {
+#                 "type": "minecraft:player",
+#                 "input": {
+#                     input: true
+#                 }
+#             }
+#         }
+#     }
+
+function ~/tick:
+    for input in inputs:
+        scoreboard players operation @s f"projectfight.gui.screen.{input}.was_holding" = @s f"projectfight.gui.screen.{input}.is_holding"
+        execute store result score @s f"projectfight.gui.screen.{input}.is_holding" if predicate f"projectfight:gui/screen/is_pressing_{input}"
+
+        execute 
+            if score @s f"projectfight.gui.screen.{input}.is_holding" matches 1 
+            if score @s f"projectfight.gui.screen.{input}.was_holding" matches 0:
+                if input == "forward" or input == "left":
+                    scoreboard players remove @s projectfight.gui.screen.button.selected 1
+                elif input == "backward" or input == "right":
+                    scoreboard players add @s projectfight.gui.screen.button.selected 1
+                else:
+                    say wahoo
+        
+        execute if score @s projectfight.gui.screen.button.selected matches ..-1
+            run scoreboard players operation @s projectfight.gui.screen.button.selected = @s projectfight.gui.screen.button.last
+        
+        execute if score @s projectfight.gui.screen.button.selected > @s projectfight.gui.screen.button.last
+            run scoreboard players set @s projectfight.gui.screen.button.selected 0
+
+function ~/switch_screen:
+    # used inside a screen effect to only change the actual screen during a specific frame
+    execute store result storage projectfight:gui screen.switch_screen.player.id int 1 run scoreboard players get @s projectfight.player.id
+
+    function ~/set_player_screen:
+        data modify storage projectfight:players "$(id)".screen.current_screen set from storage projectfight:players "$(id)".screen.next_screen
+
+    function ~/set_player_screen with storage projectfight:gui screen.switch_screen.player
+
+class Screen:
+    def __init__(self, id, transition):
+        self.id = id
+        self.transition = transition
+    
+    def open(self):
+        function ~/set_player_next_screen:
+            data modify storage projectfight:players "$(id)".screen.next_screen set value (self.id)
+
+        execute store result storage projectfight:gui screen.open_screen.player.id int 1 run scoreboard players get @s projectfight.player.id
+        function ~/set_player_next_screen with storage projectfight:gui screen.open_screen.player
+
+        data modify storage scrfx:in id set value (self.transition)
+        function scrfx:play
+
+    def add_button(self):
+        ...
+
+    def clear_buttons(self):
+        ...
+
+    def build(self):
+        function ~/open:
+            self.open()
+    
+class Button:
+    def __init__(self, id, on_click, neutral, hover = None):
+        self.id = id
+        self.neutral = neutral
+        self.hover = hover or neutral
+        self.on_click = on_click or f"function projectfight:gui/screen/dummy_on_click with {{id: {id}}}"
+
+        data modify storage projectfight:gui f"button.{self.id}.on_click" set value (self.on_click)
+        data modify storage projectfight:gui f"button.{self.id}.neutral" set value (self.neutral)
+        data modify storage projectfight:gui f"button.{self.id}.hover" set value (self.hover)
+
+function ~/dummy_on_click:
+    tellraw @s {text: "Button '$(id)' does nothing yet...", color: "gray"}
+    playsound minecraft:block.note_block.didgeridoo ui @s

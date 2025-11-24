@@ -82,9 +82,6 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                     execute unless block ~ ~ ~ #air run return run function projectfight:items/definitions/generic_placeable/find_ground_up
                     function projectfight:items/definitions/generic_placeable/find_ground_down
 
-                # TODO: find the exact formula on how to get the display size to match with distance check
-                #       ...or maybe use dx dy dz
-
                 summon item_display ~ ~ ~ {
                     Tags:[f"projectfight.items.{self.item_name}.trigger_area", f"projectfight.items.{self.item_name}.trigger_area.temp"],
                     brightness: {block: 15, sky: 15},

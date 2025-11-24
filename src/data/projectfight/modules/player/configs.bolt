@@ -1,5 +1,3 @@
-# TODO: wtf am i doing here, i dont need a list
-
 default_scores = {
     "health": 100,
     "max_health": 100,

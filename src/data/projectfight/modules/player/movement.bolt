@@ -81,7 +81,7 @@ function ~/init:
 
 function ~/tick:
     execute 
-        if entity @s[tag=!projectfight.player.dead, tag=!projectfight.player.knockback_stunned] 
+        if entity @s[tag=!projectfight.player.dead, tag=!projectfight.player.knockback_stunned, tag=!projectfight.player.options.disable_movement] 
         at @s run function projectfight:player/movement/move
     scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.player.id
     execute if score @s projectfight.player.movement.ledge_grab.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.ledge_grab.cooldown 1
