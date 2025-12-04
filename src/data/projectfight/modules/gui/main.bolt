@@ -3,7 +3,8 @@ function ~/init:
     schedule function ~/../build_hud 5t replace
 
 function ~/build_hud:
-    execute as @a[tag=projectfight.player.playing] run function projectfight:gui/hud/build
+    execute as @a[tag=projectfight.player.playing] run function projectfight:gui/hud/update
+    schedule function ~/../build_hud 5t replace
 
 function ~/tick:
     #execute as @a[tag=projectfight.player.in_menu] run function projectfight:gui/screen/tick

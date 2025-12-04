@@ -29,5 +29,9 @@ function projectfight:player/configs/apply_configs:
     for attribute, value in default_attributes.items():
         attribute @s attribute base set value
     
+    $data modify storage projectfight:players temp.hud.var set from storage projectfight:players "$(id)".hud.var
+    execute unless data storage projectfight:players temp.hud.var.kill_message run data modify storage projectfight:players temp.hud.var.kill_message set value {text:""}
+    $data modify storage projectfight:players "$(id)".hud.var set from storage projectfight:players temp.hud.var
+
     effect give @s resistance infinite 5 true
     effect give @s saturation infinite 5 true

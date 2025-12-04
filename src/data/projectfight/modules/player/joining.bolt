@@ -33,7 +33,8 @@ function projectfight:player/joining/start_intro/rejoin:
     tellraw @s {"text":"[ProjectFight] player rejoined."}
 
 function projectfight:player/joining/common:
-    function projectfight:player/configs/apply_configs
+    execute store result storage projectfight:players temp.id int 1 run scoreboard players get @s projectfight.player.id
+    function projectfight:player/configs/apply_configs with storage projectfight:players temp
 
 function projectfight:player/joining/listen:
     execute as @s[tag=projectfight.player.initv0.0.1,scores={projectfight.player.left_game=1..}] run return run function projectfight:player/joining/prejoin

@@ -9,8 +9,11 @@ function ~/init:
 function ~/move/gravity:
     scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.items.id
     $execute rotated as @e[type=item_display,tag=projectfight.items.initial_rotation,predicate=projectfight:util/compare_score/items.owner,limit=1] positioned ~ ~$(vertical) ~ positioned ^$(sideward) ^ ^$(horizontal) positioned ~ ~$(vertical) ~ run summon marker ^$(sideward) ^ ^$(horizontal) {Tags:["projectfight.items.temp.rotation_point"]}
-    $execute rotated as @e[type=item_display,tag=projectfight.items.initial_rotation,predicate=projectfight:util/compare_score/items.owner,limit=1] positioned ~ ~$(vertical) ~ run tp @s ^$(sideward) ^ ^$(horizontal) facing entity @n[type=marker,tag=projectfight.items.temp.rotation_point]
+    $execute rotated as @e[type=item_display,tag=projectfight.items.initial_rotation,predicate=projectfight:util/compare_score/items.owner,limit=1] positioned ~ ~$(vertical) ~ facing entity @n[type=marker,tag=projectfight.items.temp.rotation_point] feet positioned ^$(sideward) ^ ^$(horizontal) run function projectfight:items/movement/move/tp_here
     kill @n[type=marker,tag=projectfight.items.temp.rotation_point]
 
 function ~/move/no_gravity:
-    $tp @s ^ ^ ^$(speed)
+    $execute positioned ^ ^ ^$(speed) facing ^ ^ ^1 run function projectfight:items/movement/move/tp_here
+
+function ~/move/tp_here:
+    tp @s ~ ~ ~ ~ ~

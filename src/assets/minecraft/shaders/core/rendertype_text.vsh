@@ -43,8 +43,9 @@ void main() {
         pos.y += 65; // push the actionbar down to revert offset
         gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
 
-        gl_Position.x += 0.99 * gl_Position.w;
-        gl_Position.y += 1.99 * gl_Position.w;
+        gl_Position.x += gl_Position.w;
+        gl_Position.y += 2 * gl_Position.w;
+        gl_Position.x -= 0.4;
     } else if (id <= -4.0 && id >= -5.0) { // ScreenEffects support
         float aspect = ScreenSize.x / ScreenSize.y;
         vec2 corner = corners[gl_VertexID % 4];
