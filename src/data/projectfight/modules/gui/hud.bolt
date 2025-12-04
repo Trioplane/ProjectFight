@@ -22,7 +22,7 @@ function ~/build:
     data modify storage projectfight:gui hud.display set value []
 
     # HEALTH
-    $data modify storage projectfight:gui hud.display append value {score:{name:"@s",objective:"projectfight.player.health"},color:"green",font:"projectfight:hud/number_right"}
+    data modify storage projectfight:gui hud.display append value {score:{name:"@s",objective:"projectfight.player.health"},color:"green",font:"projectfight:hud/number_right"}
     execute if score @s projectfight.player.health matches 67..100 run data modify storage projectfight:gui hud.display[0].color set value "green"
     execute if score @s projectfight.player.health matches 34..66 run data modify storage projectfight:gui hud.display[0].color set value "yellow"
     execute if score @s projectfight.player.health matches 0..33 run data modify storage projectfight:gui hud.display[0].color set value "red"
