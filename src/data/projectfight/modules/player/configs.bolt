@@ -1,9 +1,10 @@
 default_scores = {
     "health": 100,
     "max_health": 100,
-    "strength_modifier": 1,
-    "weakness_modifier": 1,
+    "strength_modifier": 100,
+    "weakness_modifier": 100,
     "damage_to_deal": 0,
+    "hit_combo": 0,
     "death_timer": 0,
     "movement.ledge_grab.cooldown": 0,
     "movement.slide.cooldown": 0,

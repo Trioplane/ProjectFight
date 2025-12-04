@@ -1,0 +1,19 @@
+{
+    "model": {
+        "type": "select",
+        "property": "custom_model_data",
+        "index": 0,
+        "fallback": {
+            "type": "model",
+            "model": "projectfight:item/general/mat_red"
+        },
+        "cases": [
+            { "when": "red", "model": { "type": "model", "model": "projectfight:item/general/mat_red" } },
+            { "when": "yellow", "model": { "type": "model", "model": "projectfight:item/general/mat_yellow" } },
+            { "when": "orange", "model": { "type": "model", "model": "projectfight:item/general/mat_orange" } },
+            { "when": "green", "model": { "type": "model", "model": "projectfight:item/general/mat_green" } },
+            { "when": "blue", "model": { "type": "model", "model": "projectfight:item/general/mat_blue" } },
+            { "when": "pink", "model": { "type": "model", "model": "projectfight:item/general/mat_pink" } }
+        ]
+    }
+}

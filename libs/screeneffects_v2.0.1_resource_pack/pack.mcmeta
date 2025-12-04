@@ -1,0 +1,35 @@
+{
+  "pack": {
+    "pack_format": 64,
+    "description": "A small flexible library for showing animated screen overlays to the user.\nAuthor: Trplnr\nVersion: v2.0.1",
+    "supported_formats": {
+      "min_inclusive": 64,
+      "max_inclusive": 34
+    }
+  },
+  "overlays": {
+    "entries": [
+      {
+        "formats": {
+          "min_inclusive": 34,
+          "max_inclusive": 34
+        },
+        "directory": "overlay_1.21.1"
+      },
+      {
+        "formats": {
+          "min_inclusive": 42,
+          "max_inclusive": 46
+        },
+        "directory": "overlay_1.21.2to4"
+      },
+      {
+        "formats": {
+          "min_inclusive": 55,
+          "max_inclusive": 55
+        },
+        "directory": "overlay_1.21.5"
+      }
+    ]
+  }
+}

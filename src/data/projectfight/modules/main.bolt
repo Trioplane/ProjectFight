@@ -7,9 +7,10 @@ function projectfight:load:
     function projectfight:util/main/init
     function projectfight:match/main/init
     function projectfight:gui/main/init
-    
-    data modify storage projectfight:scrfx_data screen_effects set value {
-       "projectfight:intro": {
+
+    data modify storage projectfight:scrfx_data screen_effects set value [
+        {
+            name: "projectfight:intro",
             tps: 1,
             frame_count: 210,
             path: "projectfight:scrfx/intro",
@@ -22,7 +23,8 @@ function projectfight:load:
                 "207": "execute at @s run playsound minecraft:entity.breeze.land master @s ~ ~ ~ 1 0.5"
             }
         },
-        "projectfight:death": {
+        {
+            name: "projectfight:death",
             tps: 1,
             frame_count: 97,
             path: "projectfight:scrfx/death",
@@ -33,8 +35,18 @@ function projectfight:load:
                 "88": "execute at @s run playsound minecraft:block.trial_spawner.ominous_activate",
             }
         },
-    }
-    function scrfx:add_screen_effects {storage: "projectfight:scrfx_data", path: "screen_effects"}
+        {
+            name: "projectfight:kill_indicator",
+            tps: 1,
+            frame_count: 19,
+            path: "projectfight:scrfx/kill_indicator",
+            callbacks: {
+                "5": "execute at @s run playsound minecraft:item.mace.smash_ground"
+            }
+        }
+    ]
+
+    function scrfx:api/register_screen_effect/register_group {storage: "projectfight:scrfx_data", path: "screen_effects"}
 
 function projectfight:load/set_global_rules:
     gamerule disableElytraMovementCheck true

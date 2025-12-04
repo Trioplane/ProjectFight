@@ -1,92 +1,34 @@
-import copy
-
-# The hydrator is a dict where keys are paths that start in `projectfight:gui hud.display[-1]`
-# and values are paths that start in `projectfight:players "$(id)".`
-# It gets the values per player and hydrates the component.
-# !! THIS CAN ONLY BE RAN IF THE FUNCTION IT'S IN HAS AN "id" ARGUMENT !!
-def add_slot(component, background_size = 0, hydrator = {}, shadow_color = None):
-    component_negative = copy.deepcopy(component)
-    component_display = copy.deepcopy(component)
-
-    if isinstance(component_negative, list):
-        for index in range(len(component_negative)):
-            component_negative[index]["font"] = "default_neg"
-            component_negative[index]["shadow_color"] = shadow_color or 0
-    elif isinstance(component_negative, dict):
-        component_negative["font"] = "default_neg"
-        component_negative["shadow_color"] = shadow_color or 0
-
-    if isinstance(component_display, list):
-        for index in range(len(component_display)):
-            component_display[index]["font"] = "projectfight:hud/default_right"
-            component_display[index]["shadow_color"] = shadow_color or 0
-    elif isinstance(component_display, dict):
-        component_display["font"] = "projectfight:hud/default_right"
-        component_display["shadow_color"] = shadow_color or 0
-
-    if background_size > 1:
-        background_str_negative = ""
-        background_str = ""
-        for i in range(background_size):
-            if i == 0:
-                background_str_negative += "\uE004\uE003"
-                background_str += "\uE000\uE003"
-            elif i == background_size - 1: 
-                background_str_negative += "\uE004"
-                background_str += "\uE002"
-            else: 
-                background_str_negative += "\uE004\uE003"
-                background_str += "\uE001\uE003"
-
-        background_str = background_str_negative + background_str
-
-        component_negative.insert(0, {text: background_str, font:"projectfight:hud/background", shadow_color: 0})
-
-    data modify storage projectfight:gui hud.display append value component_negative
-
-    # for negative, index needs to be i+1 to select the actual text and not the background if there is
-    if background_size > 0:
-        for hydratee, value in hydrator.items():
-            _hydratee = hydratee
-            if hydratee.startswith("["):
-                end_index = hydratee.index("]")
-                component_index = int(hydratee[1:end_index]) + 1
-                _hydratee = f"[{component_index}]{hydratee[end_index + 1:]}"
-
-            data modify storage projectfight:gui f"hud.display[-1]{_hydratee}" set from storage projectfight:gui f"hud.current_player.data.{value}"
-    else:
-        for hydratee, value in hydrator.items():
-            data modify storage projectfight:gui f"hud.display[-1]{hydratee}" set from storage projectfight:gui f"hud.current_player.data.{value}"
-
-    data modify storage projectfight:gui hud.display append value component_display
-
-    for hydratee, value in hydrator.items():
-        data modify storage projectfight:gui f"hud.display[-1]{hydratee}" set from storage projectfight:gui f"hud.current_player.data.{value}"
+# revamp:
+# each player stores their hud
+# hud runs 10tps
+# let the external peeps do their own thing
+# update func will do everything from scratch
 
 function ~/render:
     execute store result storage projectfight:gui hud.current_player.id int 1 run scoreboard players get @s projectfight.player.id
-    function ~/../build with storage projectfight:gui hud.current_player
-    function ~/../show with storage projectfight:gui hud
+    function ~/macro with storage projectfight:gui hud.current_player
+
+function ~/update:
+    execute store result storage projectfight:gui hud.current_player.id int 1 run scoreboard players get @s projectfight.player.id
+    function ~/macro with storage projectfight:gui hud.current_player
+
+function ~/render/macro:
+    function ~/../show with storage projectfight:players "$(id)".hud
+    
+function ~/update/macro:
+    function ~/../build with storage projectfight:players "$(id)".hud.var
 
 function ~/build:
     data modify storage projectfight:gui hud.display set value []
-    $data modify storage projectfight:gui hud.current_player.data set from storage projectfight:players "$(id)".hud
 
     # HEALTH
-    add_slot(
-        [
-            {text:"100",color:"green"},
-            {text:" ♥ ",color:"red"},
-        ],     
-        hydrator = {
-            "[0].text": "health.text",
-            "[0].color": "health.color",
-        },
-        background_size = 3
-    )
+    $data modify storage projectfight:gui hud.display append value {score:{name:"@s",objective:"projectfight.player.health"},color:"green",font:"projectfight:hud/number_right"}
+    execute if score @s projectfight.player.health matches 67..100 run data modify storage projectfight:gui hud.display[0].color set value "green"
+    execute if score @s projectfight.player.health matches 34..66 run data modify storage projectfight:gui hud.display[0].color set value "yellow"
+    execute if score @s projectfight.player.health matches 0..33 run data modify storage projectfight:gui hud.display[0].color set value "red"
 
     # KILL MESSAGE
-    add_slot([{text:""},{text:""},{text:"           "}], hydrator = { "[1]": "kill_message.component" })
+    $execute if score @s projectfight.gui.hud.kill_message.visible matches 1.. run data modify storage projectfight:gui hud.display append value $(kill_message)
 
 function ~/show:
     # entity context = player

@@ -1,0 +1,15 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "ascent": 16,
+            "height": 32,
+            "file": "projectfight:font/number.png",
+            "chars": [
+                "1234",
+                "5678",
+                "90\u0000\u0000"
+            ]
+        }
+    ]
+}

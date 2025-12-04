@@ -1,32 +1,54 @@
 function ~/init:
     scoreboard objectives add projectfight.player.max_health dummy
     scoreboard objectives add projectfight.player.health dummy
+    scoreboard objectives add projectfight.player.hit_combo dummy
 
     scoreboard objectives add projectfight.player.damage_to_deal dummy
     scoreboard objectives add projectfight.player.weakness_modifier dummy
     scoreboard objectives add projectfight.player.strength_modifier dummy
 
     scoreboard objectives add projectfight.player.death_timer dummy
-    scoreboard objectives add projectfight.gui.hud.kill_message.remove_time dummy
+    scoreboard objectives add projectfight.gui.hud.kill_message.visible dummy
 
 function ~/tick:
-    execute if score @s projectfight.gui.hud.kill_message.remove_time matches 1..:
-        scoreboard players remove @s projectfight.gui.hud.kill_message.remove_time 1
-        execute if score @s projectfight.gui.hud.kill_message.remove_time matches 0:
-            execute store result storage projectfight:gui hud.update_hud.id int 1 run scoreboard players get @s projectfight.player.id
-            function ~/../update_hud/death/remove with storage projectfight:gui hud.update_hud
+    execute if score @s projectfight.gui.hud.kill_message.visible matches 1.. run scoreboard players remove @s projectfight.gui.hud.kill_message.visible 1
     execute as @s[tag=projectfight.player.dead]:
         scoreboard players remove @s projectfight.player.death_timer 1
         execute if score @s projectfight.player.death_timer matches 0 run function projectfight:player/health/respawn
 
 function ~/apply_damage:
     # Calculates damage_to_deal and applies it to every player with the tag `projectfight.player.temp.victim`
+    # TODO: MAKE THIS THING HAVE DECIMALS (THE FINAL HEALTH IS STILL AN INTEGER)
+    # TODO: add hit combo to the equation
+    # dmg = base * v_weakness (x100) * a_strength (x100) * (1 (x100) + (hit_combo (x100) / 10))
+    # if hit_combo > 50, just add 250 to the final damage lol
     execute as @a[tag=projectfight.player.temp.victim,tag=!projectfight.player.dead,gamemode=!creative]:
-        # damage to deal * victim weakness
+        # dmg *= victim weakness
         scoreboard players operation @s projectfight.player.damage_to_deal *= @s projectfight.player.weakness_modifier
-        # damage to deal * attacker strength
+        # dmg *= attacker strength
         scoreboard players operation @s projectfight.player.damage_to_deal *= @p[tag=projectfight.player.temp.attacker] projectfight.player.strength_modifier
+        tellraw @a "====START====="
+        tellraw @a {score:{name:"@s",objective:"projectfight.player.damage_to_deal"}}
 
+        # 1+h/10
+        scoreboard players operation #temp projectfight.player.damage_to_deal = @p[tag=projectfight.player.temp.attacker] projectfight.player.hit_combo
+        scoreboard players operation #temp projectfight.player.damage_to_deal *= #100 projectfight.util.constants
+        scoreboard players operation #temp projectfight.player.damage_to_deal /= #10 projectfight.util.constants
+        scoreboard players add #temp projectfight.player.damage_to_deal 100
+
+        # dmg *= 1+h/10
+        scoreboard players operation @s projectfight.player.damage_to_deal *= #temp projectfight.player.damage_to_deal
+        tellraw @a {score:{name:"@s",objective:"projectfight.player.damage_to_deal"}}
+
+        # dmg /= 1000000
+        scoreboard players operation @s projectfight.player.damage_to_deal /= #1000000 projectfight.util.constants
+
+        # if hit_combo > 50, just add 250 to the final damage lol
+        execute if score @p[tag=projectfight.player.temp.attacker] projectfight.player.hit_combo matches 50..:
+            scoreboard players add @s projectfight.player.damage_to_deal 250
+
+        tellraw @a {score:{name:"@s",objective:"projectfight.player.damage_to_deal"}}
+        tellraw @a "====END======"
         scoreboard players operation @s projectfight.player.health -= @s projectfight.player.damage_to_deal
         
         execute if score @s projectfight.player.damage_to_deal matches ..0 if score @s projectfight.player.health > @s projectfight.player.max_health:
@@ -38,15 +60,23 @@ function ~/apply_damage:
 
         scoreboard players set @s projectfight.player.damage_to_deal 0
         
-        function ~/../update_hud/health
+        function ~/../calculate_hit_combo
 
     tag @a[tag=projectfight.player.temp.victim] remove projectfight.player.temp.victim
     tag @a[tag=projectfight.player.temp.attacker] remove projectfight.player.temp.attacker
+
+function ~/calculate_hit_combo:
+    # attacker
+    execute as @p[tag=projectfight.player.temp.attacker] unless score @s projectfight.player.hit_combo matches 50..:
+        scoreboard players add @s projectfight.player.hit_combo 1
+    # victim
+    scoreboard players set @s projectfight.player.hit_combo 0
 
 function ~/kill:
     tag @s add projectfight.player.dead
 
     function ~/../show_death_message with storage projectfight:health temp.damage
+    execute as @p[tag=projectfight.player.temp.attacker] run function ~/../kill_as_attacker
     
     function projectfight:player/movement/knockback/disable
     scoreboard players set @s projectfight.player.death_timer 86
@@ -54,16 +84,23 @@ function ~/kill:
     function scrfx:play
     gamemode spectator @s
 
+function ~/kill_as_attacker:
+    data modify storage scrfx:in id set value "projectfight:kill_indicator"
+    function scrfx:play
+
 function ~/show_death_message:
     execute if score @s projectfight.player.id = @p[tag=projectfight.player.temp.attacker] projectfight.player.id run return:
         tellraw @s {translate:"projectfight.death.generic.self",color:"red",italic: true}
     $tellraw @s {translate:"$(translation_key).victim",with:[{"selector":"@p[tag=projectfight.player.temp.attacker]",color:"red"}],color:"gray"}
 
     $summon text_display ~ ~ ~ {Tags:["projectfight.gui.kill_message.resolver"],text:{translate:"$(translation_key).attacker",with:[{"selector":"@a[tag=projectfight.player.temp.victim,tag=projectfight.player.dead]",color:"gold"}],color:"white"}}
-    data modify storage projectfight:health temp.damage.attacker.message set from entity @n[type=text_display,tag=projectfight.gui.kill_message.resolver] text
+    execute store result storage projectfight:gui hud.current_player.id int 1 run scoreboard players get @p[tag=projectfight.player.temp.attacker] projectfight.player.id
+    execute as @p[tag=projectfight.player.temp.attacker] run function ~/update_hud with storage projectfight:gui hud.current_player
     kill @n[tag=projectfight.gui.kill_message.resolver]
-    execute store result storage projectfight:gui hud.update_hud.id int 1 run scoreboard players get @p[tag=projectfight.player.temp.attacker] projectfight.player.id
-    execute as @p[tag=projectfight.player.temp.attacker] run function ~/../update_hud/death/set_values with storage projectfight:gui hud.update_hud
+
+function ~/show_death_message/update_hud:
+    scoreboard players set @s projectfight.gui.hud.kill_message.visible 100
+    $data modify storage projectfight:players "$(id)".hud.var.kill_message set from entity @n[type=text_display,tag=projectfight.gui.kill_message.resolver] text
 
 function ~/respawn:
     tag @s remove projectfight.player.dead
@@ -71,23 +108,3 @@ function ~/respawn:
     gamemode adventure @s
     tp @s 0 63 0
 
-    function ~/../update_hud/health
-
-function ~/update_hud/death/set_values:
-    scoreboard players set @s projectfight.gui.hud.kill_message.remove_time 100
-    $data modify storage projectfight:players "$(id)".hud.kill_message.component set from storage projectfight:health temp.damage.attacker.message
-
-function ~/update_hud/death/remove:
-    $data remove storage projectfight:players "$(id)".hud.kill_message.component
-
-function ~/update_hud/health:
-    execute store result storage projectfight:gui hud.update_hud.id int 1 run scoreboard players get @s projectfight.player.id
-    function ~/set_values with storage projectfight:gui hud.update_hud
-
-function ~/update_hud/health/set_values:
-    $execute store result storage projectfight:players "$(id)".hud.health.value int 1 run scoreboard players get @s projectfight.player.health
-    $data modify storage projectfight:players "$(id)".hud.health.text set string storage projectfight:players "$(id)".hud.health.value
-
-    $execute if score @s projectfight.player.health matches 67..100 run data modify storage projectfight:players "$(id)".hud.health.color set value "green"
-    $execute if score @s projectfight.player.health matches 34..66 run data modify storage projectfight:players "$(id)".hud.health.color set value "yellow"
-    $execute if score @s projectfight.player.health matches 0..33 run data modify storage projectfight:players "$(id)".hud.health.color set value "red"
