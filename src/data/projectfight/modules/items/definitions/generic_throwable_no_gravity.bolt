@@ -53,7 +53,7 @@ class ItemGenericThrowableNoGravity(ItemGenericThrowable):
         execute as @a if score @s projectfight.player.id = @n[type=item_display,tag=projectfight.items.temp.impact] projectfight.items.owner:
             tag @s add projectfight.player.temp.attacker
     
-        execute as @a[tag=!projectfight.player.dead,distance=(None, self.config.on_impact.aoe_range)]:
+        execute as @a[tag=!projectfight.player.dead,tag=projectfight.player.playing,distance=(None, self.config.on_impact.aoe_range)]:
             tag @s add projectfight.player.temp.victim
             scoreboard players add @s projectfight.player.damage_to_deal self.config.on_impact.damage
             execute

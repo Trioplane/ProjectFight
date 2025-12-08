@@ -49,7 +49,7 @@ function writeFontAndImageFiles(frameCount, width, imagePath, fileName) {
                         type: "bitmap",
                         file: imageResourcePath,
                         height: width,
-                        ascent: -2000,
+                        ascent: -20000 + (width/2),
                         chars: [
                           "\uE000"
                         ]

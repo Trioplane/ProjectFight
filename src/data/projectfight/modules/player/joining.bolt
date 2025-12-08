@@ -36,6 +36,11 @@ function projectfight:player/joining/common:
     execute store result storage projectfight:players temp.id int 1 run scoreboard players get @s projectfight.player.id
     function projectfight:player/configs/apply_configs with storage projectfight:players temp
 
+    execute if score .active projectfight.match matches 1:
+        tellraw @s {text:"It seems like theres a match currently playing. Please wait for the match to end.",color:"gray"}
+        gamemode spectator @s
+        spectate @s @r[tag=projectfight.player.playing]
+
 function projectfight:player/joining/listen:
     execute as @s[tag=projectfight.player.initv0.0.1,scores={projectfight.player.left_game=1..}] run return run function projectfight:player/joining/prejoin
     execute as @s[tag=!projectfight.player.initv0.0.1] run return run function projectfight:player/joining/first_join

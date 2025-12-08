@@ -2,7 +2,7 @@
     "providers": [
         {
             "type": "bitmap",
-            "ascent": -4032,
+            "ascent": -6032,
             "height": 32,
             "file": "projectfight:font/number.png",
             "chars": [

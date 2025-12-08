@@ -41,7 +41,7 @@ function projectfight:load:
             frame_count: 19,
             path: "projectfight:scrfx/kill_indicator",
             callbacks: {
-                "5": "execute at @s run playsound minecraft:item.mace.smash_ground"
+                "0": "execute at @s run playsound minecraft:item.mace.smash_ground"
             }
         }
     ]
@@ -75,6 +75,7 @@ function projectfight:load/set_global_rules:
     gamerule announceAdvancements false
     gamerule tntExplodes false
     gamerule locatorBar false
+    gamerule commandModificationBlockLimit 99999999
 
 function projectfight:tick:
     execute as @a:

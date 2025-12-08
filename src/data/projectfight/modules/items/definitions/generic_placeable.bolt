@@ -162,6 +162,7 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                 positioned ~trigger_offset ~ ~trigger_offset
                 if entity @a[
                     tag=!projectfight.player.dead,
+                    tag=projectfight.player.playing,
                     dx=(trigger_range),
                     dy=0,
                     dz=(trigger_range),
@@ -175,6 +176,7 @@ class ItemGenericPlaceable(ItemGenericThrowable):
                 positioned ~trigger_offset ~ ~trigger_offset 
                 if entity @a[
                     tag=!projectfight.player.dead,
+                    tag=projectfight.player.playing,
                     dx=(self.config.trigger.range),
                     dy=0,
                     dz=(self.config.trigger.range),
@@ -198,6 +200,7 @@ class ItemGenericPlaceable(ItemGenericThrowable):
             positioned ~aoe_range_offset ~ ~aoe_range_offset
             as @a[
                 tag=!projectfight.player.dead,
+                tag=projectfight.player.playing,
                 dx=aoe_range,
                 dy=aoe_range_y,
                 dz=aoe_range

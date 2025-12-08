@@ -22,7 +22,7 @@ function ~/apply_damage:
     # TODO: add hit combo to the equation
     # dmg = base * v_weakness (x100) * a_strength (x100) * (1 (x100) + (hit_combo (x100) / 10))
     # if hit_combo > 50, just add 250 to the final damage lol
-    execute as @a[tag=projectfight.player.temp.victim,tag=!projectfight.player.dead,gamemode=!creative]:
+    execute as @a[tag=projectfight.player.temp.victim,tag=!projectfight.player.dead,tag=projectfight.player.playing,gamemode=!creative]:
         # dmg *= victim weakness
         scoreboard players operation @s projectfight.player.damage_to_deal *= @s projectfight.player.weakness_modifier
         # dmg *= attacker strength
@@ -93,10 +93,12 @@ function ~/show_death_message:
         tellraw @s {translate:"projectfight.death.generic.self",color:"red",italic: true}
     $tellraw @s {translate:"$(translation_key).victim",with:[{"selector":"@p[tag=projectfight.player.temp.attacker]",color:"red"}],color:"gray"}
 
+    # TEMP GUI FIX BY JUST REMOVING KILL MESSAGE FROM HUD
     $summon text_display ~ ~ ~ {Tags:["projectfight.gui.kill_message.resolver"],text:{translate:"$(translation_key).attacker",with:[{"selector":"@a[tag=projectfight.player.temp.victim,tag=projectfight.player.dead]",color:"gold"}],color:"white"}}
     execute store result storage projectfight:gui hud.current_player.id int 1 run scoreboard players get @p[tag=projectfight.player.temp.attacker] projectfight.player.id
     execute as @p[tag=projectfight.player.temp.attacker] run function ~/update_hud with storage projectfight:gui hud.current_player
     kill @n[tag=projectfight.gui.kill_message.resolver]
+    #$tellraw @a {translate:"$(translation_key).attacker",with:[{"selector":"@a[tag=projectfight.player.temp.victim,tag=projectfight.player.dead]",color:"gold"}],color:"white"}
 
 function ~/show_death_message/update_hud:
     scoreboard players set @s projectfight.gui.hud.kill_message.visible 100
@@ -106,5 +108,6 @@ function ~/respawn:
     tag @s remove projectfight.player.dead
     scoreboard players operation @s projectfight.player.health = @s projectfight.player.max_health
     gamemode adventure @s
-    tp @s 0 63 0
+    execute unless entity @n[type=marker,tag=projectfight.match.spawn] run return run tp @s 0 63 0
+    tp @s @n[type=marker,tag=projectfight.match.spawn,sort=random]
 

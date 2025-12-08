@@ -33,5 +33,7 @@ function projectfight:player/configs/apply_configs:
     execute unless data storage projectfight:players temp.hud.var.kill_message run data modify storage projectfight:players temp.hud.var.kill_message set value {text:""}
     $data modify storage projectfight:players "$(id)".hud.var set from storage projectfight:players temp.hud.var
 
+    tag @s remove projectfight.player.playing
+
     effect give @s resistance infinite 5 true
     effect give @s saturation infinite 5 true

@@ -1,4 +1,4 @@
-#version 150
+#version 330
 
 #moj_import <minecraft:fog.glsl>
 #moj_import <minecraft:dynamictransforms.glsl>
@@ -29,7 +29,7 @@ float ASCENT_OFFSET = 2000;
 float HALF_ASCENT_OFFSET = ASCENT_OFFSET / 2;
 
 void main() {
-    float id = -floor((pos.y + HALF_ASCENT_OFFSET) / ASCENT_OFFSET);
+    float id = floor((pos.y + HALF_ASCENT_OFFSET) / ASCENT_OFFSET);
     pos.y = mod(pos.y + HALF_ASCENT_OFFSET, ASCENT_OFFSET) - HALF_ASCENT_OFFSET;
 
     sphericalVertexDistance = fog_spherical_distance(Position);
@@ -39,14 +39,21 @@ void main() {
 
     gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
 
-    if (id == -2) {
+    if (id == 2.) {
+        pos.y += 65; // push the actionbar down to revert offset
+        gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
+
+        gl_Position.x -= gl_Position.w;
+        gl_Position.y += 2 * gl_Position.w;
+        gl_Position.x += 0.2;
+    } else if (id == 3.) {
         pos.y += 65; // push the actionbar down to revert offset
         gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
 
         gl_Position.x += gl_Position.w;
         gl_Position.y += 2 * gl_Position.w;
-        gl_Position.x -= 0.4;
-    } else if (id <= -4.0 && id >= -5.0) { // ScreenEffects support
+        gl_Position.x -= 0.2;
+    } else if (id >= 10. && id <= 50.) { // ScreenEffects support
         float aspect = ScreenSize.x / ScreenSize.y;
         vec2 corner = corners[gl_VertexID % 4];
         vec2 scaled = (corner * 2.0 - 1.0) * vec2(1.0, aspect);
