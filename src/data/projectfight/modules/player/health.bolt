@@ -27,8 +27,6 @@ function ~/apply_damage:
         scoreboard players operation @s projectfight.player.damage_to_deal *= @s projectfight.player.weakness_modifier
         # dmg *= attacker strength
         scoreboard players operation @s projectfight.player.damage_to_deal *= @p[tag=projectfight.player.temp.attacker] projectfight.player.strength_modifier
-        tellraw @a "====START====="
-        tellraw @a {score:{name:"@s",objective:"projectfight.player.damage_to_deal"}}
 
         # 1+h/10
         scoreboard players operation #temp projectfight.player.damage_to_deal = @p[tag=projectfight.player.temp.attacker] projectfight.player.hit_combo
@@ -38,8 +36,6 @@ function ~/apply_damage:
 
         # dmg *= 1+h/10
         scoreboard players operation @s projectfight.player.damage_to_deal *= #temp projectfight.player.damage_to_deal
-        tellraw @a {score:{name:"@s",objective:"projectfight.player.damage_to_deal"}}
-
         # dmg /= 1000000
         scoreboard players operation @s projectfight.player.damage_to_deal /= #1000000 projectfight.util.constants
 
@@ -47,8 +43,6 @@ function ~/apply_damage:
         execute if score @p[tag=projectfight.player.temp.attacker] projectfight.player.hit_combo matches 50..:
             scoreboard players add @s projectfight.player.damage_to_deal 250
 
-        tellraw @a {score:{name:"@s",objective:"projectfight.player.damage_to_deal"}}
-        tellraw @a "====END======"
         scoreboard players operation @s projectfight.player.health -= @s projectfight.player.damage_to_deal
         
         execute if score @s projectfight.player.damage_to_deal matches ..0 if score @s projectfight.player.health > @s projectfight.player.max_health:
