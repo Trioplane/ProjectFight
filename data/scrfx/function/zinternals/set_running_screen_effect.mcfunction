@@ -1,4 +1,4 @@
-$execute unless data storage scrfx:registry screen_effects."$(screen_effect_id)" run return run function scrfx:zinternals/errors/screen_effect_not_found {id: "$(screen_effect_id)"}
+$execute unless data storage scrfx:registry screen_effects."$(screen_effect_id)" run return run function scrfx:zinternals/messages/screen_effect_not_found {id: "$(screen_effect_id)"}
 $data modify storage scrfx:running_screen_effects running."$(player_id)" set from storage scrfx:registry screen_effects."$(screen_effect_id)"
 $execute store result score @s scrfx.zinternals.player.tps run data get storage scrfx:running_screen_effects running."$(player_id)".tps
 $execute store result score @s scrfx.zinternals.player.frame_count run data get storage scrfx:running_screen_effects running."$(player_id)".frame_count

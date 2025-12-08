@@ -1,4 +1,4 @@
-execute if entity @s[tag=!projectfight.player.dead, tag=!projectfight.player.knockback_stunned] at @s run function projectfight:player/movement/move
+execute if entity @s[tag=!projectfight.player.dead, tag=!projectfight.player.knockback_stunned, tag=!projectfight.player.options.disable_movement, gamemode=!spectator] at @s run function projectfight:player/movement/move
 scoreboard players operation #compare_value projectfight.predicate.compare_score = @s projectfight.player.id
 execute if score @s projectfight.player.movement.ledge_grab.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.ledge_grab.cooldown 1
 execute if score @s projectfight.player.movement.air_dash.cooldown matches 1.. run scoreboard players remove @s projectfight.player.movement.air_dash.cooldown 1

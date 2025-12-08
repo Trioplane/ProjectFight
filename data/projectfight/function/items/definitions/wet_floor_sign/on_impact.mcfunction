@@ -1,6 +1,6 @@
 tag @s add projectfight.items.temp.impact
 execute as @a if score @s projectfight.player.id = @n[type=item_display, tag=projectfight.items.temp.impact] projectfight.items.owner run tag @s add projectfight.player.temp.attacker
-execute align xyz positioned ~-5.5 ~ ~-5.5 as @a[tag=!projectfight.player.dead, dx=11, dy=4.4, dz=11] positioned ~5.5 ~ ~5.5 run function projectfight:items/definitions/wet_floor_sign/on_impact/nested_execute_0
+execute align xyz positioned ~-5.5 ~ ~-5.5 as @a[tag=!projectfight.player.dead, tag=projectfight.player.playing, dx=11, dy=4.4, dz=11] positioned ~5.5 ~ ~5.5 run function projectfight:items/definitions/wet_floor_sign/on_impact/nested_execute_0
 data modify storage projectfight:health temp.damage.translation_key set value "projectfight.death.slip"
 function projectfight:player/health/apply_damage
 playsound minecraft:block.conduit.deactivate

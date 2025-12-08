@@ -1,5 +1,6 @@
 tag @s add projectfight.player.dead
 function projectfight:player/health/show_death_message with storage projectfight:health temp.damage
+execute as @p[tag=projectfight.player.temp.attacker] run function projectfight:player/health/kill_as_attacker
 function projectfight:player/movement/knockback/disable
 scoreboard players set @s projectfight.player.death_timer 86
 data modify storage scrfx:in id set value "projectfight:death"

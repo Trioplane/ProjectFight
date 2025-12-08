@@ -1,3 +1,3 @@
-function projectfight:match/dice/tick
-execute if score .dice_timer projectfight.match matches 1.. run scoreboard players remove .dice_timer projectfight.match 1
-execute unless score .dice_timer projectfight.match matches 1.. run function projectfight:match/main/tick/nested_execute_0
+title @a times 0.8s 5s 0.8s
+title @a title {text: "\ue000", font: "projectfight:scrfx/intro45"}
+execute as @a at @s run playsound minecraft:block.beacon.activate master

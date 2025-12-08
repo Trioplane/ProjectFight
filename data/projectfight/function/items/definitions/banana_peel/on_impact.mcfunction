@@ -1,6 +1,6 @@
 tag @s add projectfight.items.temp.impact
 execute as @a if score @s projectfight.player.id = @n[type=item_display, tag=projectfight.items.temp.impact] projectfight.items.owner run tag @s add projectfight.player.temp.attacker
-execute align xyz positioned ~ ~ ~ as @a[tag=!projectfight.player.dead, dx=0, dy=0.0, dz=0] positioned ~ ~ ~ run function projectfight:items/definitions/banana_peel/on_impact/nested_execute_0
+execute align xyz positioned ~ ~ ~ as @a[tag=!projectfight.player.dead, tag=projectfight.player.playing, dx=0, dy=0.0, dz=0] positioned ~ ~ ~ run function projectfight:items/definitions/banana_peel/on_impact/nested_execute_0
 data modify storage projectfight:health temp.damage.translation_key set value "projectfight.death.generic"
 function projectfight:player/health/apply_damage
 playsound minecraft:block.honey_block.fall master @a ~ ~ ~ 1 1

@@ -23,3 +23,5 @@ gamerule doVinesSpread false
 gamerule doWeatherCycle false
 gamerule announceAdvancements false
 gamerule tntExplodes false
+gamerule locatorBar false
+gamerule commandModificationBlockLimit 99999999
