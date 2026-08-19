@@ -1,0 +1,13 @@
+[project]
+name = "projectfight"
+version = "0.1.0"
+description = "A fast chaotic PVP game inspired by RUNNING FROM THE INTERNET"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[tool.uv.workspace]
+members = [
+    "pack",
+    "projectfight_sdk",
+]

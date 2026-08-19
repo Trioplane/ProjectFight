@@ -1,0 +1,17 @@
+[project]
+name = "pack"
+version = "0.1.0"
+description = "Minecraft packs that contain logic and assets for ProjectFight"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "beet>=0.116.0",
+    "bolt>=0.50.1",
+    "bolt-expressions>=0.19.2",
+    "bolt-native-macros>=0.5.2",
+    "rich>=15.0.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.26,<0.12.0"]
+build-backend = "uv_build"
