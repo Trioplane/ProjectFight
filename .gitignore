@@ -1,6 +1,0 @@
-.venv/
-/build/
-.beet_cache/
-ignore/
-src/blender/renders/
-lore.md
