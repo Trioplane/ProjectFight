@@ -1,0 +1,27 @@
+from bolt_expressions import Data
+REGISTRY_STORAGE = Data.storage("pf:registry").root
+
+class Registry:
+    def __init__(self, id, function_path):
+        self.id = id
+        self.function_path = function_path
+        self.storage = REGISTRY_STORAGE[id]
+
+        self._build_function_register()
+        self._build_function_tag_register()
+
+    def _build_function_register(self):
+        function f"{self.function_path}/register":
+            self.storage = []
+            function f"#pf:registry/{self.id}"
+
+    def _build_function_tag_register(self):
+        function_tag f"pf:registry/{self.id}" {"values": []}
+
+    def get_storage(self):
+        return self.storage
+
+ITEM_REGISTRY          = Registry("item", ~/item)
+PROJECTILE_REGISTRY    = Registry("projectile", ~/projectile)
+MOVEMENT_TYPE_REGISTRY = Registry("movement_type", ~/movement_type)
+MAP_REGISTRY           = Registry("map", ~/map)

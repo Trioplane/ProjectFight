@@ -23,8 +23,8 @@
     ],
     "meta": {
         "bolt": {
-            "entrypoint": "projectfight:*"
+            "entrypoint": "pf:main"
         }
     },
-    "output": "build"
+    "output": ".build"
 }
