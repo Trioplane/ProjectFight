@@ -1,0 +1,10 @@
+from plugins.log import log
+
+if ctx.meta.get("pf_environment") is None:
+    log.error("No projectfight environment was found.")
+    raise AttributeError
+
+def get_environment() -> str:
+    return ctx.meta["pf_environment"]
+
+log.info("Building projectfight %s on %s environment", ctx.project_version, get_environment())

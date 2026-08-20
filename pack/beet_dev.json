@@ -24,7 +24,8 @@
     "meta": {
         "bolt": {
             "entrypoint": "pf:main"
-        }
+        },
+        "pf_environment": "developer"
     },
     "output": ".build"
 }

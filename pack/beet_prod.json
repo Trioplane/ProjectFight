@@ -1,0 +1,30 @@
+{
+    "author": "Trplnr",
+    "name": "ProjectFight",
+    "description": "A fast chaotic PVP game inspired by RUNNING FROM THE INTERNET",
+    "version": "0.1.0",
+    "minecraft": "26.2",
+    "data_pack": {
+        "load": ["src"],
+        "min_format": [107,1],
+        "max_format": [107,1]
+    },
+    "resource_pack": {
+        "load": ["src"],
+        "min_format": [88,0],
+        "max_format": [88,0]
+    },
+    "pipeline": ["plugins.load_third_party", "mecha"],
+    "require": [
+        "bolt",
+        "bolt_expressions",
+        "bolt_native_macros"
+    ],
+    "meta": {
+        "bolt": {
+            "entrypoint": "pf:main"
+        },
+        "pf_environment": "production"
+    },
+    "output": ".build"
+}
