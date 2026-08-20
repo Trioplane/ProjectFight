@@ -1,0 +1,17 @@
+USED_ITEM = ~/used_item
+
+advancement USED_ITEM {
+    "criteria": {
+        "used_item": {
+            "trigger": "minecraft:consume_item",
+            "conditions": {
+                "item": {
+                    "predicates": {
+                        "minecraft:custom_data": {}
+                    }
+                }
+            }
+        }
+    }
+}
+
