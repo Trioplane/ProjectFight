@@ -3,6 +3,8 @@ import pf:registry as registry
 from pf:build import get_environment
 
 function ~/setup_gamerules:
+    append function_tag minecraft:load {"values": [(~/)]}
+    
     gamerule advance_time false
     gamerule advance_weather false
     gamerule allow_entering_nether_using_portals false
