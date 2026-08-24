@@ -1,5 +1,5 @@
 from beet import PluginOptions
 
 
-class ProjectFightSdkOptions(PluginOptions):
+class PFOptions(PluginOptions):
     ...
