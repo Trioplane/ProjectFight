@@ -9,6 +9,7 @@ dependencies = [
     "bolt>=0.50.1",
     "bolt-expressions>=0.19.2",
     "bolt-native-macros>=0.5.2",
+    "projectfight-sdk",
     "rich>=15.0.0",
 ]
 
@@ -18,3 +19,6 @@ build-backend = "uv_build"
 
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+projectfight-sdk = { workspace = true, editable = true }

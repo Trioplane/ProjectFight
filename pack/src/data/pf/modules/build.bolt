@@ -1,10 +1,11 @@
-from plugins.log import log
+import logging
+logger = logging.getLogger("projectfight")
 
 if ctx.meta.get("pf_environment") is None:
-    log.error("No projectfight environment was found.")
+    logger.error("No projectfight environment was found.")
     raise AttributeError
 
 def get_environment() -> str:
     return ctx.meta["pf_environment"]
 
-log.info("Building projectfight %s on %s environment", ctx.project_version, get_environment())
+logger.info("Building projectfight %s on %s environment", ctx.project_version, get_environment())

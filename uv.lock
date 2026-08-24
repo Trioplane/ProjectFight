@@ -287,6 +287,7 @@ dependencies = [
     { name = "bolt" },
     { name = "bolt-expressions" },
     { name = "bolt-native-macros" },
+    { name = "projectfight-sdk" },
     { name = "rich" },
 ]
 
@@ -296,6 +297,7 @@ requires-dist = [
     { name = "bolt", specifier = ">=0.50.1" },
     { name = "bolt-expressions", specifier = ">=0.19.2" },
     { name = "bolt-native-macros", specifier = ">=0.5.2" },
+    { name = "projectfight-sdk", editable = "projectfight_sdk" },
     { name = "rich", specifier = ">=15.0.0" },
 ]
 
@@ -367,6 +369,12 @@ source = { virtual = "." }
 name = "projectfight-sdk"
 version = "0.1.0"
 source = { editable = "projectfight_sdk" }
+dependencies = [
+    { name = "rich" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "rich", specifier = ">=15.0.0" }]
 
 [[package]]
 name = "pydantic"

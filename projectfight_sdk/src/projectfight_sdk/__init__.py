@@ -1,2 +1,1 @@
-def hello() -> str:
-    return "Hello from projectfight-sdk!"
+from .plugin import *
