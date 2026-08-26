@@ -1,0 +1,4 @@
+{
+    "type": "pf:uniform_acceleration",
+    "y": {"type": "local", "value": -0.2}
+}

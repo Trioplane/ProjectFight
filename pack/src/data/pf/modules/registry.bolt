@@ -22,4 +22,5 @@ class Registry:
         return self.storage
 
 ITEM_REGISTRY          = Registry("item", ~/item)
+PROJECTILE_REGISTRY          = Registry("projectile", ~/projectile)
 MAP_REGISTRY           = Registry("map", ~/map)

@@ -49,7 +49,7 @@ class PFItem(JsonFileBase):
         # Register item into the PF item registry
         pack.functions.setdefault(REGISTRY_FUNCTION_PATH)
         pack.functions[REGISTRY_FUNCTION_PATH].append(Function([
-          f"data modify storage pf:registry root.item append value {json.dumps([identifier])}"
+          f"data modify storage pf:registry root.item append value \"{identifier}\""
         ]))
         pack.function_tags["pf:registry/item"].add(REGISTRY_FUNCTION_PATH)
         
@@ -69,7 +69,8 @@ class PFItem(JsonFileBase):
                 }
               }
             }
-          }
+          },
+          "rewards": {"function": ON_USE_FUNCTION_PATH}
         })
         
         # loot table giver

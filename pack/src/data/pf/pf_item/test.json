@@ -1,6 +1,11 @@
 {
     "use_properties": {
-        "duration": 2
+        "duration": 3,
+        "sound": "minecraft:block.note_block.bit",
+        "on_use_effects": [{
+            "type": "minecraft:play_sound",
+            "sound": "minecraft:block.anvil.land"
+        }]
     },
     "weapon": {
         "spawn_position": [0, 0, 0.5],

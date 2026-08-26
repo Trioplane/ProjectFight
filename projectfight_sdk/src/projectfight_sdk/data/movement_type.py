@@ -1,4 +1,3 @@
-import json
 import logging
 from typing import ClassVar
 
@@ -31,7 +30,6 @@ class PFMovementType(JsonFileBase):
         identifier: str
     ):
         logger.debug("Building %s %s", file.__class__.__name__, identifier)
-        logger.debug(json.dumps(json.loads(file.data.model_dump_json()), indent=2))
         
 @configurable("projectfight", validator=PFOptions)
 def pf_movement_type(ctx: Context, opts: PFOptions):

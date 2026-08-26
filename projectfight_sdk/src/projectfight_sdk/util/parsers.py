@@ -15,3 +15,6 @@ def parse_identifier(identifier: str) -> tuple[str, str]:
         return (left_part, right_part)
     else:
         return ("minecraft", left_part)
+    
+def path_to_dot_notation(path: str) -> str:
+    return path.replace("/", ".")

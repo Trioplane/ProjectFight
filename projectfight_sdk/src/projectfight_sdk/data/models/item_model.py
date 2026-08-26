@@ -33,7 +33,7 @@ class UseModel(BaseModel):
     can_sprint: bool = True
     """Whether the player is allowed to sprint or not."""
     
-    speed_multiplier: float                       = Field(default=1,ge=0)
+    speed_multiplier: float = Field(default=1,ge=0,le=1)
     """Speed to multiply the player's movement speed whilst using the item."""
     
     on_use_effects: list[dict[str, Any]] | None = None
