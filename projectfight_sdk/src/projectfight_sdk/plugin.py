@@ -12,8 +12,6 @@ def beet_default(ctx: Context):
     
 @configurable("projectfight", validator=PFOptions)
 def projectfight_sdk(ctx: Context, opts: PluginOptions):
-    logger.debug("ae")
-    
     ctx.require(data.pf_item)
     ctx.require(data.pf_movement_type)
     ctx.require(data.pf_projectile)

@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import ClassVar
 
@@ -9,6 +10,7 @@ from beet import (
     configurable,
 )
 
+from projectfight_sdk.data.models.movement_type_model import MovementTypeModel
 from projectfight_sdk.options import PFOptions
 
 logger = logging.getLogger("projectfight_sdk")
@@ -18,6 +20,7 @@ class PFMovementType(JsonFileBase):
     
     scope: ClassVar[NamespaceFileScope] = ("pf_movement_type",)
     extension: ClassVar[str] = ".json"
+    model = MovementTypeModel
     
     @staticmethod
     def build_file(
@@ -28,6 +31,7 @@ class PFMovementType(JsonFileBase):
         identifier: str
     ):
         logger.debug("Building %s %s", file.__class__.__name__, identifier)
+        logger.debug(json.dumps(json.loads(file.data.model_dump_json()), indent=2))
         
 @configurable("projectfight", validator=PFOptions)
 def pf_movement_type(ctx: Context, opts: PFOptions):
