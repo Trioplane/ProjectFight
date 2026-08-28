@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field
 
-from projectfight_sdk.data.components.die_on_random_chance_component import (
+from projectfight_sdk.data.components.die_on_random_chance import (
     DieOnRandomChanceComponentModel,
 )
-from projectfight_sdk.data.components.on_tick_function_component import (
+from projectfight_sdk.data.components.on_tick_function import (
     OnTickFunctionComponentModel,
 )
 from projectfight_sdk.data.models.movement_type_model import MovementTypeModel

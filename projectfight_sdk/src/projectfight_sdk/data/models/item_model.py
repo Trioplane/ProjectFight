@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
-from projectfight_sdk.data.components.useable_component import UseableComponentModel
-from projectfight_sdk.data.components.weapon_component import WeaponComponentModel
+from projectfight_sdk.data.components.useable import UseableComponentModel
+from projectfight_sdk.data.components.weapon import WeaponComponentModel
 
 
 class ItemModel(BaseModel):
