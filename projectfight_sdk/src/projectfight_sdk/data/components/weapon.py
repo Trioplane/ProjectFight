@@ -29,5 +29,5 @@ def get_function_code(pack: DataPack, weapon: WeaponComponentModel) -> list[str]
      
     return [
         f"data modify storage pf:projectile in.initial_velocity set value {json.dumps(weapon.initial_velocity)}",
-        f"execute positioned {spawn_position_string} run function {projectile_file.SUMMON_FUNCTION_PATH}"
+        f"execute anchored eyes positioned {spawn_position_string} run function {projectile_file.SUMMON_FUNCTION_PATH}"
     ]
