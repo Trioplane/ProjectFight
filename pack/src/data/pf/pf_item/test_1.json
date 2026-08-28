@@ -1,7 +1,5 @@
 {
-    "use_properties": {
-        "duration": 2
-    },
+    "item_model": "egg",
     "weapon": {
         "spawn_position": [0, 0, 0.5],
         "initial_velocity": [0, 0, 1],

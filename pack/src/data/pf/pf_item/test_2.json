@@ -1,5 +1,6 @@
 {
-    "use_properties": {
+    "item_model": "egg",
+    "useable": {
         "duration": 3,
         "sound": "minecraft:block.note_block.bit",
         "on_use_effects": [{

@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "A fast chaotic PVP game inspired by RUNNING FROM THE INTERNET"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "beet>=0.116.0",
+    "bolt>=0.50.1",
+    "mecha>=0.104.1",
+]
 
 [tool.uv.workspace]
 members = [

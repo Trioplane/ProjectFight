@@ -1,20 +1,26 @@
-from projectfight_sdk.data.models.generic import RelativeOrLocalAxis
+from projectfight_sdk.data.models.generic import CoordinateMode
 
 
-def parse_relative_or_local_axis(tree: RelativeOrLocalAxis) -> str:
-    value = str(tree.value) if tree.value != 0 else ""
-    
-    if tree.type == "relative":
-        return f"~{value}"
-    elif tree.type == "local":
-        return f"^{value}"
-    
-def parse_identifier(identifier: str) -> tuple[str, str]:
+def parse_coordinate_mode(mode: CoordinateMode) -> str:
+    if mode == "relative":
+        return "~"
+    elif mode == "local":
+        return "^"
+
+
+def parse_identifier(identifier: str, as_string: bool = False) -> tuple[str, str] | str:
     left_part, colon, right_part = identifier.partition(":")
+    decomposed_form: tuple[str, str]
     if colon == ":":
-        return (left_part, right_part)
+        decomposed_form = (left_part, right_part)
     else:
-        return ("minecraft", left_part)
+        decomposed_form = ("minecraft", left_part)
+        
+    if as_string:
+        return f"{decomposed_form[0]}:{decomposed_form[1]}"
     
+    return decomposed_form
+
+
 def path_to_dot_notation(path: str) -> str:
     return path.replace("/", ".")

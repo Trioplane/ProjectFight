@@ -1,4 +1,0 @@
-{
-    "type": "pf:uniform_velocity",
-    "y": {"type": "local", "value": -0.2}
-}
