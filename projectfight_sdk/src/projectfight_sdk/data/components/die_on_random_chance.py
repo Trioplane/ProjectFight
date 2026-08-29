@@ -6,5 +6,5 @@ class DieOnRandomChanceComponentModel(BaseModel):
 
 def get_function_code(die_on_random_chance: DieOnRandomChanceComponentModel) -> list[str]:
     return [
-        f'execute if predicate {{condition: "random_chance", chance: {die_on_random_chance.chance}}} run kill @s'
+        f'execute if predicate {{type: "random_chance", chance: {die_on_random_chance.chance}}} run kill @s'
     ]

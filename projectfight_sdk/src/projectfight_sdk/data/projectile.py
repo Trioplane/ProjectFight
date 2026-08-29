@@ -67,6 +67,7 @@ class PFProjectile(JsonFileBase):
         projectile_entity_data = {
             "item": {"id": "egg", "components": {"item_model": definition.item_model}},
             "Tags": ["pf.projectile", projectile_entity_tag, "pf.projectile.new"],
+            "teleport_duration": 1,
             "data": {"pf": {"projectile": {"velocity": [0, 0, 0]}}}
         }
 
@@ -92,7 +93,8 @@ class PFProjectile(JsonFileBase):
         pack.functions[file.SUMMON_FUNCTION_PATH] = Function(
             [
                 f"summon item_display ~ ~ ~ {json.dumps(projectile_entity_data)}",
-                f"execute as @e[type=item_display,tag=pf.projectile.new,limit=1] at @s run function {file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH}",
+                f"execute as @e[type=item_display,tag=pf.projectile.new,limit=1] run function {file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH}",
+                "tag @e[type=item_display,tag=pf.projectile.new,limit=1] remove pf.projectile.new",
                 f"schedule function {file.PROJECTILE_TICK_FUNCTION_PATH} 1t replace",
             ]
         )
@@ -100,7 +102,8 @@ class PFProjectile(JsonFileBase):
         # As projectile summon function
         pack.functions[file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH] = Function(
             [
-                "data modify entity @s data.pf.projectile.velocity set from storage pf:projectile in.initial_velocity"
+                "function pf:sdk/api/projectile/vector_local_to_world_space with storage pf:projectile in.initial_velocity",
+                "data modify entity @s data.pf.projectile.velocity set from storage pf:sdk api.projectile.vector_to_local_world_space.out",
             ]
         )
 

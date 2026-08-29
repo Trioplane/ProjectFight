@@ -1,5 +1,6 @@
 import pf:items as items
 import pf:registry as registry
+import pf:sdk/api as sdk_api
 from pf:build import get_environment
 
 function ~/setup_gamerules:

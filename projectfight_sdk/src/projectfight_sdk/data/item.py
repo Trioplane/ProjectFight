@@ -92,18 +92,16 @@ class PFItem(JsonFileBase):
                             {
                                 "type": "minecraft:item",
                                 "name": DUMMY_ITEM,
-                                "functions": [
-                                    {
-                                        "function": "minecraft:set_components",
-                                        "components": {
-                                            "item_name": {"translate": f"pf:item.{parse_identifier(identifier, as_string=True)}"},
-                                            **(components.ItemName.get_item_components(definition.item_name) if definition.item_name is not None else {}),
-                                            "custom_data": {"pf": {"item": identifier}},
-                                            "item_model": definition.item_model,
-                                            **(components.Useable.get_item_components(definition.useable) if definition.useable is not None else {})
-                                        },
-                                    }
-                                ],
+                                "modifier": {
+                                    "type": "minecraft:set_components",
+                                    "components": {
+                                        "item_name": {"translate": f"pf:item.{parse_identifier(identifier, as_string=True)}"},
+                                        **(components.ItemName.get_item_components(definition.item_name) if definition.item_name is not None else {}),
+                                        "custom_data": {"pf": {"item": identifier}},
+                                        "item_model": definition.item_model,
+                                        **(components.Useable.get_item_components(definition.useable) if definition.useable is not None else {})
+                                    },
+                                }
                             }
                         ],
                     }

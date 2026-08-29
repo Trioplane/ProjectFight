@@ -1,0 +1,21 @@
+PERMA_MARKER = "5fd2592f-f67c-4db5-97a3-d24d15bd1284"
+
+function ~/load:
+    append function_tag minecraft:load {"values": [(~/)]}
+
+    # PERMA_MARKER
+    summon marker 0.0 0.0 0.0 {UUID: [I;1607620911,-159625803,-1750871475,364712580]}
+
+function ~/projectile/vector_local_to_world_space:
+    #> @in 
+    # @macro {x, y, z}
+
+    #> @out 
+    # @storage pf:sdk api.projectile.vector_to_local_world_space.out {x, y, z}
+
+    raw f"$execute positioned 0.0 0.0 0.0 run tp {PERMA_MARKER} ^$(x) ^$(y) ^$(z)"
+    data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.x set from entity PERMA_MARKER Pos[0]
+    data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.y set from entity PERMA_MARKER Pos[1]
+    data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.z set from entity PERMA_MARKER Pos[2]
+
+    

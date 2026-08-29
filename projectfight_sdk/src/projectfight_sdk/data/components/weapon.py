@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from projectfight_sdk.data.models.generic import Vector3
 from projectfight_sdk.data.projectile import PFProjectile
+from projectfight_sdk.util.parsers import vector3_to_decomposed_form
 
 
 class WeaponComponentModel(BaseModel):
@@ -28,6 +29,6 @@ def get_function_code(pack: DataPack, weapon: WeaponComponentModel) -> list[str]
     spawn_position_string = f"^{weapon.spawn_position[0]} ^{weapon.spawn_position[1]} ^{weapon.spawn_position[2]}"
      
     return [
-        f"data modify storage pf:projectile in.initial_velocity set value {json.dumps(weapon.initial_velocity)}",
+        f"data modify storage pf:projectile in.initial_velocity set value {json.dumps(vector3_to_decomposed_form(weapon.initial_velocity))}",
         f"execute anchored eyes positioned {spawn_position_string} run function {projectile_file.SUMMON_FUNCTION_PATH}"
     ]

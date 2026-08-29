@@ -1,0 +1,5 @@
+{
+    "item_model": "barrel",
+    "movement_type": "pf:pull_by_gravity",
+    "die_on_random_chance": {"chance": 0.05}
+}

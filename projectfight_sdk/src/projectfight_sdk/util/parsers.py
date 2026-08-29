@@ -1,4 +1,4 @@
-from projectfight_sdk.data.models.generic import CoordinateMode
+from projectfight_sdk.data.models.generic import CoordinateMode, Vector3, DecomposedVector3
 
 
 def parse_coordinate_mode(mode: CoordinateMode) -> str:
@@ -6,7 +6,6 @@ def parse_coordinate_mode(mode: CoordinateMode) -> str:
         return "~"
     elif mode == "local":
         return "^"
-
 
 def parse_identifier(identifier: str, as_string: bool = False) -> tuple[str, str] | str:
     left_part, colon, right_part = identifier.partition(":")
@@ -21,6 +20,8 @@ def parse_identifier(identifier: str, as_string: bool = False) -> tuple[str, str
     
     return decomposed_form
 
+def vector3_to_decomposed_form(vector3: Vector3) -> DecomposedVector3:
+    return {"x": vector3[0], "y": vector3[1], "z": vector3[2]}
 
 def path_to_dot_notation(path: str) -> str:
     return path.replace("/", ".")

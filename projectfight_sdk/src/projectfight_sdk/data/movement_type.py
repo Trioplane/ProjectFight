@@ -29,6 +29,9 @@ class PFMovementType(JsonFileBase):
     scope: ClassVar[NamespaceFileScope] = ("pf_movement_type",)
     extension: ClassVar[str] = ".json"
     model = MovementTypeModel
+    
+    def bind(self, pack: DataPack, path: str):
+        uniform_acceleration.generate_sdk_functions(pack)
 
     @staticmethod
     def resolve(pack: DataPack, reference: str | MovementTypeModel) -> list[str]:
@@ -43,18 +46,24 @@ class PFMovementType(JsonFileBase):
         elif isinstance(reference, MovementTypeModel):
             movement_type = reference.root
 
-        return PFMovementType.__function_code(movement_type)
+        return PFMovementType.__function_code(pack=pack, definition=movement_type)
 
     @staticmethod
-    def __function_code(definition: MovementTypes) -> list[str]:
+    def __function_code(pack, definition: MovementTypes) -> list[str]:
         match definition.type:
             case "pf:uniform_velocity":
                 return uniform_velocity.get_function_code(
-                    definition.coordinate_mode, definition.x, definition.y, definition.z
+                    coordinate_mode=definition.coordinate_mode, 
+                    x=definition.x, 
+                    y=definition.y, 
+                    z=definition.z
                 )
             case "pf:uniform_acceleration":
                 return uniform_acceleration.get_function_code(
-                    definition.coordinate_mode, definition.x, definition.y, definition.z
+                    coordinate_mode=definition.coordinate_mode, 
+                    x=definition.x, 
+                    y=definition.y, 
+                    z=definition.z
                 )
             case _:
                 raise TypeError(

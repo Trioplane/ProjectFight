@@ -1,0 +1,16 @@
+{
+    "item_model": "firework_rocket",
+    "useable": {
+        "duration": 0.25,
+        "sound": "minecraft:entity.creeper.primed",
+        "on_use_effects": [{
+            "type": "minecraft:play_sound",
+            "sound": "minecraft:entity.firework_rocket.launch"
+        }]
+    },
+    "weapon": {
+        "spawn_position": [0, 0, 0.5],
+        "initial_velocity": [0, 0, 0],
+        "projectile": "pf:firework"
+    }
+}

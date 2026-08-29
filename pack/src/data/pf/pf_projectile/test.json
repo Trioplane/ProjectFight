@@ -1,5 +1,0 @@
-{
-    "item_model": "egg",
-    "movement_type": "pf:velocity",
-    "die_on_random_chance": {"chance": 0.1}
-}

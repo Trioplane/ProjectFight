@@ -1,3 +1,5 @@
+"""Moves with a constant velocity. Initial velocity will have no effect on this movement type."""
+
 from typing import Literal
 
 from pydantic import BaseModel
@@ -20,4 +22,10 @@ def get_function_code(
     y: float,
     z: float,
 ) -> list[str]:
-    return [f"tp @s {parse_coordinate_mode(coordinate_mode)}{x} {parse_coordinate_mode(coordinate_mode)}{y} {parse_coordinate_mode(coordinate_mode)}{z}"]
+    # TODO: make this use shootfacing too
+    return [(
+        f"tp @s " 
+        f"{parse_coordinate_mode(coordinate_mode)}{x} "
+        f"{parse_coordinate_mode(coordinate_mode)}{y} "
+        f"{parse_coordinate_mode(coordinate_mode)}{z}"
+    )]

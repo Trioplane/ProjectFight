@@ -1,0 +1,5 @@
+{
+    "type": "pf:uniform_acceleration",
+    "coordinate_mode": "relative",
+    "y": -0.05
+}
