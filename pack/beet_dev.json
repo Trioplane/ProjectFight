@@ -16,6 +16,7 @@
     },
     "pipeline": ["plugins.load_third_party", "mecha"],
     "require": [
+        "plugins.26_3_support",
         "projectfight_sdk",
         "bolt",
         "bolt_expressions",

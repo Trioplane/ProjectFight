@@ -1,0 +1,27 @@
+use ::java::world::component::item::ItemUseAnimation
+use ::java::world::component::item::ConsumeEffect
+use ::java::data::util::SoundEventRef
+
+struct UseableComponent {
+    /// How long it takes to use the item in seconds. Defaults to `0`
+    duration?: float @ 0..,
+    /// Using animation. Defaults to `block`
+    animation?: ItemUseAnimation,
+    /// Sound to play while using. Defaults to `minecraft:intentionally_empty`
+    sound?: SoundEventRef,
+    /// Whether to show the item particles while using or not. Defaults to `false`
+    show_particles?: boolean,
+    /// Whether the player is allowed to sprint or not. Defaults to `true`
+    can_sprint?: boolean,
+    /// Speed to multiply the player's movement speed whilst using the item. Defaults to `1`
+    speed_multipler?: float @ 0..1,
+    /// See on_consume_effects in https://minecraft.wiki/w/Data_component_format#consumable
+    on_use_effects?: [ConsumeEffect],
+    /// Function to run when the item has been used.
+    on_use_function?: #[id="function"] string
+}
+
+struct WeaponComponent {
+    /// Undocumented
+    [key]: any
+}

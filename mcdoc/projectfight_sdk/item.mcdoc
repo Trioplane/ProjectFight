@@ -1,0 +1,12 @@
+use ::java::util::text::Text
+use ::projectfight_sdk::components::UseableComponent
+use ::projectfight_sdk::components::WeaponComponent
+
+struct Item {
+    item_name?: Text,
+    item_model?: minecraft:data_component[item_model],
+    useable?: UseableComponent,
+    weapon?: WeaponComponent
+}
+
+dispatch minecraft:resource[pf:pf_item] to Item

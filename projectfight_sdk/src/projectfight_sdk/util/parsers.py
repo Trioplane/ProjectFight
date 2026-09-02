@@ -1,4 +1,8 @@
-from projectfight_sdk.data.models.generic import CoordinateMode, Vector3, DecomposedVector3
+from projectfight_sdk.data.models.generic import (
+    CoordinateMode,
+    DecomposedVector3,
+    Vector3,
+)
 
 
 def parse_coordinate_mode(mode: CoordinateMode) -> str:

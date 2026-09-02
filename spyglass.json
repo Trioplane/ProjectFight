@@ -1,6 +1,13 @@
 {
     "env": {
         "gameVersion": "Latest snapshot",
-        "exclude": ["**.bolt"]
+        "exclude": ["**.bolt"],
+        "customResources": {
+            "pf_item": {
+                "category": "pf:pf_item",
+                "ext": ".json",
+                "pack": "data"
+            }
+        }
     }
 }

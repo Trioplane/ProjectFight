@@ -1,5 +1,8 @@
 PERMA_MARKER = "5fd2592f-f67c-4db5-97a3-d24d15bd1284"
 
+CROSS = ~/math/cross
+VECTOR_LOCAL_TO_WORLD = ~/math/vector_local_to_world
+
 function ~/load:
     append function_tag minecraft:load {"values": [(~/)]}
 
@@ -18,4 +21,298 @@ function ~/projectile/vector_local_to_world_space:
     data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.y set from entity PERMA_MARKER Pos[1]
     data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.z set from entity PERMA_MARKER Pos[2]
 
+function CROSS:
+    #> pf:sdk/api/math/cross
+    # @input storage pdf:sdk api.math.cross.in
+    #   @type struct {
+    #       a: ::types::Vector,
+    #       b: ::types::Vector 
+    #   }
+    # @writes storage pf:sdk api.math.cross.out
+    #   @type ::types::Vector
+
+    ## (a.y * b.z) - (a.z * b.y)
+    data modify storage pf:sdk api.math.cross.out.x set compute default float {
+        type: "minecraft:sub",
+        left: {
+            type: "minecraft:mul",
+            inputs: [
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.a.y"},
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.b.z"},
+            ]
+        },
+        right: {
+            type: "minecraft:mul",
+            inputs: [
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.a.z"},
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.b.y"},
+            ]
+        }
+    }
+
+    ## (a.z * b.x) - (a.x * b.z)
+    data modify storage pf:sdk api.math.cross.out.y set compute default float {
+        type: "minecraft:sub",
+        left: {
+            type: "minecraft:mul",
+            inputs: [
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.a.z"},
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.b.x"},
+            ]
+        },
+        right: {
+            type: "minecraft:mul",
+            inputs: [
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.a.x"},
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.b.z"},
+            ]
+        }
+    }
+
+    ## (a.x * b.y) - (a.y * b.x)
+    data modify storage pf:sdk api.math.cross.out.z set compute default float {
+        type: "minecraft:sub",
+        left: {
+            type: "minecraft:mul",
+            inputs: [
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.a.x"},
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.b.y"},
+            ]
+        },
+        right: {
+            type: "minecraft:mul",
+            inputs: [
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.a.y"},
+                {type: "storage", storage: "pf:sdk", path: "api.math.cross.in.b.x"},
+            ]
+        }
+    }
+
+function VECTOR_LOCAL_TO_WORLD:
+    #> pf:sdk/api/math/vector_local_to_world
+    # @input storage pdf:sdk api.math.vector_local_to_world.in
+    #   @type struct {
+    #       direction: ::types::Vector,
+    #       position: ::types::Vector 
+    #   }
+    # @writes storage pf:sdk api.math.vector_local_to_world.out
+    #   @type ::types::Vector
+
+    # w = Vector(
+    #     x = direction.x / length(direction),
+    #     y = direction.y / length(direction),
+    #     z = direction.z / length(direction)
+    # )
+    context_float_provider ~/direction_length ({
+        type: "minecraft:length",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.direction.x"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.direction.y"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.direction.z"}
+        ]
+    })
+
+    data modify storage pf:sdk api.math.vector_local_to_world.w.x set compute default float {
+        type: "minecraft:div",
+        left: {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.direction.x"},
+        right: (~/direction_length) 
+    }
+
+    data modify storage pf:sdk api.math.vector_local_to_world.w.y set compute default float {
+        type: "minecraft:div",
+        left: {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.direction.y"},
+        right: (~/direction_length)
+    }
+
+    data modify storage pf:sdk api.math.vector_local_to_world.w.z set compute default float {
+        type: "minecraft:div",
+        left: {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.direction.z"},
+        right: (~/direction_length)
+    }
+
+    # reference_axis = UP (0, 1, 0)
+    # if abs(w.y) >= 0.99:
+    #     reference_axis = FORWARD (0, 0, 1)
+
+    predicate ~/is_direction_codirectional_to_up ({
+        type: "minecraft:float_value_check",
+        value: {
+            type: "minecraft:abs",
+            input: {
+                type: "minecraft:storage",
+                storage: "pf:sdk",
+                path: "api.math.vector_local_to_world.w.y"
+            }
+        },
+        range: {
+            min: 0.99
+        }
+    })
+
+    execute if predicate ~/is_direction_codirectional_to_up run return:
+        data modify storage pf:sdk api.math.vector_local_to_world.reference_axis set value {x: 0, y: 0, z: 1}
+    data modify storage pf:sdk api.math.vector_local_to_world.reference_axis set value {x: 0, y: 1, z: 0}
+
+    # u = Vector(
+    #     x = cross(reference_axis, w).x / length(cross(reference_axis, w)),
+    #     y = cross(reference_axis, w).y / length(cross(reference_axis, w)),
+    #     z = cross(reference_axis, w).z / length(cross(reference_axis, w))
+    # )
+
+    # cross(reference_axis, w)
+    data modify storage pf:sdk api.math.cross.in.a set from storage pf:sdk api.math.vector_local_to_world.reference_axis
+    data modify storage pf:sdk api.math.cross.in.b set from storage pf:sdk api.math.vector_local_to_world.w
+    function CROSS
+
+    # length(cross(reference_axis, w))
+    context_float_provider ~/cross_of_reference_axis_and_w_length ({
+        type: "minecraft:length",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.cross.out.x"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.cross.out.y"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.cross.out.z"}
+        ]
+    })
+
+    # u = Vector(
+    #     x = cross(reference_axis, w).x / length(cross(reference_axis, w)),
+    #     y = cross(reference_axis, w).y / length(cross(reference_axis, w)),
+    #     z = cross(reference_axis, w).z / length(cross(reference_axis, w))
+    # )
+    data modify storage pf:sdk api.math.vector_local_to_world.u.x set compute default float {
+        type: "minecraft:div",
+        left: {type: "storage", storage: "pf:sdk", path: "api.math.cross.out.x"},
+        right: (~/cross_of_reference_axis_and_w_length)
+    }
+
+    data modify storage pf:sdk api.math.vector_local_to_world.u.y set compute default float {
+        type: "minecraft:div",
+        left: {type: "storage", storage: "pf:sdk", path: "api.math.cross.out.y"},
+        right: (~/cross_of_reference_axis_and_w_length)
+    }
+
+    data modify storage pf:sdk api.math.vector_local_to_world.u.z set compute default float {
+        type: "minecraft:div",
+        left: {type: "storage", storage: "pf:sdk", path: "api.math.cross.out.z"},
+        right: (~/cross_of_reference_axis_and_w_length)
+    }
+
+    # v = cross(w, u)
+    data modify storage pf:sdk api.math.cross.in.a set from storage pf:sdk api.math.vector_local_to_world.w
+    data modify storage pf:sdk api.math.cross.in.b set from storage pf:sdk api.math.vector_local_to_world.u
+    function CROSS
+
+    data modify storage pf:sdk api.math.vector_local_to_world.v set from storage pf:sdk api.math.cross.out
+
+    # world_position_x = Vector(
+    #     x = position.x * u.x,
+    #     y = position.x * u.y,
+    #     z = position.x * u.z
+    # )
     
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_x.x set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.x"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.u.x"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_x.y set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.x"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.u.y"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_x.z set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.x"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.u.z"},
+        ]
+    }
+
+    # world_position_y = Vector(
+    #     x = position.y * v.x,
+    #     y = position.y * v.y,
+    #     z = position.y * v.z
+    # )
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_y.x set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.y"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.v.x"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_y.y set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.y"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.v.y"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_y.z set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.y"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.v.z"},
+        ]
+    }
+
+    # world_position_z = Vector(
+    #     x = position.z * w.x,
+    #     y = position.z * w.y,
+    #     z = position.z * w.z
+    # )
+
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_z.x set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.z"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.w.x"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_z.y set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.z"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.w.y"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.world_position_z.z set compute default float {
+        type: "minecraft:mul",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.in.position.z"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.w.z"},
+        ]
+    }
+
+    # out = Vector(
+    #     x = world_position_x.x + world_position_y.x + world_position_z.x,
+    #     y = world_position_x.y + world_position_y.y + world_position_z.y,
+    #     z = world_position_x.z + world_position_y.z + world_position_z.z
+    # )
+    data modify storage pf:sdk api.math.vector_local_to_world.out.x set compute default float {
+        type: "minecraft:add",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_x.x"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_y.x"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_z.x"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.out.y set compute default float {
+        type: "minecraft:add",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_x.y"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_y.y"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_z.y"},
+        ]
+    }
+    data modify storage pf:sdk api.math.vector_local_to_world.out.z set compute default float {
+        type: "minecraft:add",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_x.z"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_y.z"},
+            {type: "storage", storage: "pf:sdk", path: "api.math.vector_local_to_world.world_position_z.z"},
+        ]
+    }
