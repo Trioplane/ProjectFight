@@ -29,9 +29,9 @@ def get_function_code(
     velocity_y = {"type": "minecraft:storage","storage": "pf:projectile","path": "temp.velocity.y"}
     velocity_z = {"type": "minecraft:storage","storage": "pf:projectile","path": "temp.velocity.z"}
     
-    x_string = f"data modify storage pf:projectile temp.velocity.x set compute default {NumberProvider.sum(velocity_x, x)}"
-    y_string = f"data modify storage pf:projectile temp.velocity.y set compute default {NumberProvider.sum(velocity_y, y)}"
-    z_string = f"data modify storage pf:projectile temp.velocity.z set compute default {NumberProvider.sum(velocity_z, z)}"
+    x_string = f"data modify storage pf:projectile temp.velocity.x set compute default float {NumberProvider.sum(velocity_x, x)}"
+    y_string = f"data modify storage pf:projectile temp.velocity.y set compute default float {NumberProvider.sum(velocity_y, y)}"
+    z_string = f"data modify storage pf:projectile temp.velocity.z set compute default float {NumberProvider.sum(velocity_z, z)}"
     
     tp_string: str
     
