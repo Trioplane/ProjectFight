@@ -22,18 +22,14 @@ def get_function_code(
 ) -> list[str]:
     """x/y/z represents acceleration."""
     
-    # TODO: you have to rethink coordinate mode
-    # make it settable for each axis because
-    # in the case that you want to use local, but you also want gravity to work, gravity will not point down correctly :sob:
-    
-    function_code: list[str]
+    function_code: list[str] = []
     
     if coordinate_mode == "relative":
         compute_x = f"data modify storage pf:projectile temp.velocity.x set compute default float {NumberProvider.add(NumberProvider.storage("pf:projectile","temp.velocity.x"), x)}"
         compute_y = f"data modify storage pf:projectile temp.velocity.y set compute default float {NumberProvider.add(NumberProvider.storage("pf:projectile","temp.velocity.y"), y)}"
         compute_z = f"data modify storage pf:projectile temp.velocity.z set compute default float {NumberProvider.add(NumberProvider.storage("pf:projectile","temp.velocity.z"), z)}"
         
-        function_code = [
+        function_code += [
             "data modify storage pf:projectile temp.velocity set from entity @s data.pf.projectile.velocity",
             compute_x if x != 0 else "",
             compute_y if y != 0 else "",
@@ -45,7 +41,7 @@ def get_function_code(
         compute_y = f"data modify storage pf:projectile temp.velocity.y set compute default float {NumberProvider.add(NumberProvider.storage("pf:projectile","temp.velocity.y"), NumberProvider.storage("pf:sdk", "api.math.vector_local_to_world.out.y"))}"
         compute_z = f"data modify storage pf:projectile temp.velocity.z set compute default float {NumberProvider.add(NumberProvider.storage("pf:projectile","temp.velocity.z"), NumberProvider.storage("pf:sdk", "api.math.vector_local_to_world.out.z"))}"
         
-        function_code = [
+        function_code += [
             "data modify storage pf:projectile temp.velocity set from entity @s data.pf.projectile.velocity",
             "data modify storage pf:sdk api.math.vector_local_to_world.in.direction set from entity @s data.pf.projectile.direction",
             f"data modify storage pf:sdk api.math.vector_local_to_world.in.position set value {{x: {x}, y: {y}, z: {z}}}",
@@ -55,7 +51,5 @@ def get_function_code(
             compute_z if z != 0 else "",
             "data modify entity @s data.pf.projectile.velocity set from storage pf:projectile temp.velocity"
         ]
-        
-    function_code += ["function pf:sdk/api/projectile/apply_velocity"]   
     
     return function_code

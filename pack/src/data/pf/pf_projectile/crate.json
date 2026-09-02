@@ -1,4 +1,4 @@
 {
     "item_model": "barrel",
-    "movement_type": "pf:pull_by_gravity"
+    "movement_type": ["pf:pull_by_gravity", "pf:accelerate_left"]
 }
