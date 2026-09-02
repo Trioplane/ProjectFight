@@ -3,14 +3,27 @@
 import math
 from dataclasses import dataclass
 
+import projectfight_sdk.entities
+
 
 def main():
-    for t in range(100):
-        print(local_to_world(Vector(0.5,1,0), Vector(
-            math.sin(t*3) / 3, 
-            math.cos(t*3) / 3,
-            t * 0.01
-        )))
+    int_uuid = hex_to_int_uuid(projectfight_sdk.entities.PERMA_MARKER)
+    print(int_uuid)
+    assert int_uuid == [1607620911,-159625803,-1750871475,364712580]
+    
+def hex_to_int_uuid(uuid_hex: str) -> list[int]:
+
+    unhyphenated_hex = uuid_hex.replace("-","")
+    uuid_128_bits = int(unhyphenated_hex, 16)
+    
+    mask = (1 << 32) - 1
+    
+    unsigned_int_uuid = [(uuid_128_bits >> ((3-i) * 32)) & mask for i in range(4)]
+    
+    int_uuid = [x if x < (2**32/2) else x - 2**32 for x in unsigned_int_uuid]
+    
+    return int_uuid
+    
 
 @dataclass
 class Vector:

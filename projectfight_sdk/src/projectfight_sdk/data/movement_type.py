@@ -29,9 +29,6 @@ class PFMovementType(JsonFileBase):
     scope: ClassVar[NamespaceFileScope] = ("pf_movement_type",)
     extension: ClassVar[str] = ".json"
     model = MovementTypeModel
-    
-    def bind(self, pack: DataPack, path: str):
-        uniform_acceleration.generate_sdk_functions(pack)
 
     @staticmethod
     def resolve(pack: DataPack, reference: str | MovementTypeModel) -> list[str]:
@@ -69,7 +66,6 @@ class PFMovementType(JsonFileBase):
                 raise TypeError(
                     f"{definition.type} movement type function is not recognized as a valid movement type. This should not have ran due to Pydantic handling validation. Are you doing cursed stuff?"
                 )
-
 
 @configurable("projectfight", validator=PFOptions)
 def pf_movement_type(ctx: Context, opts: PFOptions):

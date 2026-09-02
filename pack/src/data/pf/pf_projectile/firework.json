@@ -1,5 +1,4 @@
 {
     "item_model": "firework_rocket",
-    "movement_type": "pf:straight_path",
-    "die_on_random_chance": {"chance": 0.05}
+    "movement_type": "pf:straight_path"
 }

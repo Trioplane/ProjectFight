@@ -1,28 +1,67 @@
-PERMA_MARKER = "5fd2592f-f67c-4db5-97a3-d24d15bd1284"
+from projectfight_sdk import entities
 
+# math
 CROSS = ~/math/cross
 VECTOR_LOCAL_TO_WORLD = ~/math/vector_local_to_world
+
+# projectiles
+GET_VELOCITY = ~/projectile/get_velocity
+APPLY_VELOCITY = ~/projectile/apply_velocity
 
 function ~/load:
     append function_tag minecraft:load {"values": [(~/)]}
 
-    # PERMA_MARKER
-    summon marker 0.0 0.0 0.0 {UUID: [I;1607620911,-159625803,-1750871475,364712580]}
+    # entities.PERMA_MARKER
+    summon marker 0.0 0.0 0.0 {UUID: (entities.hex_to_int_uuid(entities.PERMA_MARKER))}
 
-function ~/projectile/vector_local_to_world_space:
-    #> @in 
-    # @macro {x, y, z}
+function GET_VELOCITY:
+    # ⚠ This should be hardcoded instead of called. This just serves as reference.
+    #> pf:sdk/api/projectile/apply_velocity
+    # @user
+    # @reads entity @s data.pf.projectile.velocity
+    #   @type ::types::Vector
+    # @writes storage pf:sdk api.projectile.get_velocity.out
+    #   @type ::types::Vector
+    data modify storage pf:sdk api.projectile.get_velocity.out set from entity @s data.pf.projectile.velocity
 
-    #> @out 
-    # @storage pf:sdk api.projectile.vector_to_local_world_space.out {x, y, z}
+function APPLY_VELOCITY:
+    #> pf:sdk/api/projectile/apply_velocity
+    # @user
+    # @reads entity @s data.pf.projectile.velocity
+    #   @type ::types::Vector
+    # @writes entity @s Pos
 
-    raw f"$execute positioned 0.0 0.0 0.0 run tp {PERMA_MARKER} ^$(x) ^$(y) ^$(z)"
-    data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.x set from entity PERMA_MARKER Pos[0]
-    data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.y set from entity PERMA_MARKER Pos[1]
-    data modify storage pf:sdk api.projectile.vector_to_local_world_space.out.z set from entity PERMA_MARKER Pos[2]
+    data modify storage pf:sdk api.projectile.apply_velocity.velocity set from entity @s data.pf.projectile.velocity
+    data modify storage pf:sdk api.projectile.apply_velocity.pos set from entity @s Pos
+
+    data modify entity @s Pos[0] set compute default float {
+        type: "minecraft:add",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.projectile.apply_velocity.pos[0]"},
+            {type: "storage", storage: "pf:sdk", path: "api.projectile.apply_velocity.velocity.x"}
+        ]
+    }
+
+    data modify entity @s Pos[1] set compute default float {
+        type: "minecraft:add",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.projectile.apply_velocity.pos[1]"},
+            {type: "storage", storage: "pf:sdk", path: "api.projectile.apply_velocity.velocity.y"}
+        ]
+    }
+
+    data modify entity @s Pos[2] set compute default float {
+        type: "minecraft:add",
+        inputs: [
+            {type: "storage", storage: "pf:sdk", path: "api.projectile.apply_velocity.pos[2]"},
+            {type: "storage", storage: "pf:sdk", path: "api.projectile.apply_velocity.velocity.z"}
+        ]
+    }
+
 
 function CROSS:
     #> pf:sdk/api/math/cross
+    # @user
     # @input storage pdf:sdk api.math.cross.in
     #   @type struct {
     #       a: ::types::Vector,
@@ -90,6 +129,7 @@ function CROSS:
 
 function VECTOR_LOCAL_TO_WORLD:
     #> pf:sdk/api/math/vector_local_to_world
+    # @user
     # @input storage pdf:sdk api.math.vector_local_to_world.in
     #   @type struct {
     #       direction: ::types::Vector,
@@ -144,14 +184,14 @@ function VECTOR_LOCAL_TO_WORLD:
                 path: "api.math.vector_local_to_world.w.y"
             }
         },
-        range: {
+        test: {
             min: 0.99
         }
     })
 
-    execute if predicate ~/is_direction_codirectional_to_up run return:
-        data modify storage pf:sdk api.math.vector_local_to_world.reference_axis set value {x: 0, y: 0, z: 1}
     data modify storage pf:sdk api.math.vector_local_to_world.reference_axis set value {x: 0, y: 1, z: 0}
+    execute if predicate ~/is_direction_codirectional_to_up:
+        data modify storage pf:sdk api.math.vector_local_to_world.reference_axis set value {x: 0, y: 0, z: 1}
 
     # u = Vector(
     #     x = cross(reference_axis, w).x / length(cross(reference_axis, w)),

@@ -11,6 +11,7 @@ from beet import (
     configurable,
 )
 
+from projectfight_sdk import entities
 from projectfight_sdk.data import components
 from projectfight_sdk.data.models.projectile_model import ProjectileModel
 from projectfight_sdk.data.movement_type import PFMovementType
@@ -68,7 +69,7 @@ class PFProjectile(JsonFileBase):
             "item": {"id": "egg", "components": {"item_model": definition.item_model}},
             "Tags": ["pf.projectile", projectile_entity_tag, "pf.projectile.new"],
             "teleport_duration": 1,
-            "data": {"pf": {"projectile": {"velocity": [0, 0, 0]}}}
+            "data": {"pf": {"projectile": {}}}
         }
 
         # Tick schedule loop for this projectile
@@ -100,10 +101,15 @@ class PFProjectile(JsonFileBase):
         )
         
         # As projectile summon function
+        # Runs as projectile, at the player
         pack.functions[file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH] = Function(
             [
-                "function pf:sdk/api/projectile/vector_local_to_world_space with storage pf:projectile in.initial_velocity",
-                "data modify entity @s data.pf.projectile.velocity set from storage pf:sdk api.projectile.vector_to_local_world_space.out",
+                # Get direction vector
+                f"execute positioned 0.0 0.0 0.0 run tp {entities.PERMA_MARKER} ^ ^ ^1",
+                f"data modify entity @s data.pf.projectile.direction.x set from entity {entities.PERMA_MARKER} Pos[0]",
+                f"data modify entity @s data.pf.projectile.direction.y set from entity {entities.PERMA_MARKER} Pos[1]",
+                f"data modify entity @s data.pf.projectile.direction.z set from entity {entities.PERMA_MARKER} Pos[2]",
+                "data modify entity @s data.pf.projectile.velocity set from storage pf:projectile in.initial_velocity"
             ]
         )
 

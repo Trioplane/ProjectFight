@@ -1,5 +1,5 @@
 {
     "type": "pf:uniform_velocity",
     "coordinate_mode": "local",
-    "z": 0.3
+    "z": 0.5
 }

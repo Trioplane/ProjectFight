@@ -10,7 +10,7 @@
     },
     "weapon": {
         "spawn_position": [0, 0, 0.5],
-        "initial_velocity": [0, 0, 2],
+        "initial_velocity": {"velocity": [0, 0, 2]},
         "projectile": "pf:crate"
     }
 }
