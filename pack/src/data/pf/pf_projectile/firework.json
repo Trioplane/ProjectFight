@@ -1,4 +1,4 @@
 {
     "item_model": "firework_rocket",
-    "movement_type": "pf:straight_path"
+    "movement_type": "pf:pull_by_gravity"
 }

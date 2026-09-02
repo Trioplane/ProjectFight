@@ -1,6 +1,6 @@
 use ::java::util::text::Text
-use ::projectfight_sdk::components::UseableComponent
-use ::projectfight_sdk::components::WeaponComponent
+use super::components::UseableComponent
+use super::components::WeaponComponent
 
 struct Item {
     item_name?: Text,

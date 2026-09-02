@@ -7,6 +7,16 @@
                 "category": "pf:pf_item",
                 "ext": ".json",
                 "pack": "data"
+            },
+            "pf_projectile": {
+                "category": "pf:pf_projectile",
+                "ext": ".json",
+                "pack": "data"
+            },
+            "pf_movement_type": {
+                "category": "pf:pf_movement_type",
+                "ext": ".json",
+                "pack": "data"
             }
         }
     }

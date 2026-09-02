@@ -1,0 +1,15 @@
+use super::components::OnTickFunctionComponent
+use super::components::DieOnRandomChanceComponent
+use super::movement_type::MovementType
+
+struct Projectile {
+    item_model?: minecraft:data_component[item_model],
+    movement_type?: (
+        (#[id="pf:pf_movement_type"] string | MovementType)
+        | [(#[id="pf:pf_movement_type"] string | MovementType)]
+    ),
+    on_tick_function?: OnTickFunctionComponent,
+    die_on_random_chance?: DieOnRandomChanceComponent
+}
+
+dispatch minecraft:resource[pf:pf_projectile] to Projectile

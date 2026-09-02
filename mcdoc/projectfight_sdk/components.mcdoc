@@ -1,6 +1,8 @@
 use ::java::world::component::item::ItemUseAnimation
 use ::java::world::component::item::ConsumeEffect
 use ::java::data::util::SoundEventRef
+use super::types::Vector3
+use super::types::CoordinateMode
 
 struct UseableComponent {
     /// How long it takes to use the item in seconds. Defaults to `0`
@@ -22,6 +24,22 @@ struct UseableComponent {
 }
 
 struct WeaponComponent {
-    /// Undocumented
-    [key]: any
+    spawn_position: Vector3,
+    initial_velocity?: struct {
+        coordinate_mode?: CoordinateMode,
+        velocity?: Vector3
+    },
+    projectile: #[id="pf:pf_projectile"] string
+}
+
+struct OnTickFunctionComponent {
+    function: #[id="function"] string,
+    args: struct {
+        data_source: #[id="storage"] string,
+        path: #[nbt_path] string
+    }
+}
+
+struct DieOnRandomChanceComponent {
+    chance: float @ 0..1
 }

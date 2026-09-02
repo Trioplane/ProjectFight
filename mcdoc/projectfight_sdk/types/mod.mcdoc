@@ -1,0 +1,18 @@
+type Vector3 = [float] @ 3
+
+struct DecomposedVector3 {
+    x: float,
+    y: float,
+    z: float
+}
+
+struct OptionalDecomposedVector3 {
+    x?: float,
+    y?: float,
+    z?: float
+}
+
+enum(string) CoordinateMode {
+    Relative = "relative",
+    Local = "local"
+}

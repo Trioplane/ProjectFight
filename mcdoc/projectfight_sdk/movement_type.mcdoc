@@ -1,0 +1,22 @@
+use super::types::CoordinateMode
+use super::types::OptionalDecomposedVector3
+
+dispatch pf:movement_type["pf:uniform_acceleration"] to struct UniformAccelerationMovementType {
+    coordinate_mode: CoordinateMode,
+    ...OptionalDecomposedVector3
+}
+
+dispatch pf:movement_type["pf:uniform_velocity"] to struct UniformVelocityMovementType {
+    coordinate_mode: CoordinateMode,
+    ...OptionalDecomposedVector3
+}
+
+struct MovementType {
+    type: #[id="pf:movement_type_function"] enum(string) {
+        UniformAcceleration = "pf:uniform_acceleration",
+        UniformVelocity = "pf:uniform_velocity"
+    },
+    ...pf:movement_type[[type]]
+}
+
+dispatch minecraft:resource[pf:pf_movement_type] to MovementType
