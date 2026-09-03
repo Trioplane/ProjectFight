@@ -1,19 +1,19 @@
 use super::types::CoordinateMode
 use super::types::OptionalDecomposedVector3
 
-dispatch pf:movement_type["pf:uniform_acceleration"] to struct UniformAccelerationMovementType {
+dispatch pf:movement_type_function["pf:uniform_acceleration"] to struct UniformAccelerationMovementType {
     coordinate_mode: CoordinateMode,
     ...OptionalDecomposedVector3
 }
 
-dispatch pf:movement_type["pf:uniform_velocity"] to struct UniformVelocityMovementType {
+dispatch pf:movement_type_function["pf:uniform_velocity"] to struct UniformVelocityMovementType {
     coordinate_mode: CoordinateMode,
     ...OptionalDecomposedVector3
 }
 
 struct MovementType {
-    type: #[dispatcher_key="pf:movement_type"] string,
-    ...pf:movement_type[[type]]
+    type: #[dispatcher_key="pf:movement_type_function"] string,
+    ...pf:movement_type_function[[type]]
 }
 
 dispatch minecraft:resource[pf:pf_movement_type] to MovementType
