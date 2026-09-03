@@ -9,8 +9,11 @@
         }]
     },
     "weapon": {
-        "spawn_position": [0, 0, 0.5],
-        "initial_velocity": {"velocity": [0, 0, 1]},
+        "spawn_position": [0, 0, 0],
+        "initial_velocity": {
+            "coordinate_mode": "relative",
+            "velocity": [0, 0, 1]
+        },
         "projectile": "pf:crate"
     }
 }

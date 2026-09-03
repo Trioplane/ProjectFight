@@ -11,13 +11,8 @@ dispatch pf:movement_type["pf:uniform_velocity"] to struct UniformVelocityMoveme
     ...OptionalDecomposedVector3
 }
 
-enum(string) MovementTypeFunctions {
-    UniformAcceleration = "pf:uniform_acceleration",
-    UniformVelocity = "pf:uniform_velocity"
-}
-
 struct MovementType {
-    type: #[id="pf:movement_type_function"] MovementTypeFunctions,
+    type: #[dispatcher_key="pf:movement_type"] string,
     ...pf:movement_type[[type]]
 }
 
