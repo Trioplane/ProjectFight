@@ -3,7 +3,7 @@
     "name": "ProjectFight",
     "description": "A fast chaotic PVP game inspired by RUNNING FROM THE INTERNET",
     "version": "0.1.0",
-    "minecraft": "26.2",
+    "minecraft": "26.3",
     "data_pack": {
         "load": ["src"],
         "min_format": [107,1],
@@ -16,7 +16,6 @@
     },
     "pipeline": ["plugins.load_third_party", "mecha"],
     "require": [
-        "plugins.26_3_support",
         "projectfight_sdk",
         "bolt",
         "bolt_expressions",

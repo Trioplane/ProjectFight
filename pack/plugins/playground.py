@@ -1,10 +1,14 @@
 # trplnr debugging realm
 
+from typing import Annotated, Literal
+from pydantic import create_model
+import rich
 import math
 from dataclasses import dataclass
 
 import projectfight_sdk.entities
 
+test = create_model("MyModel", test=Literal["ae"], bar=(int, 123))
 
 def main():
     int_uuid = hex_to_int_uuid(projectfight_sdk.entities.PERMA_MARKER)

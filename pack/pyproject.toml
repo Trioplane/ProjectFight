@@ -5,10 +5,11 @@ description = "Minecraft packs that contain logic and assets for ProjectFight"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "beet>=0.116.0",
-    "bolt>=0.50.1",
+    "beet>=0.121.2",
+    "bolt>=0.53.0",
     "bolt-expressions>=0.19.2",
     "bolt-native-macros>=0.5.2",
+    "mecha>=0.107.0",
     "projectfight-sdk",
     "rich>=15.0.0",
 ]
