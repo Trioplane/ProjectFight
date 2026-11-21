@@ -19,8 +19,7 @@
         "projectfight_sdk",
         "bolt",
         "bolt_expressions",
-        "bolt_native_macros",
-        "beet.contrib.livereload"
+        "bolt_native_macros"
     ],
     "meta": {
         "bolt": {

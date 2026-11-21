@@ -37,6 +37,7 @@ class PFProjectile(JsonFileBase):
         self.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH = f"{self.DIR_PATH}/summon/as_projectile"
         self.PROJECTILE_TICK_FUNCTION_PATH             = f"{self.DIR_PATH}/projectile_tick"
         self.AS_PROJECTILE_ENTITY_TICK_FUNCTION_PATH   = f"{self.DIR_PATH}/projectile_tick/as_projectile"
+        self.ON_COLLIDE_FUNCTION_PATH                  = f"{self.DIR_PATH}/on_collide"
         self.REGISTRY_FUNCTION_PATH                    = f"{namespace}:pf_projectile/register"
 
     @staticmethod
@@ -73,45 +74,42 @@ class PFProjectile(JsonFileBase):
         }
 
         # Tick schedule loop for this projectile
-        pack.functions[file.PROJECTILE_TICK_FUNCTION_PATH] = Function(
-            [
-                f"schedule function {file.PROJECTILE_TICK_FUNCTION_PATH} 1t replace",
-                f"execute as @e[type=item_display,tag={projectile_entity_tag}] at @s run function {file.AS_PROJECTILE_ENTITY_TICK_FUNCTION_PATH}",
-                f"execute unless entity @e[type=item_display,tag={projectile_entity_tag}] run schedule clear {file.PROJECTILE_TICK_FUNCTION_PATH}",
-            ]
-        )
+        pack.functions[file.PROJECTILE_TICK_FUNCTION_PATH] = Function([
+            f"schedule function {file.PROJECTILE_TICK_FUNCTION_PATH} 1t replace",
+            f"execute as @e[type=item_display,tag={projectile_entity_tag}] at @s run function {file.AS_PROJECTILE_ENTITY_TICK_FUNCTION_PATH}",
+            f"execute unless entity @e[type=item_display,tag={projectile_entity_tag}] run schedule clear {file.PROJECTILE_TICK_FUNCTION_PATH}",
+        ])
 
         # MAIN PROJECTILE LOGIC
-        pack.functions[file.AS_PROJECTILE_ENTITY_TICK_FUNCTION_PATH] = Function(
-            [
-                *(components.OnTickFunction.get_function_code(definition.on_tick_function) if definition.on_tick_function is not None else []),
-                *(PFMovementType.resolve(pack, definition.movement_type) if definition.movement_type is not None else []),
-                *(components.DieOnRandomChance.get_function_code(definition.die_on_random_chance) if definition.die_on_random_chance is not None else []),
-            ]
-        )
+        pack.functions[file.AS_PROJECTILE_ENTITY_TICK_FUNCTION_PATH] = Function([
+            *(components.OnTickFunction.get_function_code(definition.on_tick_function) if definition.on_tick_function is not None else []),
+            *(PFMovementType.resolve(pack, definition.movement_type) if definition.movement_type is not None else []),
+            *(components.Collidable.get_function_code(definition.collidable, file.ON_COLLIDE_FUNCTION_PATH) if definition.collidable is not None else []),
+            *(components.DieOnRandomChance.get_function_code(definition.die_on_random_chance) if definition.die_on_random_chance is not None else []),
+        ])
+        
+        pack.functions[file.ON_COLLIDE_FUNCTION_PATH] = Function([
+            *(components.OnCollideFunction.get_function_code(definition.on_collide_function) if definition.on_collide_function is not None else []),
+        ])
 
         # Summon function
-        pack.functions[file.SUMMON_FUNCTION_PATH] = Function(
-            [
-                f"summon item_display ~ ~ ~ {json.dumps(projectile_entity_data)}",
-                f"execute as @e[type=item_display,tag=pf.projectile.new,limit=1] run function {file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH}",
-                "tag @e[type=item_display,tag=pf.projectile.new,limit=1] remove pf.projectile.new",
-                f"schedule function {file.PROJECTILE_TICK_FUNCTION_PATH} 1t replace",
-            ]
-        )
+        pack.functions[file.SUMMON_FUNCTION_PATH] = Function([
+            f"summon item_display ~ ~ ~ {json.dumps(projectile_entity_data)}",
+            f"execute as @e[type=item_display,tag=pf.projectile.new,limit=1] run function {file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH}",
+            "tag @e[type=item_display,tag=pf.projectile.new,limit=1] remove pf.projectile.new",
+            f"schedule function {file.PROJECTILE_TICK_FUNCTION_PATH} 1t replace",
+        ])
         
         # As projectile summon function
         # Runs as projectile, at the player
-        pack.functions[file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH] = Function(
-            [
-                # Get direction vector
-                f"execute positioned 0.0 0.0 0.0 run tp {entities.PERMA_MARKER} ^ ^ ^1",
-                f"data modify entity @s data.pf.projectile.direction.x set from entity {entities.PERMA_MARKER} Pos[0]",
-                f"data modify entity @s data.pf.projectile.direction.y set from entity {entities.PERMA_MARKER} Pos[1]",
-                f"data modify entity @s data.pf.projectile.direction.z set from entity {entities.PERMA_MARKER} Pos[2]",
-                "data modify entity @s data.pf.projectile.velocity set from storage pf:projectile in.initial_velocity"
-            ]
-        )
+        pack.functions[file.AS_PROJECTILE_ENTITY_SUMMON_FUNCTION_PATH] = Function([
+            # Get direction vector
+            f"execute positioned 0.0 0.0 0.0 run tp {entities.PERMA_MARKER} ^ ^ ^1",
+            f"data modify entity @s data.pf.projectile.direction.x set from entity {entities.PERMA_MARKER} Pos[0]",
+            f"data modify entity @s data.pf.projectile.direction.y set from entity {entities.PERMA_MARKER} Pos[1]",
+            f"data modify entity @s data.pf.projectile.direction.z set from entity {entities.PERMA_MARKER} Pos[2]",
+            "data modify entity @s data.pf.projectile.velocity set from storage pf:projectile in.initial_velocity"
+        ])
 
 
 @configurable("projectfight", validator=PFOptions)

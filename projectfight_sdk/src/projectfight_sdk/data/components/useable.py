@@ -33,6 +33,7 @@ class UseableComponentModel(BaseModel):
 
 def get_function_code(useable: UseableComponentModel) -> list[str]:
     return [
+        "# UseableComponent",
         *([f"function {useable.on_use_function}"] if useable.on_use_function else [])
     ]
 

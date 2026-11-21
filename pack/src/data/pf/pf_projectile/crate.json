@@ -1,4 +1,6 @@
 {
     "item_model": "barrel",
-    "movement_type": ["pf:pull_by_gravity"]
+    "movement_type": ["pf:pull_by_gravity"],
+    "collidable": {"hits_blocks": {}},
+    "on_collide_function": {"function": "trp:test"}
 }

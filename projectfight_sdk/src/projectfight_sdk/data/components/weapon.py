@@ -33,16 +33,16 @@ def get_function_code(pack: DataPack, weapon: WeaponComponentModel) -> list[str]
     
     spawn_position_string = f"^{weapon.spawn_position[0]} ^{weapon.spawn_position[1]} ^{weapon.spawn_position[2]}"
      
-    function_code: list[str]
+    function_code: list[str] = ["# WeaponComponent"]
     
     if weapon.initial_velocity.coordinate_mode == "relative":
-        function_code = [
+        function_code += [
             f"data modify storage pf:projectile in.initial_velocity set value {json.dumps(vector3_to_decomposed_form(weapon.initial_velocity.velocity))}",
             f"execute anchored eyes positioned {spawn_position_string} run function {projectile_file.SUMMON_FUNCTION_PATH}"
         ]
         
     if weapon.initial_velocity.coordinate_mode == "local":
-        function_code = [
+        function_code += [
             f"execute positioned 0.0 0.0 0.0 run tp {entities.PERMA_MARKER} ^ ^ ^1",
             f"data modify storage pf:sdk api.math.vector_local_to_world.in.direction.x set from entity {entities.PERMA_MARKER} Pos[0]",
             f"data modify storage pf:sdk api.math.vector_local_to_world.in.direction.y set from entity {entities.PERMA_MARKER} Pos[1]",

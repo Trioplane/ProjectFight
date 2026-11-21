@@ -14,4 +14,4 @@ def get_function_code(on_tick_function: OnTickFunctionComponentModel) -> list[st
     if on_tick_function.args is not None:
         code_string += f" with {on_tick_function.args.data_source} {on_tick_function.args.path}"
     
-    return [code_string]
+    return ["# OnTickFunctionComponent", code_string]
