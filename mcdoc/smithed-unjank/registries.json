@@ -1,0 +1,7 @@
+{
+  "game_rule": [
+    "unjank:send_trigger_feedback",
+    "unjank:broadcast_macro_failure",
+    "unjank:log_macro_failure"
+  ]
+}

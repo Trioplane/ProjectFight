@@ -1,0 +1,78 @@
+{
+  "type": "root",
+  "children": {
+    "gamerule": {
+      "type": "literal",
+      "children": {
+        "unjank:send_trigger_feedback": {
+          "type": "literal",
+          "children": {
+            "disabled": {
+              "type": "literal",
+              "executable": true,
+              "permissions": {
+                "type": "minecraft:always_pass"
+              }
+            },
+            "sourceOnly": {
+              "type": "literal",
+              "executable": true,
+              "permissions": {
+                "type": "minecraft:always_pass"
+              }
+            },
+            "sourceAndOps": {
+              "type": "literal",
+              "executable": true,
+              "permissions": {
+                "type": "minecraft:always_pass"
+              }
+            }
+          },
+          "executable": true,
+          "permissions": {
+            "type": "minecraft:always_pass"
+          }
+        },
+        "unjank:broadcast_macro_failure": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "argument": {
+                "type": "minecraft:bool"
+              },
+              "executable": true,
+              "permissions": {
+                "type": "minecraft:always_pass"
+              }
+            }
+          },
+          "executable": true,
+          "permissions": {
+            "type": "minecraft:always_pass"
+          }
+        },
+        "unjank:log_macro_failure": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "argument": {
+                "type": "minecraft:bool"
+              },
+              "executable": true,
+              "permissions": {
+                "type": "minecraft:always_pass"
+              }
+            }
+          },
+          "executable": true,
+          "permissions": {
+            "type": "minecraft:always_pass"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+use ::java::world::component::DataComponentPatch
+use ::java::world::component::DataComponentExactPredicate
+use ::java::world::component::DataComponentPredicate
+
+struct ItemPredicateWithoutCount {
+  items?: (#[id(registry="item",tags="allowed")] string | [#[id="item"] string]),
+  components?: DataComponentExactPredicate,
+  predicates?: DataComponentPredicate,
+}
+
+dispatch unjank:item_source_type["unjank:item"] to struct {
+  item: struct {
+    id: #[id="item"] string,
+    components?: DataComponentPatch
+  }
+}
+
+dispatch unjank:item_source_type["unjank:loot"] to struct {
+  loot: #[id="loot_table"] string
+}
+
+type UnjankItemSourceRef = (
+  #[id=(registry="unjank:item_source",tags="allowed")] string |
+  [UnjankItemSource]    
+)
+
+dispatch unjank:item_source_type["unjank:group"] to struct {
+  items: UnjankItemSourceRef
+}
+
+type ItemsRef = ([#[id=(registry="item")] string] | #[id=(registry="item",tags="allowed")] string)
+
+struct UnjankItemSource {
+  type: #[dispatcher_key="unjank:item_source_type"] string,
+  ...unjank:item_source_type[[type]],
+  after?: ItemPredicateWithoutCount,
+  operator?: boolean
+}
+
+dispatch minecraft:resource[unjank:item_source] to UnjankItemSource

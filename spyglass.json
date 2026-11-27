@@ -1,6 +1,6 @@
 {
     "env": {
-        "gameVersion": "Latest snapshot",
+        "gameVersion": "26.3",
         "exclude": ["**.bolt"],
         "customResources": {
             "pf_item": {
@@ -17,7 +17,38 @@
                 "category": "pf:pf_movement_type",
                 "ext": ".json",
                 "pack": "data"
+            },
+            "unjank/item_source": {
+                "category": "unjank:item_source",
+                "ext": ".json",
+                "pack": "data"
+            },
+            "unjank/creative_tab": {
+                "category": "unjank:creative_tab",
+                "ext": ".json",
+                "pack": "data"
+            },
+            "tags/unjank/item_source": {
+                "category": "tag/unjank:item_source",
+                "ext": ".json",
+                "pack": "data"
+            },
+            "tags/unjank/creative_tab": {
+                "category": "tag/unjank:creative_tab",
+                "ext": ".json",
+                "pack": "data"
             }
-        }
+        },
+        "mcmetaSummaryOverrides": {
+            "commands": {
+                "path": "./mcdoc/smithed-unjank/commands.json",
+                "replace": false
+            },
+            "registries": {
+                "path": "./mcdoc/smithed-unjank/registries.json",
+                "replace": false
+            }
+        },
+        "enableSymbolCache": false
     }
 }

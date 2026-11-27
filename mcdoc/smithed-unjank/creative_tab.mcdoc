@@ -1,0 +1,13 @@
+use ::java::world::component::DataComponentPatch
+use ::java::util::text::Text
+
+struct UnjankCreativeTab {
+  icon: struct {
+    id: #[id="item"] string,
+    components?: DataComponentPatch
+  },
+  title: Text,
+  items: [#[id="unjank:item_source"] string]
+}
+
+dispatch minecraft:resource[unjank:creative_tab] to UnjankCreativeTab
