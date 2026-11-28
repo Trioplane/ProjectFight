@@ -1,0 +1,7 @@
+{
+  "title": "ProjectFight (All)",
+  "icon": {
+    "id": "amethyst_shard"
+  },
+  "items": ["pf:all_items"]
+}

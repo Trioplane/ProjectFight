@@ -1,3 +1,4 @@
+from projectfight_sdk.unjank import UnjankItemSource, UnjankItemSourceTag
 import json
 import logging
 from typing import ClassVar
@@ -118,6 +119,16 @@ class PFItem(JsonFileBase):
                 *(components.Useable.get_function_code(definition.useable) if definition.useable is not None else {})
             ]
         )
+        
+        pack[UnjankItemSource][identifier] = UnjankItemSource({
+            "type": "unjank:loot",
+            "loot": file.LOOT_TABLE_PATH
+        })
+        
+        pack[UnjankItemSourceTag]["pf:all_items"].append({
+            "values": [identifier],
+            "replace": False
+        })
 
 
 @configurable("projectfight", validator=PFOptions)

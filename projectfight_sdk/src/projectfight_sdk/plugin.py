@@ -4,6 +4,7 @@ from beet import Context, PluginOptions, configurable
 
 from projectfight_sdk import data
 from projectfight_sdk.options import PFOptions
+from projectfight_sdk.unjank import unjank
 
 logger = logging.getLogger("projectfight_sdk")
 
@@ -14,6 +15,7 @@ def beet_default(ctx: Context):
 
 @configurable("projectfight", validator=PFOptions)
 def projectfight_sdk(ctx: Context, opts: PluginOptions):
+    ctx.require(unjank)
     ctx.require(data.pf_movement_type)
     ctx.require(data.pf_projectile)
     ctx.require(data.pf_item)
